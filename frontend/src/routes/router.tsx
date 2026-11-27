@@ -1,6 +1,8 @@
 import { createBrowserRouter, Navigate } from 'react-router'
 import { prefetchKitchen, prefetchPos } from '@/features/cafe/prefetch'
+import { canManageStock } from '@/lib/auth/roles'
 import { RequireAuth } from './RequireAuth'
+import { RequireRole } from './RequireRole'
 
 // Each page is lazy-loaded so the POS screen doesn't download inventory/report code.
 export const router = createBrowserRouter([
@@ -13,6 +15,21 @@ export const router = createBrowserRouter([
     Component: RequireAuth,
     children: [
       { index: true, lazy: async () => ({ Component: (await import('@/features/home/pages/HomePage')).HomePage }) },
+      {
+        lazy: async () => ({ Component: (await import('./layouts/CoreLayout')).CoreLayout }),
+        children: [
+          {
+            element: <RequireRole allow={canManageStock} />,
+            children: [
+              { path: '/kho', element: <Navigate to="/kho/ton-kho" replace /> },
+              { path: '/kho/ton-kho', lazy: async () => ({ Component: (await import('@/features/inventory/pages/StockPage')).StockPage }) },
+              { path: '/kho/phieu', lazy: async () => ({ Component: (await import('@/features/inventory/pages/DocumentsPage')).DocumentsPage }) },
+              { path: '/kho/phieu/moi', lazy: async () => ({ Component: (await import('@/features/inventory/pages/DocumentPage')).DocumentPage }) },
+              { path: '/kho/phieu/:id', lazy: async () => ({ Component: (await import('@/features/inventory/pages/DocumentPage')).DocumentPage }) },
+            ],
+          },
+        ],
+      },
       {
         lazy: async () => ({ Component: (await import('./layouts/CafeLayout')).CafeLayout }),
         children: [

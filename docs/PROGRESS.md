@@ -43,7 +43,13 @@
   - Realtime: món gửi từ POS hiện sau khoảng 50 ms, nháy nền `lane` một lần; POS thấy trạng thái món đổi theo.
   - Cờ "Chờ lâu" khi món chưa xong sau 10 phút; chế độ tối cho ca đêm, lưu trên máy.
   - Thao tác tuần tự (TanStack scope) + cập nhật lạc quan; kiểm bằng Playwright 2 máy.
-- **Việc tiếp theo:** kho (phiếu nhập/xuất, tồn kho, kiểm kê), báo cáo ngày; POS còn thiếu chuyển/gộp bàn, giảm giá, in hóa đơn.
+- **Màn kho (2026-11-27):** ✅ bố cục desktop (`CoreLayout`, sidebar 240px), chỉ thủ kho/quản lý vào được (`RequireRole`).
+  - `/kho/ton-kho`: lọc kho, dưới mức tối thiểu, tìm không dấu (lọc ở trình duyệt); bấm dòng mở thẻ kho theo khoảng ngày.
+  - `/kho/phieu`: danh sách lọc theo loại/trạng thái; báo phiếu chuyển kho đang chờ nhận.
+  - `/kho/phieu/:id`: soạn 6 loại phiếu (cấu hình `DOCUMENT_TYPES`, không switch), chọn đơn vị quy đổi, lưu nháp/ghi sổ/xóa nháp; xem phiếu đã ghi sổ; hủy có lý do (quản lý); xác nhận nhận hàng chuyển kho; kiểm kê hiện sổ sách/thực tế/chênh lệch.
+  - Kiểm chứng: Playwright 1440×900 với thukho1, quanly1, quanly2, thungan1 — nhập 2 hộp = 2.000 ml, hủy hoàn kho, kiểm kê điều chỉnh, chuyển kho 2 chi nhánh.
+  - Còn treo: `/api/catalog/products?q=` và `/api/inventory/balances?q=` dùng ILIKE nên phân biệt dấu (cần extension `unaccent` nếu muốn tìm ở server).
+- **Việc tiếp theo:** báo cáo ngày; POS còn thiếu chuyển/gộp bàn, giảm giá, in hóa đơn.
 - Còn treo: 2 cảnh báo EF về global filter (Unit ↔ ProductUnit, Branch ↔ UserBranch). Chưa ảnh hưởng hành vi.
 
 > Phần dưới là nhật ký quá trình refactor, giữ lại để tham khảo.
