@@ -61,6 +61,11 @@ function errorMessage(status: number, data: unknown): string {
   return 'Lỗi hệ thống, vui lòng thử lại.'
 }
 
+/** Current access token, refreshing it first if needed (used by SignalR). */
+export function getAccessToken(): Promise<string> {
+  return Promise.resolve(sessionStore.accessToken() ?? refreshAccessToken())
+}
+
 // Concurrent 401s refresh only once (refresh tokens rotate — refreshing twice would break the session).
 let refreshing: Promise<string> | null = null
 

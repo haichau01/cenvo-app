@@ -5,18 +5,14 @@ import '@fontsource/barlow-semi-condensed/600.css'
 import '@fontsource/barlow-semi-condensed/700.css'
 import './index.css'
 
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { QueryClientProvider } from '@tanstack/react-query'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { RouterProvider } from 'react-router'
+import { Toaster } from '@/components/ui/Toast'
 import { restoreSession } from '@/lib/api/client'
+import { queryClient } from '@/lib/queryClient'
 import { router } from '@/routes/router'
-
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: { retry: 1, refetchOnWindowFocus: false },
-  },
-})
 
 // Restore the session before rendering so the login screen doesn't flash on reload.
 restoreSession().finally(() => {
@@ -24,6 +20,7 @@ restoreSession().finally(() => {
     <StrictMode>
       <QueryClientProvider client={queryClient}>
         <RouterProvider router={router} />
+        <Toaster />
       </QueryClientProvider>
     </StrictMode>,
   )

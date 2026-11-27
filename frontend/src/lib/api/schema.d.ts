@@ -2901,31 +2901,16 @@ export interface components {
             amount: number;
             reference?: string | null;
         };
-        /**
-         * Format: int32
-         * @enum {integer}
-         */
-        "Cenvo.Modules.Cafe.Domain.KitchenStatus": 0 | 1 | 2 | 3 | 4;
-        /**
-         * Format: int32
-         * @enum {integer}
-         */
-        "Cenvo.Modules.Cafe.Domain.OrderStatus": 1 | 2 | 3;
-        /**
-         * Format: int32
-         * @enum {integer}
-         */
-        "Cenvo.Modules.Cafe.Domain.OrderType": 1 | 2;
-        /**
-         * Format: int32
-         * @enum {integer}
-         */
-        "Cenvo.Modules.Cafe.Domain.PaymentMethod": 1 | 2 | 3;
-        /**
-         * Format: int32
-         * @enum {integer}
-         */
-        "Cenvo.Modules.Cafe.Domain.ShiftStatus": 1 | 2;
+        /** @enum {string} */
+        "Cenvo.Modules.Cafe.Domain.KitchenStatus": "New" | "Sent" | "Preparing" | "Done" | "Served";
+        /** @enum {string} */
+        "Cenvo.Modules.Cafe.Domain.OrderStatus": "Open" | "Paid" | "Cancelled";
+        /** @enum {string} */
+        "Cenvo.Modules.Cafe.Domain.OrderType": "DineIn" | "TakeAway";
+        /** @enum {string} */
+        "Cenvo.Modules.Cafe.Domain.PaymentMethod": "Cash" | "Transfer" | "Card";
+        /** @enum {string} */
+        "Cenvo.Modules.Cafe.Domain.ShiftStatus": "Open" | "Closed";
         "Cenvo.Modules.Catalog.Application.Categories.CategoryDto": {
             /** Format: uuid */
             id: string;
@@ -2998,11 +2983,8 @@ export interface components {
             id: string;
             name: string;
         };
-        /**
-         * Format: int32
-         * @enum {integer}
-         */
-        "Cenvo.Modules.Catalog.Domain.ProductKind": 1 | 2 | 3 | 4;
+        /** @enum {string} */
+        "Cenvo.Modules.Catalog.Domain.ProductKind": "Ingredient" | "FinishedGood" | "Merchandise" | "Supply";
         "Cenvo.Modules.Inventory.Application.Documents.StockDocumentDto": {
             /** Format: uuid */
             id: string;
@@ -3170,16 +3152,10 @@ export interface components {
             name: string;
             isDefault: boolean;
         };
-        /**
-         * Format: int32
-         * @enum {integer}
-         */
-        "Cenvo.Modules.Inventory.Domain.StockDocumentType": 1 | 2 | 3 | 4 | 5 | 6 | 7;
-        /**
-         * Format: int32
-         * @enum {integer}
-         */
-        "Cenvo.Modules.Inventory.Domain.TransferState": 0 | 1 | 2;
+        /** @enum {string} */
+        "Cenvo.Modules.Inventory.Domain.StockDocumentType": "PurchaseReceipt" | "DisposalIssue" | "InternalIssue" | "Transfer" | "Stocktake" | "SaleIssue" | "OpeningBalance";
+        /** @enum {string} */
+        "Cenvo.Modules.Inventory.Domain.TransferState": "None" | "InTransit" | "Received";
         "Cenvo.Modules.Inventory.Posting.StockWarning": {
             /** Format: uuid */
             productId: string;
@@ -3237,11 +3213,8 @@ export interface components {
             branchIds: string[];
             isActive: boolean;
         };
-        /**
-         * Format: int32
-         * @enum {integer}
-         */
-        "Cenvo.SharedKernel.DocumentStatus": 0 | 1 | 2;
+        /** @enum {string} */
+        "Cenvo.SharedKernel.DocumentStatus": "Draft" | "Posted" | "Cancelled";
     };
     responses: never;
     parameters: never;

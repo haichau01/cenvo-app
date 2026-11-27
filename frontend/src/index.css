@@ -85,3 +85,11 @@ html { font-family: var(--font-sans); color: var(--color-ink); background: var(-
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
+
+/* A new bill line slides into the order panel (design system: 150ms, answers an action). */
+@theme {
+  --animate-line-in: line-in 150ms var(--ease-snap);
+}
+@keyframes line-in {
+  from { opacity: 0; transform: translateY(-6px); }
+}

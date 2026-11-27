@@ -23,7 +23,16 @@
     - `npm run build`, `npm run lint` sạch; `npm test` 3/3.
     - Chạy thử bằng Playwright + Edge ở tablet, điện thoại và desktop: sai mật khẩu báo lỗi tiếng Việt; thu ngân vào thẳng Quận 1; admin vào toàn chuỗi rồi đổi sang Thủ Đức; tải lại trang vẫn giữ phiên.
   - Backend: bật `NonNullableReferenceTypesAsRequired` trong Swagger để sinh kiểu TS chính xác.
-- **Việc tiếp theo:** màn POS cà phê (bàn, menu, hóa đơn, thanh toán, mở/đóng ca), sau đó đến màn pha chế, kho, báo cáo ngày.
+- **Màn POS cà phê `/pos` (2026-11-27):** ✅
+  - Sơ đồ bàn theo khu + hóa đơn mang đi; thực đơn theo nhóm; tùy chọn món (số lượng, topping mỗi ly, ghi chú).
+  - Panel hóa đơn: tăng/giảm/xóa món, gửi pha chế, thanh toán (tiền mặt gợi ý mệnh giá, chuyển khoản, thẻ), hủy có lý do.
+  - Mở ca / đóng ca **đếm mù** (không hiện tiền mặt dự kiến trước khi nhập số đếm; báo lệch sau khi đóng).
+  - Realtime SignalR `ordersChanged` → máy khác thấy bàn đổi ngay; banner khi mất kết nối.
+  - Các thao tác trên hóa đơn chạy tuần tự (TanStack `scope`) — trước đó chạm nhanh gây 409 và mất món.
+  - Backend: sửa `/api/cafe/menu` trả 500 (OrderBy trên DTO), thêm `PosMenuTests`; Swagger sinh enum dạng chuỗi.
+  - Kiểm chứng: `dotnet test` 29/29; `npm test` 15/15, lint, build sạch; chạy Playwright + Edge 1180×820 trọn luồng.
+  - Chưa làm: chuyển/gộp bàn, giảm giá, in hóa đơn, sửa ghi chú dòng đã thêm.
+- **Việc tiếp theo:** màn pha chế (hàng chờ realtime), kho, báo cáo ngày; phần còn lại của POS ở trên.
 - Còn treo: 2 cảnh báo EF về global filter (Unit ↔ ProductUnit, Branch ↔ UserBranch). Chưa ảnh hưởng hành vi.
 
 > Phần dưới là nhật ký quá trình refactor, giữ lại để tham khảo.

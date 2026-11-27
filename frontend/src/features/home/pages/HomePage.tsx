@@ -5,7 +5,7 @@ import { useLogout } from '@/features/auth/api/auth'
 import { canWorkAcrossBranches, currentBranchName } from '@/features/auth/lib/branches'
 import { useSession } from '@/lib/auth/session'
 
-/** Temporary home page after login — POS, kitchen and inventory will hang off here later. */
+/** Temporary home page after login — entry to POS; kitchen and inventory will hang off here later. */
 export function HomePage() {
   const user = useSession()!.user
   const logout = useLogout()
@@ -29,8 +29,12 @@ export function HomePage() {
       <main className="mx-auto max-w-2xl px-6 py-16">
         <h1 className="font-display text-screen font-semibold text-ink">Chào {user.fullName}</h1>
         <p className="mt-2 text-ink-muted">
-          Bạn đã đăng nhập vào {currentBranchName(user)}. Màn bán hàng (POS), pha chế và kho sẽ có ở bước tiếp theo.
+          Bạn đã đăng nhập vào {currentBranchName(user)}. Pha chế, kho và báo cáo sẽ có ở bước tiếp theo.
         </p>
+        <Link to="/pos" data-module="cafe"
+          className="mt-8 inline-flex h-14 items-center rounded-(--radius-control) bg-(--module) px-6 text-lg font-semibold text-white">
+          Mở màn bán hàng
+        </Link>
       </main>
     </div>
   )
