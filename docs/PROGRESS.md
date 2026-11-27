@@ -49,7 +49,13 @@
   - `/kho/phieu/:id`: soạn 6 loại phiếu (cấu hình `DOCUMENT_TYPES`, không switch), chọn đơn vị quy đổi, lưu nháp/ghi sổ/xóa nháp; xem phiếu đã ghi sổ; hủy có lý do (quản lý); xác nhận nhận hàng chuyển kho; kiểm kê hiện sổ sách/thực tế/chênh lệch.
   - Kiểm chứng: Playwright 1440×900 với thukho1, quanly1, quanly2, thungan1 — nhập 2 hộp = 2.000 ml, hủy hoàn kho, kiểm kê điều chỉnh, chuyển kho 2 chi nhánh.
   - Còn treo: `/api/catalog/products?q=` và `/api/inventory/balances?q=` dùng ILIKE nên phân biệt dấu (cần extension `unaccent` nếu muốn tìm ở server).
-- **Việc tiếp theo:** báo cáo ngày; POS còn thiếu chuyển/gộp bàn, giảm giá, in hóa đơn.
+- **Báo cáo bán hàng `/bao-cao` (2026-11-27):** ✅ chỉ quản lý.
+  - Chọn kỳ: Hôm nay / Hôm qua / 7 ngày / Tháng này / Tháng trước hoặc ngày tùy chọn (giờ VN).
+  - Ô số: doanh thu (nổi bật), lãi gộp + biên, giá vốn, số hóa đơn, trung bình, số hủy.
+  - Biểu đồ cột doanh thu theo ngày (SVG tự vẽ, không thêm thư viện; tooltip bằng chuột và bàn phím; có dạng bảng).
+  - Món bán chạy, hình thức thanh toán, đối soát ca (chênh lệch tiền mặt), nguyên liệu đã dùng.
+  - Định dạng ngày giờ gom về `lib/format` (`formatDate`, `formatDateTime`, `formatShortDateTime`).
+- **Việc tiếp theo:** phân hệ Rửa xe (backend + màn tiếp nhận/hàng chờ); POS còn thiếu chuyển/gộp bàn, giảm giá, in hóa đơn.
 - Còn treo: 2 cảnh báo EF về global filter (Unit ↔ ProductUnit, Branch ↔ UserBranch). Chưa ảnh hưởng hành vi.
 
 > Phần dưới là nhật ký quá trình refactor, giữ lại để tham khảo.

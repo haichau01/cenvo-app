@@ -3,7 +3,7 @@ import { Wordmark } from '@/components/cenvo/Wordmark'
 import { Button } from '@/components/ui/Button'
 import { useLogout } from '@/features/auth/api/auth'
 import { canWorkAcrossBranches, currentBranchName } from '@/features/auth/lib/branches'
-import { canManageStock } from '@/lib/auth/roles'
+import { canManageStock, isManager } from '@/lib/auth/roles'
 import { useSession } from '@/lib/auth/session'
 
 /** Temporary home page after login — entry to POS, kitchen and inventory. */
@@ -30,12 +30,13 @@ export function HomePage() {
       <main className="mx-auto max-w-2xl px-6 py-16">
         <h1 className="font-display text-screen font-semibold text-ink">Chào {user.fullName}</h1>
         <p className="mt-2 text-ink-muted">
-          Bạn đã đăng nhập vào {currentBranchName(user)}. Báo cáo sẽ có ở bước tiếp theo.
+          Bạn đã đăng nhập vào {currentBranchName(user)}.
         </p>
         <nav aria-label="Màn làm việc" className="mt-8 flex flex-wrap gap-3">
           <ScreenLink to="/pos" module="cafe">Mở màn bán hàng</ScreenLink>
           <ScreenLink to="/pha-che" module="cafe">Màn pha chế</ScreenLink>
           {canManageStock(user) && <ScreenLink to="/kho/ton-kho" module="core">Kho</ScreenLink>}
+          {isManager(user) && <ScreenLink to="/bao-cao" module="core">Báo cáo</ScreenLink>}
         </nav>
       </main>
     </div>

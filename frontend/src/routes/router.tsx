@@ -1,6 +1,6 @@
 import { createBrowserRouter, Navigate } from 'react-router'
 import { prefetchKitchen, prefetchPos } from '@/features/cafe/prefetch'
-import { canManageStock } from '@/lib/auth/roles'
+import { canManageStock, isManager } from '@/lib/auth/roles'
 import { RequireAuth } from './RequireAuth'
 import { RequireRole } from './RequireRole'
 
@@ -26,6 +26,12 @@ export const router = createBrowserRouter([
               { path: '/kho/phieu', lazy: async () => ({ Component: (await import('@/features/inventory/pages/DocumentsPage')).DocumentsPage }) },
               { path: '/kho/phieu/moi', lazy: async () => ({ Component: (await import('@/features/inventory/pages/DocumentPage')).DocumentPage }) },
               { path: '/kho/phieu/:id', lazy: async () => ({ Component: (await import('@/features/inventory/pages/DocumentPage')).DocumentPage }) },
+            ],
+          },
+          {
+            element: <RequireRole allow={isManager} who="quản lý" />,
+            children: [
+              { path: '/bao-cao', lazy: async () => ({ Component: (await import('@/features/reports/pages/ReportsPage')).ReportsPage }) },
             ],
           },
         ],

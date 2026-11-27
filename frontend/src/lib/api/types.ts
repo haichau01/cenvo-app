@@ -35,3 +35,10 @@ export type StockCardDto = Schemas['Cenvo.Modules.Inventory.Application.Stock.St
 export type WarehouseDto = Schemas['Cenvo.Modules.Inventory.Application.Warehouses.WarehouseDto']
 export type SupplierDto = Schemas['Cenvo.Modules.Inventory.Application.Suppliers.SupplierDto']
 export type ProductDto = Schemas['Cenvo.Modules.Catalog.Application.Products.ProductDto']
+
+// Reports
+export type SalesSummary = Schemas['Cenvo.Modules.Cafe.Application.Reports.SalesSummary']
+export type DailyRevenue = Schemas['Cenvo.Modules.Cafe.Application.Reports.DailyRevenue']
+export type TopItem = Schemas['Cenvo.Modules.Cafe.Application.Reports.TopItem']
+export type ShiftDto = Schemas['Cenvo.Modules.Cafe.Application.Shifts.ShiftDto']
+export type ConsumptionDto = Schemas['Cenvo.Modules.Inventory.Application.Stock.ConsumptionDto']

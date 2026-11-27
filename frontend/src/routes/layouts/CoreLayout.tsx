@@ -1,4 +1,6 @@
 import { NavLink, Outlet } from 'react-router'
+import type { UserIdentity } from '@/lib/api/types'
+import { canManageStock, isManager } from '@/lib/auth/roles'
 import { Wordmark } from '@/components/cenvo/Wordmark'
 import { currentBranchName } from '@/features/auth/lib/branches'
 import { useSession } from '@/lib/auth/session'
@@ -9,8 +11,16 @@ interface NavItem {
   end?: boolean
 }
 
-const SECTIONS: { title: string; items: NavItem[] }[] = [
-  { title: 'Kho', items: [{ to: '/kho/ton-kho', label: 'Tồn kho' }, { to: '/kho/phieu', label: 'Phiếu kho' }] },
+interface NavSection {
+  title: string
+  items: NavItem[]
+  /** Hide sections the user's role cannot open (UI only). */
+  visible?: (user: UserIdentity) => boolean
+}
+
+const SECTIONS: NavSection[] = [
+  { title: 'Báo cáo', items: [{ to: '/bao-cao', label: 'Doanh thu' }], visible: isManager },
+  { title: 'Kho', items: [{ to: '/kho/ton-kho', label: 'Tồn kho' }, { to: '/kho/phieu', label: 'Phiếu kho' }], visible: canManageStock },
   { title: 'Cà phê', items: [{ to: '/pos', label: 'Bán hàng' }, { to: '/pha-che', label: 'Pha chế' }] },
   { title: '', items: [{ to: '/', label: 'Trang chủ', end: true }] },
 ]
@@ -23,7 +33,7 @@ export function CoreLayout() {
       <aside className="sticky top-0 flex h-dvh flex-col gap-6 border-l-4 border-(--module) bg-surface px-4 py-5">
         <Wordmark />
         <nav aria-label="Điều hướng" className="flex flex-1 flex-col gap-5">
-          {SECTIONS.map((section) => (
+          {SECTIONS.filter((section) => section.visible?.(user) ?? true).map((section) => (
             <div key={section.title || 'other'} className="flex flex-col gap-1">
               {section.title && <p className="px-3 text-caption text-ink-muted">{section.title}</p>}
               {section.items.map((item) => <SideLink key={item.to} item={item} />)}
