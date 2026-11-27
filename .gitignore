@@ -1,0 +1,27 @@
+# .NET
+bin/
+obj/
+TestResults/
+*.user
+*.suo
+.vs/
+
+# Node / frontend
+node_modules/
+dist/
+*.log
+.vite/
+
+# Bí mật & cấu hình máy cá nhân
+.env
+.env.*
+!.env.example
+appsettings.Production.json
+secrets.json
+*.pfx
+.claude/
+
+# Editor / OS
+.idea/
+.DS_Store
+Thumbs.db

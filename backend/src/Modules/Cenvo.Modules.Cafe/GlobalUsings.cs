@@ -1,0 +1,9 @@
+global using Cenvo.Infrastructure.Persistence;
+global using Cenvo.Modules.Cafe.Contracts;
+global using Cenvo.Modules.Cafe.Domain;
+global using Cenvo.Modules.Cafe.Domain.Calculations;
+global using Cenvo.Modules.Catalog.Contracts;
+global using Cenvo.Modules.Catalog.Domain;
+global using Cenvo.Modules.Inventory.Contracts;
+global using Cenvo.SharedKernel;
+global using Microsoft.EntityFrameworkCore;

@@ -1,0 +1,87 @@
+@import "tailwindcss";
+
+@theme {
+  --color-concrete: #EEF1F3;
+  --color-surface: #FFFFFF;
+  --color-ink: #18263A;
+  --color-ink-muted: #5B6878;
+  --color-line: #D5DBE1;
+  --color-robusta: #6B3E26;
+  --color-foam: #1677A8;
+  --color-lane: #F5B800;
+  --color-go: #1E9E63;
+  --color-stop: #C8372D;
+  /* Module colors on dark backgrounds (brand panel, dark mode) */
+  --color-robusta-bright: #A9714E;
+  --color-foam-bright: #4AA8D8;
+
+  --font-sans: "Barlow", system-ui, sans-serif;
+  --font-display: "Barlow Semi Condensed", "Barlow", system-ui, sans-serif;
+
+  --text-amount: 2.75rem;  --text-amount--line-height: 1;
+  --text-screen: 1.75rem;  --text-screen--line-height: 1.15;
+  --text-block: 1.25rem;   --text-block--line-height: 1.25;
+  --text-table: 0.9375rem; --text-table--line-height: 1.4;
+  --text-caption: 0.8125rem; --text-caption--line-height: 1.35;
+
+  --radius-control: 6px;
+  --radius-panel: 10px;
+  --radius-sheet: 14px;
+  --radius-plate: 4px;
+
+  --shadow-overlay: 0 8px 24px rgb(24 38 58 / 0.16);
+
+  --ease-snap: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Primary color per module: set data-module on the module's layout. */
+:root, [data-module="core"] { --module: var(--color-ink); }
+[data-module="cafe"] { --module: var(--color-robusta); }
+[data-module="wash"] { --module: var(--color-foam); }
+
+/* Variables for shadcn/ui */
+:root {
+  --background: var(--color-concrete);
+  --foreground: var(--color-ink);
+  --card: var(--color-surface);
+  --card-foreground: var(--color-ink);
+  --popover: var(--color-surface);
+  --popover-foreground: var(--color-ink);
+  --primary: var(--module);
+  --primary-foreground: #FFFFFF;
+  --secondary: #E3E8EC;
+  --secondary-foreground: var(--color-ink);
+  --muted: #E3E8EC;
+  --muted-foreground: var(--color-ink-muted);
+  --accent: #E3E8EC;
+  --accent-foreground: var(--color-ink);
+  --destructive: var(--color-stop);
+  --border: var(--color-line);
+  --input: var(--color-line);
+  --ring: var(--color-foam);
+  --radius: 6px;
+}
+
+.dark {
+  --color-concrete: #142030;
+  --color-surface: #1C2B3F;
+  --color-ink: #E6EBF0;
+  --color-ink-muted: #9AA7B5;
+  --color-line: #2C3D53;
+  --color-robusta: #A9714E;
+  --color-foam: #4AA8D8;
+  --secondary: #24364D;
+  --muted: #24364D;
+  --accent: #24364D;
+  --primary-foreground: #142030;
+}
+
+html { font-family: var(--font-sans); color: var(--color-ink); background: var(--color-concrete); }
+.num, td, .amount { font-variant-numeric: tabular-nums; }
+.amount { font-family: var(--font-display); font-weight: 700; }
+
+:focus-visible { outline: 2px solid var(--color-foam); outline-offset: 2px; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
