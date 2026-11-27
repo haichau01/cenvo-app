@@ -1,5 +1,6 @@
 import { sessionStore } from '@/lib/auth/session'
 import { queryClient } from '@/lib/queryClient'
+import { kitchenQuery } from './api/kitchen'
 import { openOrdersQuery } from './api/orders'
 import { floorPlanQuery, menuQuery } from './api/setup'
 
@@ -9,5 +10,12 @@ export function prefetchPos() {
   void queryClient.prefetchQuery(menuQuery)
   void queryClient.prefetchQuery(floorPlanQuery)
   void queryClient.prefetchQuery(openOrdersQuery)
+  return null
+}
+
+/** Route loader for /pha-che: start loading the queue together with the page code. */
+export function prefetchKitchen() {
+  if (sessionStore.get()?.user.branchId == null) return null
+  void queryClient.prefetchQuery(kitchenQuery)
   return null
 }

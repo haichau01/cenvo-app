@@ -93,3 +93,11 @@ html { font-family: var(--font-sans); color: var(--color-ink); background: var(-
 @keyframes line-in {
   from { opacity: 0; transform: translateY(-6px); }
 }
+
+/* A drink arriving on the kitchen screen from another device: one soft `lane` flash, no looping. */
+@theme {
+  --animate-ticket-in: ticket-in 1.2s var(--ease-snap);
+}
+@keyframes ticket-in {
+  from { background-color: color-mix(in srgb, var(--color-lane) 45%, var(--color-surface)); }
+}

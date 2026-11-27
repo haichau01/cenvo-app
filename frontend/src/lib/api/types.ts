@@ -20,3 +20,4 @@ export type MenuItem = Schemas['Cenvo.Modules.Cafe.Application.Setup.MenuItemDto
 export type AreaDto = Schemas['Cenvo.Modules.Cafe.Application.Setup.AreaDto']
 export type TableDto = Schemas['Cenvo.Modules.Cafe.Application.Setup.TableDto']
 export type ShiftSummary = Schemas['Cenvo.Modules.Cafe.Application.Shifts.ShiftSummary']
+export type KitchenTicket = Schemas['Cenvo.Modules.Cafe.Application.Kitchen.KitchenTicket']

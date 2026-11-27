@@ -6,4 +6,5 @@ export const cafeKeys = {
   openOrders: ['cafe', 'orders', 'open'] as const,
   order: (id: string) => ['cafe', 'orders', id] as const,
   currentShift: ['cafe', 'shifts', 'current'] as const,
+  kitchen: ['cafe', 'kitchen'] as const,
 }

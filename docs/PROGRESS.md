@@ -38,7 +38,12 @@
   - `LowStock` tính trong SQL; DTO dựng trong SQL đổi sang thuộc tính init (JSON không đổi).
   - Sửa 2 lỗi có từ trước: báo cáo `/api/reports/cafe-sales` trả 500; số hóa đơn hủy đếm theo `PaidAt` (luôn thiếu).
   - Skill mới `cenvo-readable-query`. Test: 41/41.
-- **Việc tiếp theo:** màn pha chế (hàng chờ realtime), kho, báo cáo ngày; phần còn lại của POS ở trên.
+- **Màn pha chế `/pha-che` (2026-11-27):** ✅
+  - 3 cột Chờ pha → Đang pha → Chờ mang ra; một chạm để chuyển cột, nút "Lùi" để sửa chạm nhầm (khớp `KitchenFlow`).
+  - Realtime: món gửi từ POS hiện sau khoảng 50 ms, nháy nền `lane` một lần; POS thấy trạng thái món đổi theo.
+  - Cờ "Chờ lâu" khi món chưa xong sau 10 phút; chế độ tối cho ca đêm, lưu trên máy.
+  - Thao tác tuần tự (TanStack scope) + cập nhật lạc quan; kiểm bằng Playwright 2 máy.
+- **Việc tiếp theo:** kho (phiếu nhập/xuất, tồn kho, kiểm kê), báo cáo ngày; POS còn thiếu chuyển/gộp bàn, giảm giá, in hóa đơn.
 - Còn treo: 2 cảnh báo EF về global filter (Unit ↔ ProductUnit, Branch ↔ UserBranch). Chưa ảnh hưởng hành vi.
 
 > Phần dưới là nhật ký quá trình refactor, giữ lại để tham khảo.

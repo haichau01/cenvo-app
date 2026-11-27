@@ -4,6 +4,7 @@ import { useRealtimeConnected } from '@/lib/realtime'
 
 const NAV = [
   { to: '/pos', label: 'Bán hàng', glyph: '☕' },
+  { to: '/pha-che', label: 'Pha chế', glyph: '⏲' },
   { to: '/', label: 'Trang chủ', glyph: '⌂' },
 ]
 

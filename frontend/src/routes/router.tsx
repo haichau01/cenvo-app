@@ -1,5 +1,5 @@
 import { createBrowserRouter, Navigate } from 'react-router'
-import { prefetchPos } from '@/features/cafe/prefetch'
+import { prefetchKitchen, prefetchPos } from '@/features/cafe/prefetch'
 import { RequireAuth } from './RequireAuth'
 
 // Each page is lazy-loaded so the POS screen doesn't download inventory/report code.
@@ -21,6 +21,11 @@ export const router = createBrowserRouter([
             // Start loading menu + floor plan in parallel with the page code (does not block navigation).
             loader: prefetchPos,
             lazy: async () => ({ Component: (await import('@/features/cafe/pages/PosPage')).PosPage }),
+          },
+          {
+            path: '/pha-che',
+            loader: prefetchKitchen,
+            lazy: async () => ({ Component: (await import('@/features/cafe/pages/KitchenPage')).KitchenPage }),
           },
         ],
       },
