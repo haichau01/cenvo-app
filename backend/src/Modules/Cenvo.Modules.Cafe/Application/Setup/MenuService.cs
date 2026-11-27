@@ -13,13 +13,15 @@ public class MenuService(AppDbContext db)
             join ci in db.Set<CafeItem>() on p.Id equals ci.ProductId into settings
             from ci in settings.DefaultIfEmpty()
             where !posOnly || ci == null || ci.ShowOnPos
+            // Sort on entity columns before projecting: EF cannot translate ordering by DTO record members.
+            orderby p.Category == null ? UncategorizedSort : p.Category.SortOrder, ci == null ? 0 : ci.SortOrder, p.Name
             select new MenuItemDto(
                 p.Id, p.Code, p.Name, p.CategoryId, p.Category!.Name,
                 p.Category == null ? UncategorizedSort : p.Category.SortOrder,
                 db.Set<ProductPrice>().Where(x => x.ProductId == p.Id).Select(x => (decimal?)x.Price).FirstOrDefault() ?? p.DefaultPrice,
                 p.ImageUrl, ci != null && ci.IsTopping, ci == null || ci.ShowOnPos, ci == null ? 0 : ci.SortOrder,
                 db.Set<RecipeLine>().Any(r => r.MenuProductId == p.Id));
-        return query.OrderBy(x => x.CategorySort).ThenBy(x => x.SortOrder).ThenBy(x => x.Name).ToListAsync(ct);
+        return query.ToListAsync(ct);
     }
 
     public async Task SaveSettings(Guid productId, MenuSettingsInput input, CancellationToken ct)

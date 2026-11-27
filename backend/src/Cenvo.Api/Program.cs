@@ -59,6 +59,8 @@ builder.Services.AddAuthorization(o => o.AddCenvoPolicies());
 
 // ---------- Web ----------
 builder.Services.ConfigureHttpJsonOptions(o => o.SerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+// Swashbuckle reads the MVC JSON options to describe schemas: mirror the enum converter so enums appear as strings.
+builder.Services.Configure<Microsoft.AspNetCore.Mvc.JsonOptions>(o => o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 builder.Services.AddSignalR().AddJsonProtocol(o => o.PayloadSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 builder.Services.AddExceptionHandler<ErrorHandler>();
 builder.Services.AddProblemDetails();
