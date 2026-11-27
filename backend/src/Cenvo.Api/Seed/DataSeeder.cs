@@ -139,10 +139,12 @@ public static class DataSeeder
     }
 
     /// <summary>Marks toppings and declares recipes (quantities in the ingredient's base unit).</summary>
+    private const int ToppingSortOrder = 99;
+
     private static void SeedMenu(AppDbContext db, SeededCatalog catalog)
     {
         db.AddRange(new[] { "TOP-TC", "TOP-SHOT", "TOP-DAO" }
-            .Select(code => new CafeItem { ProductId = catalog[code].Id, IsTopping = true, SortOrder = 99 }));
+            .Select(code => CafeItem.Topping(catalog[code].Id, ToppingSortOrder)));
 
         void Recipe(string menuCode, params (string IngredientCode, decimal Quantity)[] lines) =>
             db.AddRange(lines.Select(l => new RecipeLine

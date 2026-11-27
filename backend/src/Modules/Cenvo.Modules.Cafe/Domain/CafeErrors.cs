@@ -21,11 +21,22 @@ public static class CafeErrors
     public const string CancelReasonRequired = "Nhập lý do hủy.";
     public const string PaidCancelNeedsManager = "Cần quyền quản lý để hủy hóa đơn đã thanh toán.";
     public const string MoveToSameOrder = "Không thể chuyển sang chính hóa đơn này.";
-    public const string InvalidKitchenStatus = "Trạng thái pha chế không hợp lệ.";
     public const string AreaHasTables = "Khu vực còn bàn, hãy xóa bàn trước.";
     public const string TableOccupied = "Bàn đang có khách.";
     public const string RecipeQuantityMustBePositive = "Định lượng phải lớn hơn 0.";
     public const string RecipeSelfReference = "Món không thể là nguyên liệu của chính nó.";
 
     public static string CustomerOwes(decimal amount) => $"Khách còn thiếu {amount:N0}đ.";
+
+    public static string KitchenMoveNotAllowed(KitchenStatus from, KitchenStatus to) =>
+        $"Không thể chuyển món từ “{KitchenLabels[from]}” sang “{KitchenLabels[to]}”. Chỉ được lùi một bước để sửa thao tác nhầm.";
+
+    private static readonly Dictionary<KitchenStatus, string> KitchenLabels = new()
+    {
+        [KitchenStatus.New] = "Chưa gửi",
+        [KitchenStatus.Sent] = "Đã gửi",
+        [KitchenStatus.Preparing] = "Đang pha",
+        [KitchenStatus.Done] = "Đã xong",
+        [KitchenStatus.Served] = "Đã mang ra",
+    };
 }

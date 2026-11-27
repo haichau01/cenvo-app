@@ -53,22 +53,48 @@ public class ShiftService(AppDbContext db, IDocumentNumberGenerator numbers, ICu
     {
         var shift = await db.Set<Shift>().AsNoTracking().FirstOrDefaultAsync(s => s.Id == shiftId, ct)
                     ?? throw new NotFoundException("ca", shiftId);
-        var orders = await db.Set<CafeOrder>().AsNoTracking()
-            .Where(o => o.ShiftId == shiftId && o.Status != OrderStatus.Open)
-            .Select(o => new
-            {
-                o.Status, o.Total, Discount = o.DiscountAmount + o.Lines.Sum(l => l.DiscountAmount),
-                Payments = o.Payments.Select(p => new { p.Method, p.Amount }).ToList(),
-            })
-            .ToListAsync(ct);
-
-        var paid = orders.Where(o => o.Status == OrderStatus.Paid).ToList();
-        var byMethod = Enum.GetValues<PaymentMethod>().ToDictionary(m => m,
-            m => paid.SelectMany(o => o.Payments).Where(p => p.Method == m).Sum(p => p.Amount));
+        var closedOrders = await ClosedOrders(shiftId, ct);
+        var paid = closedOrders.Where(o => o.Status == OrderStatus.Paid).ToList();
+        var byMethod = TotalByMethod(paid);
+        // A closed shift keeps the expected cash it was closed with; an open shift computes it live.
         var expectedCash = shift.ExpectedCash ?? shift.OpeningCash + byMethod[PaymentMethod.Cash];
 
-        return new ShiftSummary(shift.Id, shift.Code, shift.CashierName, shift.Status, shift.OpenedAt, shift.ClosedAt,
-            shift.OpeningCash, paid.Count, orders.Count(o => o.Status == OrderStatus.Cancelled), paid.Sum(o => o.Total),
-            paid.Sum(o => o.Discount), byMethod, expectedCash, shift.CountedCash, shift.CountedCash - expectedCash, shift.Note);
+        return new ShiftSummary(
+            Id: shift.Id,
+            Code: shift.Code,
+            CashierName: shift.CashierName,
+            Status: shift.Status,
+            OpenedAt: shift.OpenedAt,
+            ClosedAt: shift.ClosedAt,
+            OpeningCash: shift.OpeningCash,
+            OrderCount: paid.Count,
+            CancelledCount: closedOrders.Count(o => o.Status == OrderStatus.Cancelled),
+            Revenue: paid.Sum(o => o.Total),
+            Discount: paid.Sum(o => o.Discount),
+            ByMethod: byMethod,
+            ExpectedCash: expectedCash,
+            CountedCash: shift.CountedCash,
+            Difference: shift.CountedCash - expectedCash,
+            Note: shift.Note);
     }
+
+    private record ShiftPayment(PaymentMethod Method, decimal Amount);
+    private record ShiftOrder(OrderStatus Status, decimal Total, decimal Discount, List<ShiftPayment> Payments);
+
+    /// <summary>Paid and cancelled orders of the shift (open orders are not settled yet).</summary>
+    private Task<List<ShiftOrder>> ClosedOrders(Guid shiftId, CancellationToken ct) =>
+        db.Set<CafeOrder>().AsNoTracking()
+            .Where(o => o.ShiftId == shiftId && o.Status != OrderStatus.Open)
+            .Select(o => new ShiftOrder(
+                o.Status,
+                o.Total,
+                o.DiscountAmount + o.Lines.Sum(l => l.DiscountAmount),
+                o.Payments.Select(p => new ShiftPayment(p.Method, p.Amount)).ToList()))
+            .ToListAsync(ct);
+
+    /// <summary>Every payment method is present (0 when unused).</summary>
+    private static Dictionary<PaymentMethod, decimal> TotalByMethod(List<ShiftOrder> paid) =>
+        Enum.GetValues<PaymentMethod>().ToDictionary(
+            method => method,
+            method => paid.SelectMany(o => o.Payments).Where(p => p.Method == method).Sum(p => p.Amount));
 }

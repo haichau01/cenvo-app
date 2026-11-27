@@ -30,7 +30,7 @@ public static class CafeEndpoints
         g.MapPut("/tables/{id:guid}", (Guid id, TableInput i, AreaTableService svc, CancellationToken ct) => svc.SaveTable(id, i, ct)).RequireAuthorization(Policies.Managers);
         g.MapDelete("/tables/{id:guid}", (Guid id, AreaTableService svc, CancellationToken ct) => svc.DeleteTable(id, ct)).RequireAuthorization(Policies.Managers);
 
-        g.MapGet("/menu", (bool? all, MenuService svc, CancellationToken ct) => svc.Menu(posOnly: all != true, ct));
+        g.MapGet("/menu", (bool? all, MenuQueryService svc, CancellationToken ct) => all == true ? svc.FullMenu(ct) : svc.PosMenu(ct));
         g.MapPut("/menu/{productId:guid}", (Guid productId, MenuSettingsInput i, MenuService svc, CancellationToken ct) =>
             svc.SaveSettings(productId, i, ct)).RequireAuthorization(Policies.Managers);
         g.MapGet("/menu/{productId:guid}/recipe", (Guid productId, RecipeService svc, CancellationToken ct) => svc.Get(productId, ct));

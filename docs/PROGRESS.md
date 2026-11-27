@@ -32,6 +32,12 @@
   - Backend: sửa `/api/cafe/menu` trả 500 (OrderBy trên DTO), thêm `PosMenuTests`; Swagger sinh enum dạng chuỗi.
   - Kiểm chứng: `dotnet test` 29/29; `npm test` 15/15, lint, build sạch; chạy Playwright + Edge 1180×820 trọn luồng.
   - Chưa làm: chuyển/gộp bàn, giảm giá, in hóa đơn, sửa ghi chú dòng đã thêm.
+- **Refactor query dễ đọc (2026-11-27):** ✅
+  - Query Object `ProductQueries` (FinishedGoods/ActiveOnly/Matching/WithSellingPrice): giá bán chi nhánh từng chép 3 nơi, nay chỉ viết một lần.
+  - `MenuQueryService` tách khỏi `MenuService`; `CafeItem.Configure`; trạng thái pha chế đi qua `CafeOrder.ChangeKitchenStatus` + `KitchenFlow` (tiến tùy ý, lùi 1 bước).
+  - `LowStock` tính trong SQL; DTO dựng trong SQL đổi sang thuộc tính init (JSON không đổi).
+  - Sửa 2 lỗi có từ trước: báo cáo `/api/reports/cafe-sales` trả 500; số hóa đơn hủy đếm theo `PaidAt` (luôn thiếu).
+  - Skill mới `cenvo-readable-query`. Test: 41/41.
 - **Việc tiếp theo:** màn pha chế (hàng chờ realtime), kho, báo cáo ngày; phần còn lại của POS ở trên.
 - Còn treo: 2 cảnh báo EF về global filter (Unit ↔ ProductUnit, Branch ↔ UserBranch). Chưa ảnh hưởng hành vi.
 
