@@ -8,7 +8,11 @@ import { toast } from '@/components/ui/toastStore'
 import type { OrderDto, PaymentMethod } from '@/lib/api/types'
 import { formatVnd } from '@/lib/format'
 import { usePayOrder } from '../api/orders'
+import { usePrintReceipt } from '../api/receipts'
+import { useStoredFlag } from '@/lib/useStoredFlag'
 import { previewChange, suggestCash } from '../lib/payment'
+
+const PRINT_AFTER_PAY_KEY = 'cenvo.pos.printAfterPay'
 
 const METHODS: { value: PaymentMethod; label: string }[] = [
   { value: 'Cash', label: 'Tiền mặt' },
@@ -33,6 +37,8 @@ export function PayDialog({ order, onClose, onPaid }: PayDialogProps) {
 /** Exact cash is preselected, so a typical sale is: Thanh toán → Xác nhận (2 taps). */
 function PayForm({ order, onPaid }: { order: OrderDto; onPaid: () => void }) {
   const pay = usePayOrder()
+  const printReceipt = usePrintReceipt()
+  const [printAfterPay, setPrintAfterPay] = useStoredFlag(PRINT_AFTER_PAY_KEY, true)
   const [method, setMethod] = useState<PaymentMethod>('Cash')
   const [given, setGiven] = useState(order.total)
   const isCash = method === 'Cash'
@@ -46,6 +52,7 @@ function PayForm({ order, onPaid }: { order: OrderDto; onPaid: () => void }) {
         const changeText = paid.changeAmount > 0 ? ` · Tiền thối ${formatVnd(paid.changeAmount)}` : ''
         toast.success(`Đã thanh toán ${paid.code}${changeText}`)
         onPaid()
+        if (printAfterPay) printReceipt.mutate(paid.id)
       },
     })
   }
@@ -68,6 +75,11 @@ function PayForm({ order, onPaid }: { order: OrderDto; onPaid: () => void }) {
       {isCash && <CashInput total={order.total} given={given} onGiven={setGiven} change={change} />}
 
       <FormError message={pay.error?.message} />
+      <label className="flex h-12 items-center gap-3 font-medium">
+        <input type="checkbox" checked={printAfterPay} onChange={(event) => setPrintAfterPay(event.target.checked)}
+          className="size-5 accent-(--module)" />
+        In hóa đơn sau khi thanh toán
+      </label>
       <Button size="lg" onClick={handleConfirm} busy={pay.isPending} disabled={short}>
         Xác nhận thanh toán
       </Button>

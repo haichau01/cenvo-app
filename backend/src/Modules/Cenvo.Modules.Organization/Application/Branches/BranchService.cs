@@ -1,6 +1,6 @@
 namespace Cenvo.Modules.Organization.Application.Branches;
 
-public class BranchService(AppDbContext db) : IBranchStockPolicy
+public class BranchService(AppDbContext db) : IBranchStockPolicy, IBranchDirectory
 {
     public Task<List<BranchDto>> List(CancellationToken ct) =>
         db.Set<Branch>().AsNoTracking().OrderBy(b => b.Code)
@@ -20,4 +20,11 @@ public class BranchService(AppDbContext db) : IBranchStockPolicy
     public Task<bool> AllowNegativeStock(Guid branchId, CancellationToken ct) =>
         db.Set<Branch>().IgnoreQueryFilters() // soft-deleted branches still have documents that may need cancelling
             .Where(b => b.Id == branchId).Select(b => b.AllowNegativeStock).FirstOrDefaultAsync(ct);
+
+    public Task<BranchContact?> Contact(Guid branchId, CancellationToken ct) =>
+        db.Set<Branch>().AsNoTracking()
+            .IgnoreQueryFilters() // a branch closed later still prints its old receipts
+            .Where(b => b.Id == branchId)
+            .Select(b => new BranchContact(b.Name, b.Address, b.Phone))
+            .FirstOrDefaultAsync(ct);
 }

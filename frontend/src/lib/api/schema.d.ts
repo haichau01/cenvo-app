@@ -544,6 +544,43 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/cafe/orders/{id}/receipt": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Cenvo.Modules.Cafe.Application.Orders.ReceiptDto"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/cafe/orders/{id}/lines": {
         parameters: {
             query?: never;
@@ -2674,6 +2711,11 @@ export interface components {
             amount: number;
             reference?: string | null;
         };
+        "Cenvo.Modules.Cafe.Application.Orders.ReceiptDto": {
+            order: components["schemas"]["Cenvo.Modules.Cafe.Application.Orders.OrderDto"];
+            store: components["schemas"]["Cenvo.Modules.Organization.Contracts.BranchContact"];
+            cashierName?: string | null;
+        };
         "Cenvo.Modules.Cafe.Application.Orders.ToppingDto": {
             /** Format: uuid */
             productId: string;
@@ -3212,6 +3254,11 @@ export interface components {
             roles: string[];
             branchIds: string[];
             isActive: boolean;
+        };
+        "Cenvo.Modules.Organization.Contracts.BranchContact": {
+            name: string;
+            address?: string | null;
+            phone?: string | null;
         };
         /** @enum {string} */
         "Cenvo.SharedKernel.DocumentStatus": "Draft" | "Posted" | "Cancelled";

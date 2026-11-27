@@ -15,6 +15,7 @@ export const router = createBrowserRouter([
     Component: RequireAuth,
     children: [
       { index: true, lazy: async () => ({ Component: (await import('@/features/home/pages/HomePage')).HomePage }) },
+      { path: '/in/hoa-don/:id', lazy: async () => ({ Component: (await import('@/features/cafe/pages/ReceiptPreviewPage')).ReceiptPreviewPage }) },
       {
         lazy: async () => ({ Component: (await import('./layouts/CoreLayout')).CoreLayout }),
         children: [

@@ -43,6 +43,7 @@ public static class CafeEndpoints
         g.MapGet("/open", (OrderQueryService svc, CancellationToken ct) => svc.OpenOrders(ct));
         g.MapGet("/", ([AsParameters] OrderHistoryFilter f, OrderQueryService svc, CancellationToken ct) => svc.History(f, ct));
         g.MapGet("/{id:guid}", (Guid id, OrderQueryService svc, CancellationToken ct) => svc.Get(id, ct));
+        g.MapGet("/{id:guid}/receipt", (Guid id, ReceiptQueryService svc, CancellationToken ct) => svc.Get(id, ct));
 
         g.MapPost("/", (CreateOrderInput i, OrderEditingService svc, CancellationToken ct) => svc.Create(i, ct));
         g.MapPut("/{id:guid}", (Guid id, OrderInfoInput i, OrderEditingService svc, CancellationToken ct) => svc.UpdateInfo(id, i, ct));

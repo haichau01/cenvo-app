@@ -42,3 +42,4 @@ export type DailyRevenue = Schemas['Cenvo.Modules.Cafe.Application.Reports.Daily
 export type TopItem = Schemas['Cenvo.Modules.Cafe.Application.Reports.TopItem']
 export type ShiftDto = Schemas['Cenvo.Modules.Cafe.Application.Shifts.ShiftDto']
 export type ConsumptionDto = Schemas['Cenvo.Modules.Inventory.Application.Stock.ConsumptionDto']
+export type ReceiptDto = Schemas['Cenvo.Modules.Cafe.Application.Orders.ReceiptDto']

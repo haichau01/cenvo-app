@@ -12,9 +12,10 @@ interface PosTopBarProps {
   shift: ShiftSummary | null | undefined
   onOpenShift: () => void
   onCloseShift: () => void
+  onReprint: () => void
 }
 
-export function PosTopBar({ view, onView, hasOrder, branchName, canCheckout, shift, onOpenShift, onCloseShift }: PosTopBarProps) {
+export function PosTopBar({ view, onView, hasOrder, branchName, canCheckout, shift, onOpenShift, onCloseShift, onReprint }: PosTopBarProps) {
   return (
     <header className="flex h-16 shrink-0 items-center gap-4 border-b border-line bg-surface px-6">
       <div role="tablist" aria-label="Chế độ xem" className="flex rounded-(--radius-control) bg-concrete p-1">
@@ -22,7 +23,8 @@ export function PosTopBar({ view, onView, hasOrder, branchName, canCheckout, shi
         <ViewTab active={view === 'menu'} onClick={() => onView('menu')} disabled={!hasOrder}>Thực đơn</ViewTab>
       </div>
       <span className="text-sm text-ink-muted">{branchName}</span>
-      <div className="ml-auto">
+      <div className="ml-auto flex items-center gap-3">
+        <Button variant="ghost" onClick={onReprint}>In lại</Button>
         {canCheckout && <ShiftStatus shift={shift} onOpen={onOpenShift} onClose={onCloseShift} />}
       </div>
     </header>

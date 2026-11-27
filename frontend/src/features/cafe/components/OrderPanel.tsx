@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/Button'
 import type { OrderDto } from '@/lib/api/types'
 import { formatTime } from '@/lib/format'
 import { useOrder } from '../api/orders'
+import { usePrintReceipt } from '../api/receipts'
 import { orderTitle, totalQuantity } from '../lib/order'
 import { CancelOrderDialog } from './CancelOrderDialog'
 import { OrderFooter } from './OrderFooter'
@@ -54,6 +55,7 @@ interface OpenOrderProps {
 
 function OpenOrder({ order, shiftOpen, onRequestShift, onFinished }: OpenOrderProps) {
   const [dialog, setDialog] = useState<'pay' | 'cancel' | null>(null)
+  const printReceipt = usePrintReceipt()
   const closeDialog = () => setDialog(null)
 
   function handlePay() {
@@ -75,7 +77,11 @@ function OpenOrder({ order, shiftOpen, onRequestShift, onFinished }: OpenOrderPr
             {order.code} · {formatTime(order.createdAt)} · {totalQuantity(order)} món
           </p>
         </div>
-        <Button variant="ghost" onClick={() => setDialog('cancel')} className="text-stop">Hủy</Button>
+        <div className="flex">
+          <Button variant="ghost" onClick={() => printReceipt.mutate(order.id)} busy={printReceipt.isPending}
+            disabled={order.lines.length === 0}>In tạm tính</Button>
+          <Button variant="ghost" onClick={() => setDialog('cancel')} className="text-stop">Hủy</Button>
+        </div>
       </header>
 
       <ul className="min-h-0 flex-1 overflow-y-auto">

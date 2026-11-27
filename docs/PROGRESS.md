@@ -55,6 +55,11 @@
   - Biểu đồ cột doanh thu theo ngày (SVG tự vẽ, không thêm thư viện; tooltip bằng chuột và bàn phím; có dạng bảng).
   - Món bán chạy, hình thức thanh toán, đối soát ca (chênh lệch tiền mặt), nguyên liệu đã dùng.
   - Định dạng ngày giờ gom về `lib/format` (`formatDate`, `formatDateTime`, `formatShortDateTime`).
+- **In hóa đơn (2026-11-27):** ✅
+  - Backend `GET /api/cafe/orders/{id}/receipt` (`ReceiptQueryService`; thông tin chi nhánh qua contract mới `IBranchDirectory`; tên thu ngân lấy từ ca) + 3 integration test (có cô lập chi nhánh).
+  - POS: "In tạm tính"; ô "In hóa đơn sau khi thanh toán" (nhớ theo máy, mặc định bật); "In lại" hóa đơn đã thanh toán hôm nay.
+  - `/in/hoa-don/:id`: xem trước, chọn khổ 80/58 mm theo máy, in.
+  - In trong trang (không dùng iframe, để không xoay refresh token); khổ giấy đo theo chiều cao thật, PDF kiểm được 80 × 121 mm, 1 trang.
 - **Việc tiếp theo:** phân hệ Rửa xe (backend + màn tiếp nhận/hàng chờ); POS còn thiếu chuyển/gộp bàn, giảm giá, in hóa đơn.
 - Còn treo: 2 cảnh báo EF về global filter (Unit ↔ ProductUnit, Branch ↔ UserBranch). Chưa ảnh hưởng hành vi.
 

@@ -42,7 +42,7 @@ public class ReadModelTests(ApiFixture api)
 
         var rows = (await manager.Get("/api/inventory/low-stock")).Arr();
 
-        Assert.All(rows, row => Assert.True(row!.Dec("quantity") < row.Dec("minStock")));
+        Assert.All(rows, row => Assert.True(row!.Dec("quantity") < row!.Dec("minStock")));
     }
 
     [Fact]

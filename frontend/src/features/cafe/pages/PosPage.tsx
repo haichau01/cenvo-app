@@ -17,6 +17,7 @@ import { MenuBoard } from '../components/MenuBoard'
 import { OpenShiftDialog } from '../components/OpenShiftDialog'
 import { OrderPanel } from '../components/OrderPanel'
 import { PosTopBar, type PosView } from '../components/PosTopBar'
+import { ReprintDialog } from '../components/ReprintDialog'
 import { TableMap } from '../components/TableMap'
 
 const ORDER_PARAM = 'hd'
@@ -39,6 +40,7 @@ function PosScreen({ user }: { user: UserIdentity }) {
   const [view, setView] = useState<PosView>(orderId ? 'menu' : 'tables')
   const [optionsItem, setOptionsItem] = useState<MenuItem | null>(null)
   const [shiftDialog, setShiftDialog] = useState<'open' | 'close' | null>(null)
+  const [reprinting, setReprinting] = useState(false)
   const cashier = canCheckout(user)
   const shift = useCurrentShift(cashier)
   const createOrder = useCreateOrder()
@@ -89,7 +91,7 @@ function PosScreen({ user }: { user: UserIdentity }) {
       <main className="flex min-h-0 flex-col">
         <PosTopBar view={view} onView={setView} hasOrder={orderId !== null} branchName={currentBranchName(user)}
           canCheckout={cashier} shift={shift.data} onOpenShift={() => setShiftDialog('open')}
-          onCloseShift={handleCloseShift} />
+          onCloseShift={handleCloseShift} onReprint={() => setReprinting(true)} />
         <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
           {view === 'tables'
             ? <TableMap selectedOrderId={orderId} onTable={handleTable} onOrder={selectOrder}
@@ -102,6 +104,7 @@ function PosScreen({ user }: { user: UserIdentity }) {
 
       <ItemOptionsDialog item={optionsItem} onClose={() => setOptionsItem(null)} onConfirm={handleOptionsConfirm} />
       <OpenShiftDialog open={shiftDialog === 'open'} onClose={() => setShiftDialog(null)} />
+      <ReprintDialog open={reprinting} onClose={() => setReprinting(false)} />
       <CloseShiftDialog shift={shiftDialog === 'close' ? (shift.data ?? null) : null} onClose={() => setShiftDialog(null)} />
     </div>
   )
