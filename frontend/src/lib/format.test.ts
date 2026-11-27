@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { formatDuration, formatTime, formatVnd, formatVndNumber, minutesSince } from './format'
+import { formatDate, formatDateTime, formatDuration, formatShortDateTime, formatTime, formatVnd, formatVndNumber, minutesSince } from './format'
 
 describe('format', () => {
   it('formats VND with dot separators and rounds to whole đồng', () => {
@@ -25,5 +25,15 @@ describe('format', () => {
   it('formats waiting time', () => {
     expect(formatDuration(12)).toBe('12 phút')
     expect(formatDuration(65)).toBe('1 giờ 05 phút')
+  })
+})
+
+describe('dates', () => {
+  const iso = '2026-11-26T07:05:00Z' // 14:05 in Vietnam
+  it('always uses dd/MM/yyyy with slashes, in Vietnam time', () => {
+    expect(formatDate(iso)).toBe('26/11/2026')
+    expect(formatDateTime(iso)).toBe('14:05 26/11/2026')
+    expect(formatShortDateTime(iso)).toBe('14:05 26/11')
+    expect(formatDate('2026-11-26T18:30:00Z')).toBe('27/11/2026')
   })
 })

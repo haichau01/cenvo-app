@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { documentDate, emptyDraft, lineAmount, toInput, validateDraft, vnDate, type DraftLine } from './documentForm'
+import { vnDate } from '@/lib/format'
+import { documentDate, emptyDraft, lineAmount, toInput, validateDraft, type DraftLine } from './documentForm'
 import { documentStatusView } from './status'
 
 const line = (over: Partial<DraftLine> = {}): DraftLine => ({

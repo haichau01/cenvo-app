@@ -1,4 +1,5 @@
 import type { ProductDto, StockDocumentDto, StockDocumentInput, StockDocumentType } from '@/lib/api/types'
+import { vnDate } from '@/lib/format'
 import { DOCUMENT_TYPES } from './documentTypes'
 
 /** One editable line. `key` is a client id so React keeps rows stable while editing. */
@@ -25,11 +26,6 @@ export interface DraftDocument {
   lines: DraftLine[]
 }
 
-const VN_DATE = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Ho_Chi_Minh' }) // en-CA formats as yyyy-MM-dd
-
-export function vnDate(iso: string | number | Date): string {
-  return VN_DATE.format(new Date(iso))
-}
 
 export function emptyDraft(type: StockDocumentType, warehouseId: string, today: string): DraftDocument {
   return { type, warehouseId, toWarehouseId: null, supplierId: null, date: today, note: '', lines: [] }

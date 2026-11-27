@@ -1,13 +1,13 @@
 import { useState } from 'react'
+import { vnDate } from '@/lib/format'
 import { Link } from 'react-router'
 import { Money } from '@/components/cenvo/Money'
 import { Dialog } from '@/components/ui/Dialog'
 import { controlClass } from '@/components/ui/fieldStyles'
 import type { BalanceDto, StockCardDto } from '@/lib/api/types'
-import { formatQuantity } from '@/lib/format'
+import { formatDate, formatQuantity } from '@/lib/format'
 import { useStockCard } from '../api/stock'
 import { DOCUMENT_TYPES } from '../lib/documentTypes'
-import { vnDate } from '../lib/documentForm'
 
 const DEFAULT_DAYS = 30
 const DAY_MS = 86_400_000
@@ -63,7 +63,7 @@ function StockCardTable({ card }: { card: StockCardDto }) {
         <SummaryRow label="Tồn đầu kỳ" balance={card.opening} />
         {card.rows.map((row, index) => (
           <tr key={`${row.documentId}-${index}`} className="h-10 border-b border-line">
-            <td className="px-3 tabular-nums">{new Date(row.date).toLocaleDateString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' })}</td>
+            <td className="px-3 tabular-nums">{formatDate(row.date)}</td>
             <td className="px-3">
               <Link to={`/kho/phieu/${row.documentId}`} className="font-medium hover:underline">{row.documentCode}</Link>
               <span className="text-ink-muted"> · {DOCUMENT_TYPES[row.documentType].title}{row.isReversal ? ' (đảo)' : ''}</span>
