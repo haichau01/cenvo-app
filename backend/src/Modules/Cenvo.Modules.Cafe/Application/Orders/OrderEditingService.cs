@@ -44,7 +44,7 @@ public class OrderEditingService(
     public async Task<OrderDto> UpdateLine(Guid orderId, Guid lineId, UpdateLineInput input, CancellationToken ct)
     {
         var order = await db.LoadOrder(orderId, ct);
-        order.UpdateLine(lineId, input.Quantity, input.Note, input.DiscountAmount);
+        order.UpdateLine(lineId, input.Quantity, input.Note);
         return await Save(order, ct);
     }
 
@@ -52,13 +52,6 @@ public class OrderEditingService(
     {
         var order = await db.LoadOrder(orderId, ct);
         order.RemoveLine(lineId, byManager: user.IsManager());
-        return await Save(order, ct);
-    }
-
-    public async Task<OrderDto> SetDiscount(Guid orderId, DiscountInput input, CancellationToken ct)
-    {
-        var order = await db.LoadOrder(orderId, ct);
-        order.ApplyDiscount(input.Amount, input.Percent);
         return await Save(order, ct);
     }
 

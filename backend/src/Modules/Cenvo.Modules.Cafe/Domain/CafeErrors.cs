@@ -9,6 +9,7 @@ public static class CafeErrors
     public const string QuantityMustBePositive = "Số lượng phải lớn hơn 0 — muốn bỏ món thì dùng Xóa món.";
     public const string InvalidDiscount = "Giảm giá không hợp lệ.";
     public const string InvalidDiscountPercent = "Phần trăm giảm giá phải từ 0 đến 100.";
+    public const string DiscountReasonRequired = "Nhập lý do giảm giá — lý do hiện trong báo cáo ca.";
     public const string ItemNotOnMenu = "Món không có trên menu hoặc đã ngừng bán.";
     public const string InvalidTopping = "Topping không hợp lệ.";
     public const string PreparingNeedsManager = "Món đang pha chế — cần quản lý để hủy.";
@@ -27,6 +28,9 @@ public static class CafeErrors
     public const string RecipeSelfReference = "Món không thể là nguyên liệu của chính nó.";
 
     public static string CustomerOwes(decimal amount) => $"Khách còn thiếu {amount:N0}đ.";
+
+    public static string DiscountNeedsManager(decimal cashierLimit) =>
+        $"Tổng giảm giá vượt {DiscountPolicy.CashierMaxPercent:0}% hóa đơn ({cashierLimit:N0}đ) — cần quản lý nhập tài khoản để duyệt.";
 
     public static string KitchenMoveNotAllowed(KitchenStatus from, KitchenStatus to) =>
         $"Không thể chuyển món từ “{KitchenLabels[from]}” sang “{KitchenLabels[to]}”. Chỉ được lùi một bước để sửa thao tác nhầm.";

@@ -7,3 +7,4 @@ global using Cenvo.Modules.Catalog.Domain;
 global using Cenvo.Modules.Inventory.Contracts;
 global using Cenvo.SharedKernel;
 global using Microsoft.EntityFrameworkCore;
+global using Cenvo.Modules.Organization.Contracts;

@@ -26,7 +26,7 @@ public class CurrentUser(IHttpContextAccessor http) : ICurrentUser
 
     public bool IsInRole(string role) => _runAs?.IsInRole(role) ?? Principal?.IsInRole(role) ?? false;
 
-    public string FullName => Principal?.FindFirstValue(CenvoClaims.FullName) ?? "";
+    public string FullName => _runAs != null ? _runAs.FullName : Principal?.FindFirstValue(CenvoClaims.FullName) ?? "";
 
     private static Guid? ParseGuid(string? value) => Guid.TryParse(value, out var id) ? id : null;
 }

@@ -8,4 +8,5 @@ public sealed record SystemUser(Guid? BranchId, bool IsAllBranches) : ICurrentUs
 
     public Guid? UserId => null;
     public bool IsInRole(string role) => role == Roles.Admin;
+    public string FullName => "Hệ thống";
 }

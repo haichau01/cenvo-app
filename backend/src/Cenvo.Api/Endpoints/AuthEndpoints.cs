@@ -13,7 +13,8 @@ public static class AuthEndpoints
         var auth = app.MapGroup("/api/auth").WithTags("Auth");
 
         auth.MapPost("/login", async (LoginRequest r, AuthService svc, JwtTokenService jwt, CancellationToken ct) =>
-            await Issue(await svc.Login(r.UserName.Trim().ToLowerInvariant(), r.Password, r.BranchId, ct), svc, jwt, ct));
+            await Issue(await svc.Login(r.UserName.Trim().ToLowerInvariant(), r.Password, r.BranchId, ct), svc, jwt, ct))
+            .RequireRateLimiting(RateLimits.Credentials);
 
         auth.MapPost("/refresh", async (RefreshRequest r, AuthService svc, JwtTokenService jwt, CancellationToken ct) =>
             await Issue(await svc.Refresh(r.RefreshToken, ct), svc, jwt, ct));

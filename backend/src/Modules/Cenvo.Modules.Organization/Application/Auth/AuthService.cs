@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Cenvo.Modules.Organization.Application.Auth;
 
-public class AuthService(AppDbContext db)
+public class AuthService(AppDbContext db) : IManagerApproval
 {
     private static readonly TimeSpan RefreshLifetime = TimeSpan.FromDays(14);
 
@@ -14,6 +14,18 @@ public class AuthService(AppDbContext db)
         if (user is not { IsActive: true } || !user.VerifyPassword(password))
             throw new BusinessException(OrganizationErrors.WrongCredentials);
         return await ToIdentity(user, branchId, ct);
+    }
+
+    public async Task<ManagerApproval> Approve(string userName, string password, Guid branchId, CancellationToken ct)
+    {
+        var normalized = userName.Trim().ToLowerInvariant();
+        var user = await FindUser(u => u.UserName == normalized, ct);
+        if (user is not { IsActive: true } || !user.VerifyPassword(password)) throw new BusinessException(OrganizationErrors.WrongCredentials);
+
+        var managesBranch = user.RoleNames.Contains(Roles.Admin)
+                            || (user.RoleNames.Contains(Roles.BranchManager) && user.Branches.Any(b => b.BranchId == branchId));
+        if (!managesBranch) throw new BusinessException(OrganizationErrors.NotBranchManager);
+        return new ManagerApproval(user.Id, user.FullName);
     }
 
     public async Task<UserIdentity> SwitchBranch(Guid userId, Guid branchId, CancellationToken ct)

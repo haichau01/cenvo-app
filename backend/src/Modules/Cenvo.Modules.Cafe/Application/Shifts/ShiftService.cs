@@ -9,7 +9,9 @@ public record ShiftDto(Guid Id, string Code, string CashierName, ShiftStatus Sta
 public record ShiftSummary(Guid Id, string Code, string CashierName, ShiftStatus Status, DateTime OpenedAt, DateTime? ClosedAt,
     decimal OpeningCash, int OrderCount, int CancelledCount, decimal Revenue, decimal Discount,
     Dictionary<PaymentMethod, decimal> ByMethod, decimal ExpectedCash, decimal? CountedCash, decimal? Difference, string? Note,
-    List<ShiftTakings> OtherTakings);
+    List<ShiftTakings> OtherTakings, List<ShiftDiscount> Discounts);
+
+public record ShiftDiscount(string OrderCode, decimal Amount, string Reasons, string? ByName, string? ApprovedByName);
 
 public class ShiftService(
     AppDbContext db,
@@ -88,20 +90,50 @@ public class ShiftService(
             CountedCash: shift.CountedCash,
             Difference: shift.CountedCash - expectedCash,
             Note: shift.Note,
-            OtherTakings: otherTakings);
+            OtherTakings: otherTakings,
+            Discounts: paid.Where(o => o.Discount > 0).Select(ToShiftDiscount).ToList());
     }
 
-    private record ShiftOrder(OrderStatus Status, decimal Total, decimal Discount, List<ShiftTakingsPayment> Payments);
+    /// <summary>Discounted bill in the shift report: who gave how much, why, and who approved it above the limit.</summary>
+    private static ShiftDiscount ToShiftDiscount(ShiftOrder order) => new(
+        OrderCode: order.Code,
+        Amount: order.Discount,
+        Reasons: string.Join("; ", order.Reasons.Distinct()),
+        ByName: order.DiscountByName,
+        ApprovedByName: order.DiscountApprovedByName);
+
+    private class ShiftOrder
+    {
+        public required string Code { get; init; }
+        public required OrderStatus Status { get; init; }
+        public required decimal Total { get; init; }
+        public required decimal Discount { get; init; }
+        public required string? OrderReason { get; init; }
+        public required List<string> LineReasons { get; init; }
+
+        /// <summary>Order-level reason + item reasons.</summary>
+        public IEnumerable<string> Reasons => LineReasons.Prepend(OrderReason ?? "").Where(reason => reason != "");
+        public required string? DiscountByName { get; init; }
+        public required string? DiscountApprovedByName { get; init; }
+        public required List<ShiftTakingsPayment> Payments { get; init; }
+    }
 
     /// <summary>Paid and cancelled orders of the shift (open orders are not settled yet).</summary>
     private Task<List<ShiftOrder>> ClosedOrders(Guid shiftId, CancellationToken ct) =>
         db.Set<CafeOrder>().AsNoTracking()
-            .Where(o => o.ShiftId == shiftId && o.Status != OrderStatus.Open)
-            .Select(o => new ShiftOrder(
-                o.Status,
-                o.Total,
-                o.DiscountAmount + o.Lines.Sum(l => l.DiscountAmount),
-                o.Payments.Select(p => new ShiftTakingsPayment(p.Method, p.Amount)).ToList()))
+            .Where(order => order.ShiftId == shiftId && order.Status != OrderStatus.Open)
+            .Select(order => new ShiftOrder
+            {
+                Code = order.Code,
+                Status = order.Status,
+                Total = order.Total,
+                Discount = order.DiscountAmount + order.Lines.Sum(line => line.DiscountAmount),
+                OrderReason = order.DiscountReason,
+                LineReasons = order.Lines.Where(line => line.DiscountReason != null).Select(line => line.DiscountReason!).ToList(),
+                DiscountByName = order.DiscountByName,
+                DiscountApprovedByName = order.DiscountApprovedByName,
+                Payments = order.Payments.Select(payment => new ShiftTakingsPayment(payment.Method, payment.Amount)).ToList(),
+            })
             .ToListAsync(ct);
 
     /// <summary>Takings of other sales sources (car wash...). Sequential: the sources share this scope's DbContext.</summary>

@@ -27,8 +27,11 @@ export function OrderFooter({ order, shiftOpen, onPay }: OrderFooterProps) {
       {order.discountAmount > 0 && (
         <dl className="flex flex-col gap-1 text-table">
           <SummaryRow label="Tạm tính" value={order.subtotal} />
-          <SummaryRow label="Giảm giá" value={-order.discountAmount} />
+          <SummaryRow label={`Giảm giá · ${order.discountReason ?? ''}`} value={-order.discountAmount} />
         </dl>
+      )}
+      {order.discountApprovedByName && (
+        <p className="text-caption text-ink-muted">Giảm giá vượt mức do {order.discountApprovedByName} duyệt</p>
       )}
       <div className="flex items-baseline justify-between">
         <span className="font-medium text-ink-muted">Tổng cộng</span>

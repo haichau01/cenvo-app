@@ -52,7 +52,11 @@ public static class CafeEndpoints
             svc.UpdateLine(id, lineId, i, ct));
         g.MapDelete("/{id:guid}/lines/{lineId:guid}", (Guid id, Guid lineId, OrderEditingService svc, CancellationToken ct) =>
             svc.RemoveLine(id, lineId, ct));
-        g.MapPut("/{id:guid}/discount", (Guid id, DiscountInput i, OrderEditingService svc, CancellationToken ct) => svc.SetDiscount(id, i, ct));
+        // Carries manager credentials when approving → limited like the login endpoint.
+        g.MapPut("/{id:guid}/discount", (Guid id, DiscountInput i, DiscountService svc, CancellationToken ct) => svc.DiscountOrder(id, i, ct))
+            .RequireRateLimiting(RateLimits.Credentials);
+        g.MapPut("/{id:guid}/lines/{lineId:guid}/discount", (Guid id, Guid lineId, LineDiscountInput i, DiscountService svc, CancellationToken ct) =>
+            svc.DiscountLine(id, lineId, i, ct)).RequireRateLimiting(RateLimits.Credentials);
 
         g.MapPost("/{id:guid}/move", (Guid id, MoveLinesInput i, TableTransferService svc, CancellationToken ct) => svc.Move(id, i, ct));
         g.MapPost("/{id:guid}/send", (Guid id, KitchenService svc, CancellationToken ct) => svc.Send(id, ct));

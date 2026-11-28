@@ -82,7 +82,7 @@ function withPendingLine(order: OrderDto, item: MenuItem, quantity: number): Ord
   const amount = item.price * quantity
   const line = {
     id: `${PENDING_LINE_PREFIX}${crypto.randomUUID()}`, productId: item.productId, name: item.name,
-    unitPrice: item.price, quantity, discountAmount: 0, amount, note: null, kitchenStatus: 'New' as const,
+    unitPrice: item.price, quantity, discountAmount: 0, discountReason: null, amount, note: null, kitchenStatus: 'New' as const,
     sentAt: null, toppings: [],
   }
   return { ...order, lines: [...order.lines, line], subtotal: order.subtotal + amount, total: order.total + amount }
@@ -94,10 +94,10 @@ interface LineVariables {
 }
 
 export const useUpdateLineQuantity = () =>
-  useOrderMutation(({ orderId, lineId, quantity, note, discountAmount }: LineVariables & {
-    quantity: number; note?: string | null; discountAmount: number
+  useOrderMutation(({ orderId, lineId, quantity, note }: LineVariables & {
+    quantity: number; note?: string | null
   }) => apiFetch<OrderDto>(`/api/cafe/orders/${orderId}/lines/${lineId}`, {
-    method: 'PUT', body: { quantity, note, discountAmount },
+    method: 'PUT', body: { quantity, note },
   }))
 
 export const useRemoveLine = () =>
@@ -114,3 +114,31 @@ export const usePayOrder = () =>
 export const useCancelOrder = () =>
   useOrderMutation(({ orderId, reason }: { orderId: string; reason: string }) =>
     apiFetch<OrderDto>(`/api/cafe/orders/${orderId}/cancel`, { method: 'POST', body: { reason } }), true)
+
+/** A manager typing their own account on this device to approve a discount above the cashier's limit. */
+export interface ManagerCredentials {
+  userName: string
+  password: string
+}
+
+interface DiscountVariables {
+  orderId: string
+  reason: string | null
+  approval: ManagerCredentials | null
+}
+
+export const useDiscountOrder = () =>
+  useOrderMutation(({ orderId, amount, percent, reason, approval }: DiscountVariables & { amount: number | null; percent: number | null }) =>
+    apiFetch<OrderDto>(`/api/cafe/orders/${orderId}/discount`, { method: 'PUT', body: { amount, percent, reason, approval } }), true)
+
+export const useDiscountLine = () =>
+  useOrderMutation(({ orderId, lineId, amount, reason, approval }: DiscountVariables & { lineId: string; amount: number }) =>
+    apiFetch<OrderDto>(`/api/cafe/orders/${orderId}/lines/${lineId}/discount`, { method: 'PUT', body: { amount, reason, approval } }), true)
+
+/**
+ * Move / merge / split: the chosen items (all = null) go to a table (an occupied one merges into its bill)
+ * or, with no table, to a new take-away bill. Returns the bill that received them.
+ */
+export const useMoveOrder = () =>
+  useOrderMutation(({ orderId, lineIds, toTableId }: { orderId: string; lineIds: string[] | null; toTableId: string | null }) =>
+    apiFetch<OrderDto>(`/api/cafe/orders/${orderId}/move`, { method: 'POST', body: { lineIds, toTableId, toOrderId: null } }), true)

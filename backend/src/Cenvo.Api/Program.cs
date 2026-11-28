@@ -62,6 +62,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
     };
 });
 builder.Services.AddAuthorization(o => o.AddCenvoPolicies());
+builder.Services.AddCenvoRateLimits(builder.Configuration.GetValue<int?>("RateLimits:CredentialAttemptsPerMinute"));
 
 // ---------- Web ----------
 builder.Services.ConfigureHttpJsonOptions(o => o.SerializerOptions.Converters.Add(new JsonStringEnumConverter()));
@@ -98,6 +99,7 @@ app.UseSwagger();
 app.UseSwaggerUI();
 app.UseCors();
 app.UseAuthentication();
+app.UseRateLimiter(); // after authentication: the limit is per signed-in user when there is one
 app.UseAuthorization();
 
 app.MapAuthEndpoints();
