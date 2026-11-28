@@ -8,4 +8,6 @@ public interface ICurrentUser
     /// <summary>Chain admin without a selected branch: sees every branch.</summary>
     bool IsAllBranches { get; }
     bool IsInRole(string role);
+    /// <summary>Display name, recorded on actions people answer for (discounts, approvals).</summary>
+    string FullName { get; }
 }

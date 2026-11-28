@@ -169,6 +169,44 @@ namespace Cenvo.Infrastructure.Persistence.Migrations
                         .HasColumnType("numeric(18,2)")
                         .HasColumnName("discount_amount");
 
+                    b.Property<Guid?>("DiscountApprovedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("discount_approved_by");
+
+                    b.Property<string>("DiscountApprovedByName")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("discount_approved_by_name");
+
+                    b.Property<decimal?>("DiscountApprovedGross")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)")
+                        .HasColumnName("discount_approved_gross");
+
+                    b.Property<decimal?>("DiscountApprovedTotal")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)")
+                        .HasColumnName("discount_approved_total");
+
+                    b.Property<Guid?>("DiscountBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("discount_by");
+
+                    b.Property<string>("DiscountByName")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("discount_by_name");
+
+                    b.Property<decimal?>("DiscountPercent")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)")
+                        .HasColumnName("discount_percent");
+
+                    b.Property<string>("DiscountReason")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("discount_reason");
+
                     b.Property<string>("Note")
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)")
@@ -262,6 +300,11 @@ namespace Cenvo.Infrastructure.Persistence.Migrations
                         .HasPrecision(18, 2)
                         .HasColumnType("numeric(18,2)")
                         .HasColumnName("discount_amount");
+
+                    b.Property<string>("DiscountReason")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("discount_reason");
 
                     b.Property<int>("KitchenStatus")
                         .HasColumnType("integer")

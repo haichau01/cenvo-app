@@ -100,7 +100,7 @@ function PosScreen({ user }: { user: UserIdentity }) {
         </div>
       </main>
       <OrderPanel orderId={orderId} shiftOpen={cashier && shift.data != null} onRequestShift={handleRequestShift}
-        onFinished={() => selectOrder(null)} />
+        onFinished={() => selectOrder(null)} onSelectOrder={selectOrder} />
 
       <ItemOptionsDialog item={optionsItem} onClose={() => setOptionsItem(null)} onConfirm={handleOptionsConfirm} />
       <OpenShiftDialog open={shiftDialog === 'open'} onClose={() => setShiftDialog(null)} />

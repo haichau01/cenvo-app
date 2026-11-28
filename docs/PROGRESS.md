@@ -81,7 +81,28 @@
     - `npm test` 54/54, lint và build sạch.
     - Playwright + Edge 1180×820 / 1440×900: tiếp nhận → ảnh → máy thứ hai bắt đầu và xong → máy thu ngân thấy realtime → thu tiền; không có lỗi console.
   - Còn lại: in phiếu rửa xe; nhắc khách quay lại; báo cáo doanh thu rửa xe; Payroll đọc hoa hồng (event đã mang sẵn dữ liệu).
-- **Việc tiếp theo:** commit phân hệ Rửa xe (chạy `/cenvo-security` + `/cenvo-review` trước); POS còn thiếu chuyển/gộp bàn, giảm giá.
+- Rửa xe đã commit (`766e1b3`, nhánh `feat/cafe-pos`).
+- **POS: giảm giá + chuyển/gộp/tách bàn (2026-11-28, nhánh `feat/pos-table-discount`):** ✅ chưa commit.
+  - Quy tắc người dùng chốt:
+    - Thu ngân tự giảm tối đa 10% hóa đơn; tổng giảm tính cả giảm theo món và giảm cả hóa đơn.
+    - Vượt 10% thì quản lý nhập tài khoản của mình ngay trên máy thu ngân (`IManagerApproval`). Quản lý đang đăng nhập thì tự duyệt.
+    - Bắt buộc lý do; giảm được cả hóa đơn lẫn từng món.
+  - Duyệt chỉ phủ khoản giảm bằng hoặc nhỏ hơn lúc duyệt: giảm thêm thì phải duyệt lại. Lúc thanh toán kiểm lại một lần nữa (phòng trường hợp bỏ món hoặc gộp bàn làm vượt mức).
+  - Giảm theo % lưu `DiscountPercent`, nên tự tính lại khi thêm, bỏ hoặc tách món. Trước đây % bị lưu thành số tiền cố định: tách món thì 20% thành 33%.
+  - Ghi người giảm và người duyệt trên hóa đơn; `ShiftSummary.Discounts` liệt kê từng hóa đơn có giảm giá (lý do, người duyệt), hiện ở dialog đóng ca.
+  - Rate limit `Credentials` (10 lần/phút theo người dùng, hoặc theo IP khi chưa đăng nhập) cho đăng nhập và giảm giá. Test nâng giới hạn qua `RateLimits:CredentialAttemptsPerMinute`.
+  - API đổi:
+    - `PUT /orders/{id}/lines/{lineId}` không còn nhận `discountAmount`.
+    - Thêm `PUT /orders/{id}/lines/{lineId}/discount`.
+    - Giảm giá được tách sang `DiscountService`.
+  - Migration `AddDiscountAudit`: chỉ thêm cột nullable.
+  - Frontend:
+    - `DiscountDialog`: %/số tiền, lý do nhanh, ô quản lý duyệt chỉ hiện khi vượt mức.
+    - `MoveDialog`: chọn món, chọn bàn trống (chuyển hoặc tách), bàn có khách (gộp), hoặc hóa đơn mang đi mới.
+  - Kiểm chứng:
+    - `dotnet test` 92/92; `npm test` 58/58; lint và build sạch.
+    - Playwright + Edge 1180×820: sai mật khẩu quản lý bị chặn; quản lý duyệt 20%; giảm theo món phải duyệt lại; tách món sang mang đi.
+- **Việc tiếp theo:** commit nhánh `feat/pos-table-discount` (chạy `/cenvo-security` + `/cenvo-review` trước); sau đó in phiếu rửa xe, báo cáo doanh thu rửa xe.
 - Còn treo: 2 cảnh báo EF về global filter (Unit ↔ ProductUnit, Branch ↔ UserBranch). Chưa ảnh hưởng hành vi.
 
 > Phần dưới là nhật ký quá trình refactor, giữ lại để tham khảo.

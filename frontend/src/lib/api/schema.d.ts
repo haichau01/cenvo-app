@@ -765,6 +765,48 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/cafe/orders/{id}/lines/{lineId}/discount": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                    lineId: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["Cenvo.Modules.Cafe.Application.Orders.LineDiscountInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Cenvo.Modules.Cafe.Application.Orders.OrderDto"];
+                    };
+                };
+            };
+        };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/cafe/orders/{id}/move": {
         parameters: {
             query?: never;
@@ -3732,6 +3774,14 @@ export interface components {
             amount?: number | null;
             /** Format: double */
             percent?: number | null;
+            reason?: string | null;
+            approval?: components["schemas"]["Cenvo.Modules.Cafe.Application.Orders.ManagerCredentials"];
+        };
+        "Cenvo.Modules.Cafe.Application.Orders.LineDiscountInput": {
+            /** Format: double */
+            amount: number;
+            reason?: string | null;
+            approval?: components["schemas"]["Cenvo.Modules.Cafe.Application.Orders.ManagerCredentials"];
         };
         "Cenvo.Modules.Cafe.Application.Orders.LineDto": {
             /** Format: uuid */
@@ -3745,6 +3795,7 @@ export interface components {
             quantity: number;
             /** Format: double */
             discountAmount: number;
+            discountReason?: string | null;
             /** Format: double */
             amount: number;
             note?: string | null;
@@ -3752,6 +3803,10 @@ export interface components {
             /** Format: date-time */
             sentAt?: string | null;
             toppings: components["schemas"]["Cenvo.Modules.Cafe.Application.Orders.ToppingDto"][];
+        };
+        "Cenvo.Modules.Cafe.Application.Orders.ManagerCredentials": {
+            userName: string;
+            password: string;
         };
         "Cenvo.Modules.Cafe.Application.Orders.MoveLinesInput": {
             lineIds?: string[] | null;
@@ -3789,6 +3844,10 @@ export interface components {
             shiftCode?: string | null;
             lines: components["schemas"]["Cenvo.Modules.Cafe.Application.Orders.LineDto"][];
             payments: components["schemas"]["Cenvo.Modules.Cafe.Application.Orders.PaymentDto"][];
+            discountReason?: string | null;
+            discountApprovedByName?: string | null;
+            /** Format: double */
+            cashierDiscountLimit: number;
         };
         "Cenvo.Modules.Cafe.Application.Orders.OrderInfoInput": {
             customerName?: string | null;
@@ -3827,8 +3886,6 @@ export interface components {
             /** Format: double */
             quantity: number;
             note?: string | null;
-            /** Format: double */
-            discountAmount: number;
         };
         "Cenvo.Modules.Cafe.Application.Reports.DailyRevenue": {
             /** Format: date */
@@ -3976,6 +4033,14 @@ export interface components {
             /** Format: double */
             openingCash: number;
         };
+        "Cenvo.Modules.Cafe.Application.Shifts.ShiftDiscount": {
+            orderCode: string;
+            /** Format: double */
+            amount: number;
+            reasons: string;
+            byName?: string | null;
+            approvedByName?: string | null;
+        };
         "Cenvo.Modules.Cafe.Application.Shifts.ShiftDto": {
             /** Format: uuid */
             id: string;
@@ -4029,6 +4094,7 @@ export interface components {
             difference?: number | null;
             note?: string | null;
             otherTakings: components["schemas"]["Cenvo.Modules.Cafe.Contracts.ShiftTakings"][];
+            discounts: components["schemas"]["Cenvo.Modules.Cafe.Application.Shifts.ShiftDiscount"][];
         };
         "Cenvo.Modules.Cafe.Contracts.ShiftTakings": {
             source: string;

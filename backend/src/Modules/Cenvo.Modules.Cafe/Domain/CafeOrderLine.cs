@@ -10,6 +10,8 @@ public class CafeOrderLine
     public decimal UnitPrice { get; set; }
     [Precision(18, 3)] public decimal Quantity { get; set; }
     public decimal DiscountAmount { get; set; }
+    /// <summary>Why this item was discounted (e.g. "Món làm lỗi") — shown in the shift report.</summary>
+    public string? DiscountReason { get; set; }
     public decimal Amount { get; set; }
     public string? Note { get; set; }
     public KitchenStatus KitchenStatus { get; private set; }
@@ -44,9 +46,19 @@ public class CafeOrderLine
     public IEnumerable<SoldItem> SoldItems() =>
         Toppings.Select(t => new SoldItem(t.ProductId, t.Quantity * Quantity)).Prepend(new SoldItem(ProductId, Quantity));
 
+    /// <summary>Price before the line discount: (item + toppings) × quantity.</summary>
+    public decimal GrossAmount => (UnitPrice + Toppings.Sum(t => t.UnitPrice * t.Quantity)) * Quantity;
+
+    internal void SetDiscount(decimal amount, string? reason)
+    {
+        DiscountAmount = amount;
+        DiscountReason = amount > 0 ? reason : null;
+        Recalculate();
+    }
+
     public void Recalculate()
     {
-        var gross = (UnitPrice + Toppings.Sum(t => t.UnitPrice * t.Quantity)) * Quantity;
+        var gross = GrossAmount;
         DiscountAmount = Math.Clamp(DiscountAmount, 0, gross);
         Amount = gross - DiscountAmount;
     }

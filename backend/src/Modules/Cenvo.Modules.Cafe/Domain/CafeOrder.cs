@@ -18,6 +18,18 @@ public class CafeOrder : BaseEntity, IBranchScoped
     public decimal Subtotal { get; set; }
     /// <summary>Order-level discount (as an amount of money).</summary>
     public decimal DiscountAmount { get; set; }
+    /// <summary>Set when the order discount was given as a percentage: it follows the subtotal when items are added, removed or split off.</summary>
+    public decimal? DiscountPercent { get; set; }
+    public string? DiscountReason { get; set; }
+    /// <summary>Who last changed a discount on this order.</summary>
+    public Guid? DiscountBy { get; set; }
+    public string? DiscountByName { get; set; }
+    /// <summary>Manager who approved the discounts above the cashier's limit (null = within the limit).</summary>
+    public Guid? DiscountApprovedBy { get; set; }
+    public string? DiscountApprovedByName { get; set; }
+    /// <summary>Gross and total discount the manager saw when approving: the approval covers that share of the bill.</summary>
+    public decimal? DiscountApprovedGross { get; set; }
+    public decimal? DiscountApprovedTotal { get; set; }
     public decimal Total { get; set; }
     public decimal CashReceived { get; set; }
     public decimal ChangeAmount { get; set; }
@@ -51,15 +63,13 @@ public class CafeOrder : BaseEntity, IBranchScoped
         Recalculate();
     }
 
-    public void UpdateLine(Guid lineId, decimal quantity, string? note, decimal discountAmount)
+    public void UpdateLine(Guid lineId, decimal quantity, string? note)
     {
         EnsureOpen();
         EnsurePositive(quantity);
-        if (discountAmount < 0) throw new BusinessException(CafeErrors.InvalidDiscount);
         var line = FindLine(lineId);
         line.Quantity = quantity;
         line.Note = note;
-        line.DiscountAmount = discountAmount;
         Recalculate();
     }
 
@@ -72,14 +82,72 @@ public class CafeOrder : BaseEntity, IBranchScoped
         Recalculate();
     }
 
-    public void ApplyDiscount(decimal? amount, decimal? percent)
+    // ---------------- Discounts ----------------
+    /// <summary>Whole-order discount by amount or percent of the subtotal. A reason is required; above the cashier's limit a manager must approve.</summary>
+    public void ApplyDiscount(decimal? amount, decimal? percent, string? reason, Guid? byUserId, string byName, DiscountApproval? approval)
     {
         EnsureOpen();
         if (percent is < 0 or > 100) throw new BusinessException(CafeErrors.InvalidDiscountPercent);
+        if (amount < 0) throw new BusinessException(CafeErrors.InvalidDiscount);
         Recalculate();
-        DiscountAmount = percent != null ? Math.Round(Subtotal * percent.Value / 100, 0) : Math.Max(0, amount ?? 0);
+        DiscountPercent = percent > 0 ? percent : null;
+        DiscountAmount = percent != null ? DiscountPolicy.PercentOf(Subtotal, percent.Value) : amount ?? 0;
+        DiscountReason = DiscountAmount > 0 ? Clean(reason) : null;
         Recalculate();
+        RecordDiscount(DiscountAmount, reason, byUserId, byName, approval);
     }
+
+    /// <summary>Discount on one item (e.g. a drink made wrong). Same rules as the order discount.</summary>
+    public void DiscountLine(Guid lineId, decimal amount, string? reason, Guid? byUserId, string byName, DiscountApproval? approval)
+    {
+        EnsureOpen();
+        if (amount < 0) throw new BusinessException(CafeErrors.InvalidDiscount);
+        FindLine(lineId).SetDiscount(amount, Clean(reason));
+        Recalculate();
+        RecordDiscount(amount, reason, byUserId, byName, approval);
+    }
+
+    /// <summary>Total of every discount on the order (order-level + items).</summary>
+    public decimal TotalDiscount => DiscountAmount + Lines.Sum(l => l.DiscountAmount);
+
+    /// <summary>Price of every item before any discount.</summary>
+    public decimal GrossAmount => Lines.Sum(l => l.GrossAmount);
+
+    /// <summary>Above the cashier's limit with no manager approval (checked again at payment).</summary>
+    public bool DiscountNeedsApproval => DiscountPolicy.NeedsManager(GrossAmount, TotalDiscount) && !ApprovalCoversDiscount;
+
+    private bool ApprovalCoversDiscount => DiscountApprovedBy != null
+        && DiscountPolicy.WithinApproved(GrossAmount, TotalDiscount, DiscountApprovedGross!.Value, DiscountApprovedTotal!.Value);
+
+    /// <summary>
+    /// Every discount change re-checks the whole order against the cashier's limit: an earlier approval does not
+    /// cover a bigger share of the bill given later (or left after removing items), but still covers a smaller one.
+    /// </summary>
+    private void RecordDiscount(decimal amount, string? reason, Guid? byUserId, string byName, DiscountApproval? approval)
+    {
+        if (amount > 0 && string.IsNullOrWhiteSpace(reason)) throw new BusinessException(CafeErrors.DiscountReasonRequired);
+        DiscountBy = byUserId;
+        DiscountByName = byName;
+
+        if (!DiscountPolicy.NeedsManager(GrossAmount, TotalDiscount))
+        {
+            SetApprover(null);
+            return;
+        }
+        if (approval != null) SetApprover(approval);
+        else if (!ApprovalCoversDiscount)
+            throw new BusinessException(CafeErrors.DiscountNeedsManager(DiscountPolicy.CashierLimit(GrossAmount)));
+    }
+
+    private void SetApprover(DiscountApproval? approval)
+    {
+        DiscountApprovedBy = approval?.ManagerId;
+        DiscountApprovedByName = approval?.ManagerName;
+        DiscountApprovedGross = approval == null ? null : GrossAmount;
+        DiscountApprovedTotal = approval == null ? null : TotalDiscount;
+    }
+
+    private static string? Clean(string? text) => string.IsNullOrWhiteSpace(text) ? null : text.Trim();
 
     public void UpdateInfo(string? customerName, string? note)
     {
@@ -138,6 +206,8 @@ public class CafeOrder : BaseEntity, IBranchScoped
     {
         EnsureOpen();
         if (Lines.Count == 0) throw new BusinessException(CafeErrors.EmptyOrder);
+        // Items removed or merged after a discount can push it over the limit without anyone approving.
+        if (DiscountNeedsApproval) throw new BusinessException(CafeErrors.DiscountNeedsManager(DiscountPolicy.CashierLimit(GrossAmount)));
         Recalculate();
 
         var result = PaymentCalculator.Calculate(Total, tendered);
@@ -178,6 +248,7 @@ public class CafeOrder : BaseEntity, IBranchScoped
     {
         foreach (var line in Lines) line.Recalculate();
         Subtotal = Lines.Sum(l => l.Amount);
+        if (DiscountPercent != null) DiscountAmount = DiscountPolicy.PercentOf(Subtotal, DiscountPercent.Value);
         DiscountAmount = Math.Min(DiscountAmount, Subtotal);
         Total = Subtotal - DiscountAmount;
     }

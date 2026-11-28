@@ -1,6 +1,7 @@
 import { memo } from 'react'
 import { Money } from '@/components/cenvo/Money'
 import { QuantityStepper } from '@/components/ui/QuantityStepper'
+import { Button } from '@/components/ui/Button'
 import type { OrderLine } from '@/lib/api/types'
 import { PENDING_LINE_PREFIX, useRemoveLine, useUpdateLineQuantity } from '../api/orders'
 import { kitchenStatusView } from '../lib/order'
@@ -8,16 +9,17 @@ import { kitchenStatusView } from '../lib/order'
 interface OrderLineRowProps {
   orderId: string
   line: OrderLine
+  onDiscount: (line: OrderLine) => void
 }
 
-export const OrderLineRow = memo(function OrderLineRow({ orderId, line }: OrderLineRowProps) {
+export const OrderLineRow = memo(function OrderLineRow({ orderId, line, onDiscount }: OrderLineRowProps) {
   const update = useUpdateLineQuantity()
   const remove = useRemoveLine()
   const pending = line.id.startsWith(PENDING_LINE_PREFIX) || update.isPending || remove.isPending
 
   function handleQuantity(quantity: number) {
     if (quantity <= 0) remove.mutate({ orderId, lineId: line.id })
-    else update.mutate({ orderId, lineId: line.id, quantity, note: line.note, discountAmount: line.discountAmount })
+    else update.mutate({ orderId, lineId: line.id, quantity, note: line.note })
   }
 
   return (
@@ -31,6 +33,8 @@ export const OrderLineRow = memo(function OrderLineRow({ orderId, line }: OrderL
       </div>
       <div className="flex items-center justify-between gap-3">
         <KitchenBadge line={line} />
+        <Button variant="ghost" className="ml-auto" disabled={pending} onClick={() => onDiscount(line)}
+          aria-label={`Giảm giá ${line.name}`}>Giảm</Button>
         <QuantityStepper value={line.quantity} onChange={handleQuantity} label={line.name} disabled={pending} />
       </div>
     </li>
@@ -43,6 +47,9 @@ function LineDetails({ line }: { line: OrderLine }) {
     <>
       {toppings && <p className="text-caption text-ink-muted">+ {toppings}</p>}
       {line.note && <p className="text-caption text-ink-muted italic">“{line.note}”</p>}
+      {line.discountAmount > 0 && (
+        <p className="text-caption text-ink-muted">Giảm <Money value={line.discountAmount} /> · {line.discountReason}</p>
+      )}
     </>
   )
 }

@@ -56,6 +56,7 @@ function CloseShiftForm({ shift, onDone }: { shift: ShiftSummary; onDone: () => 
         <Row label="Chuyển khoản" value={<Money value={shift.byMethod.Transfer ?? 0} />} />
         <Row label="Thẻ" value={<Money value={shift.byMethod.Card ?? 0} />} />
       </dl>
+      {shift.discounts.length > 0 && <ShiftDiscounts discounts={shift.discounts} />}
       <p className="text-ink-muted">Đếm toàn bộ tiền mặt trong két (kể cả tiền đầu ca) rồi nhập vào. Hệ thống báo lệch sau khi đóng ca.</p>
       <MoneyField label="Tiền mặt đếm được" value={countedCash} onChange={setCountedCash} autoFocus />
       <label className="flex flex-col gap-1.5">
@@ -82,4 +83,25 @@ function Row({ label, value }: { label: string; value: React.ReactNode }) {
 function differenceText(difference: number): string {
   if (difference === 0) return 'Khớp tiền'
   return difference > 0 ? `Dư ${formatVnd(difference)}` : `Thiếu ${formatVnd(-difference)}`
+}
+
+/** Every discounted bill of the shift with its reason and approver — reviewed before closing. */
+function ShiftDiscounts({ discounts }: { discounts: ShiftSummary['discounts'] }) {
+  return (
+    <section aria-label="Giảm giá trong ca" className="flex flex-col gap-1 text-table">
+      <h3 className="font-semibold">Giảm giá trong ca</h3>
+      <ul className="divide-y divide-line">
+        {discounts.map((discount) => (
+          <li key={discount.orderCode} className="flex gap-3 py-1.5">
+            <span className="tabular-nums text-ink-muted">{discount.orderCode}</span>
+            <span className="flex-1">
+              {discount.reasons}
+              {discount.approvedByName && <span className="text-ink-muted"> · duyệt: {discount.approvedByName}</span>}
+            </span>
+            <Money value={-discount.amount} />
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
 }
