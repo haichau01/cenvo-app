@@ -7,17 +7,32 @@ public class AreaTableService(AppDbContext db)
     {
         var areas = await db.Set<Area>().AsNoTracking().OrderBy(a => a.SortOrder).ThenBy(a => a.Name).ToListAsync(ct);
         var tables = await db.Set<DiningTable>().AsNoTracking().OrderBy(t => t.SortOrder).ThenBy(t => t.Name).ToListAsync(ct);
+        var openOrderByTable = await OpenOrderByTable(ct);
+
+        TableDto ToDto(DiningTable table)
+        {
+            var order = openOrderByTable.GetValueOrDefault(table.Id);
+            return new TableDto(Id: table.Id, AreaId: table.AreaId, Name: table.Name, Seats: table.Seats,
+                SortOrder: table.SortOrder, OpenOrderId: order?.Id, OpenOrderCode: order?.Code,
+                OpenOrderTotal: order?.Total, OpenedAt: order?.CreatedAt);
+        }
+
+        return areas
+            .Select(area => new AreaDto(area.Id, area.Name, area.SortOrder,
+                Tables: tables.Where(t => t.AreaId == area.Id).Select(ToDto).ToList()))
+            .ToList();
+    }
+
+    private record OpenOrder(Guid Id, string Code, Guid TableId, decimal Total, DateTime CreatedAt);
+
+    /// <summary>The open order on each table (the oldest one, should a table ever have two).</summary>
+    private async Task<Dictionary<Guid, OpenOrder>> OpenOrderByTable(CancellationToken ct)
+    {
         var openOrders = await db.Set<CafeOrder>().AsNoTracking()
             .Where(o => o.Status == OrderStatus.Open && o.TableId != null)
-            .Select(o => new { o.Id, o.Code, TableId = o.TableId!.Value, o.Total, o.CreatedAt })
+            .Select(o => new OpenOrder(o.Id, o.Code, o.TableId!.Value, o.Total, o.CreatedAt))
             .ToListAsync(ct);
-        var orderByTable = openOrders.GroupBy(o => o.TableId).ToDictionary(g => g.Key, g => g.MinBy(o => o.CreatedAt)!);
-
-        return areas.Select(a => new AreaDto(a.Id, a.Name, a.SortOrder, tables.Where(t => t.AreaId == a.Id).Select(t =>
-        {
-            var order = orderByTable.GetValueOrDefault(t.Id);
-            return new TableDto(t.Id, t.AreaId, t.Name, t.Seats, t.SortOrder, order?.Id, order?.Code, order?.Total, order?.CreatedAt);
-        }).ToList())).ToList();
+        return openOrders.GroupBy(o => o.TableId).ToDictionary(g => g.Key, g => g.MinBy(o => o.CreatedAt)!);
     }
 
     public async Task<Guid> SaveArea(Guid? id, AreaInput input, CancellationToken ct)

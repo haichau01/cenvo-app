@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { ApiError, apiFetch } from '@/lib/api/client'
 import type { LoginRequest, TokenResponse } from '@/lib/api/types'
 import { sessionStore } from '@/lib/auth/session'
+import { stopRealtime } from '@/lib/realtime'
 import { hasNoBranch } from '../lib/branches'
 
 const NO_BRANCH = 'Tài khoản chưa được gán chi nhánh nào. Nhờ quản lý gán chi nhánh rồi đăng nhập lại.'
@@ -18,6 +19,7 @@ export function useLogin() {
       return token
     },
     onSuccess: (token) => sessionStore.save(token),
+    meta: { inlineError: true },
   })
 }
 
@@ -28,9 +30,11 @@ export function useSwitchBranch() {
       apiFetch<TokenResponse>('/api/auth/switch-branch', { method: 'POST', body: { branchId } }),
     onSuccess: (token) => {
       sessionStore.save(token)
+      void stopRealtime() // reconnect with the new token → joins the new branch group
       // Cached data belongs to the previous branch — drop all of it.
       queryClient.clear()
     },
+    meta: { inlineError: true },
   })
 }
 
@@ -42,6 +46,7 @@ export function useLogout() {
       if (refreshToken) await revoke(refreshToken)
     },
     onSettled: () => {
+      void stopRealtime()
       sessionStore.clear()
       queryClient.clear()
     },

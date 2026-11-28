@@ -30,7 +30,7 @@ public static class CafeEndpoints
         g.MapPut("/tables/{id:guid}", (Guid id, TableInput i, AreaTableService svc, CancellationToken ct) => svc.SaveTable(id, i, ct)).RequireAuthorization(Policies.Managers);
         g.MapDelete("/tables/{id:guid}", (Guid id, AreaTableService svc, CancellationToken ct) => svc.DeleteTable(id, ct)).RequireAuthorization(Policies.Managers);
 
-        g.MapGet("/menu", (bool? all, MenuService svc, CancellationToken ct) => svc.Menu(posOnly: all != true, ct));
+        g.MapGet("/menu", (bool? all, MenuQueryService svc, CancellationToken ct) => all == true ? svc.FullMenu(ct) : svc.PosMenu(ct));
         g.MapPut("/menu/{productId:guid}", (Guid productId, MenuSettingsInput i, MenuService svc, CancellationToken ct) =>
             svc.SaveSettings(productId, i, ct)).RequireAuthorization(Policies.Managers);
         g.MapGet("/menu/{productId:guid}/recipe", (Guid productId, RecipeService svc, CancellationToken ct) => svc.Get(productId, ct));
@@ -43,6 +43,7 @@ public static class CafeEndpoints
         g.MapGet("/open", (OrderQueryService svc, CancellationToken ct) => svc.OpenOrders(ct));
         g.MapGet("/", ([AsParameters] OrderHistoryFilter f, OrderQueryService svc, CancellationToken ct) => svc.History(f, ct));
         g.MapGet("/{id:guid}", (Guid id, OrderQueryService svc, CancellationToken ct) => svc.Get(id, ct));
+        g.MapGet("/{id:guid}/receipt", (Guid id, ReceiptQueryService svc, CancellationToken ct) => svc.Get(id, ct));
 
         g.MapPost("/", (CreateOrderInput i, OrderEditingService svc, CancellationToken ct) => svc.Create(i, ct));
         g.MapPut("/{id:guid}", (Guid id, OrderInfoInput i, OrderEditingService svc, CancellationToken ct) => svc.UpdateInfo(id, i, ct));

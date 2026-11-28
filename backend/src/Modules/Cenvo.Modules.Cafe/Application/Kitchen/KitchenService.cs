@@ -26,34 +26,73 @@ public class KitchenService(AppDbContext db, OrderQueryService queries, IKitchen
 
     public async Task<List<KitchenTicket>> Queue(CancellationToken ct)
     {
-        var since = DateTime.UtcNow - Lookback;
-        var rows = await db.Set<CafeOrder>().AsNoTracking()
-            .Where(o => o.CreatedAt >= since && o.Status != OrderStatus.Cancelled)
-            .SelectMany(o => o.Lines.Where(l => InQueue.Contains(l.KitchenStatus)).Select(l => new
-            {
-                o.Id, o.Code, o.TableId, o.Type, LineId = l.Id, l.Name, l.Quantity, l.Note, l.KitchenStatus, l.SentAt,
-                Toppings = l.Toppings.Select(t => new { t.Name, t.Quantity }).ToList(),
-            }))
-            .OrderBy(x => x.SentAt).ToListAsync(ct);
-
-        var tableIds = rows.Where(r => r.TableId != null).Select(r => r.TableId!.Value).Distinct().ToList();
-        var tableNames = await db.Set<DiningTable>().Where(t => tableIds.Contains(t.Id)).ToDictionaryAsync(t => t.Id, t => t.Name, ct);
-
-        return rows.Select(r => new KitchenTicket(r.Id, r.Code, r.TableId == null ? null : tableNames.GetValueOrDefault(r.TableId.Value),
-            r.Type, r.LineId, r.Name, r.Quantity, r.Note,
-            r.Toppings.Select(t => t.Quantity == 1 ? t.Name : $"{t.Name} x{t.Quantity:0.##}").ToList(),
-            r.KitchenStatus, r.SentAt)).ToList();
+        var lines = await QueuedLines(ct);
+        var tableNames = await TableNames(lines.Select(l => l.TableId), ct);
+        return lines.Select(line => line.ToTicket(TableNameOf(line.TableId, tableNames))).ToList();
     }
 
     public async Task SetStatus(Guid lineId, KitchenStatus status, CancellationToken ct)
     {
-        if (status == KitchenStatus.New) throw new BusinessException(CafeErrors.InvalidKitchenStatus);
-        // Go through CafeOrder so the global filter blocks items from other branches.
+        // Load through CafeOrder so the branch filter blocks items of other branches.
         var order = await db.Set<CafeOrder>().Include(o => o.Lines)
                         .FirstOrDefaultAsync(o => o.Lines.Any(l => l.Id == lineId), ct)
                     ?? throw new NotFoundException("dòng món", lineId);
-        order.Lines.Single(l => l.Id == lineId).KitchenStatus = status;
+        order.ChangeKitchenStatus(lineId, status);
         await db.SaveChangesAsync(ct);
         await notifier.OrdersChanged(order.BranchId, ct);
+    }
+
+    /// <summary>Items of recent, non-cancelled orders that the kitchen still has to handle, oldest first.</summary>
+    private Task<List<QueuedLine>> QueuedLines(CancellationToken ct)
+    {
+        var since = DateTime.UtcNow - Lookback;
+        return db.Set<CafeOrder>().AsNoTracking()
+            .Where(o => o.CreatedAt >= since && o.Status != OrderStatus.Cancelled)
+            .SelectMany(o => o.Lines
+                .Where(l => InQueue.Contains(l.KitchenStatus))
+                .Select(l => new QueuedLine
+                {
+                    OrderId = o.Id, OrderCode = o.Code, TableId = o.TableId, Type = o.Type,
+                    LineId = l.Id, Name = l.Name, Quantity = l.Quantity, Note = l.Note,
+                    Status = l.KitchenStatus, SentAt = l.SentAt,
+                    Toppings = l.Toppings.Select(t => new QueuedTopping(t.Name, t.Quantity)).ToList(),
+                }))
+            .OrderBy(l => l.SentAt)
+            .ToListAsync(ct);
+    }
+
+    /// <summary>Separate lookup by id — a join here would need IgnoreQueryFilters, which would drop the branch filter.</summary>
+    private Task<Dictionary<Guid, string>> TableNames(IEnumerable<Guid?> tableIds, CancellationToken ct)
+    {
+        var ids = tableIds.OfType<Guid>().Distinct().ToList();
+        return db.Set<DiningTable>().Where(t => ids.Contains(t.Id)).ToDictionaryAsync(t => t.Id, t => t.Name, ct);
+    }
+
+    private static string? TableNameOf(Guid? tableId, Dictionary<Guid, string> names) =>
+        tableId is { } id ? names.GetValueOrDefault(id) : null;
+
+    private record QueuedTopping(string Name, decimal Quantity)
+    {
+        /// <summary>"Trân châu" for one portion, "Trân châu x2" otherwise.</summary>
+        public string Label => Quantity == 1 ? Name : $"{Name} x{Quantity:0.##}";
+    }
+
+    private class QueuedLine
+    {
+        public Guid OrderId { get; init; }
+        public required string OrderCode { get; init; }
+        public Guid? TableId { get; init; }
+        public OrderType Type { get; init; }
+        public Guid LineId { get; init; }
+        public required string Name { get; init; }
+        public decimal Quantity { get; init; }
+        public string? Note { get; init; }
+        public KitchenStatus Status { get; init; }
+        public DateTime? SentAt { get; init; }
+        public required List<QueuedTopping> Toppings { get; init; }
+
+        public KitchenTicket ToTicket(string? tableName) => new(
+            OrderId: OrderId, OrderCode: OrderCode, TableName: tableName, Type: Type, LineId: LineId, Name: Name,
+            Quantity: Quantity, Note: Note, Toppings: Toppings.Select(t => t.Label).ToList(), Status: Status, SentAt: SentAt);
     }
 }

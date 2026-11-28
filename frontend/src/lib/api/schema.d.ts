@@ -196,6 +196,44 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/reports/carwash-commissions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query: {
+                    from: string;
+                    to: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Cenvo.Modules.CarWash.Application.Reports.CommissionReport"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/cafe/shifts/current": {
         parameters: {
             query?: never;
@@ -537,6 +575,43 @@ export interface paths {
                 };
             };
         };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/cafe/orders/{id}/receipt": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Cenvo.Modules.Cafe.Application.Orders.ReceiptDto"];
+                    };
+                };
+            };
+        };
+        put?: never;
         post?: never;
         delete?: never;
         options?: never;
@@ -2527,6 +2602,1060 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/carwash/customers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: {
+                    q?: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Cenvo.Modules.CarWash.Application.Customers.CustomerListItemDto"][];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/carwash/customers/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Cenvo.Modules.CarWash.Application.Customers.CustomerDetailDto"];
+                    };
+                };
+            };
+        };
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["Cenvo.Modules.CarWash.Application.Customers.CustomerInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/carwash/vehicles/lookup": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query: {
+                    plate: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Cenvo.Modules.CarWash.Application.Customers.VehicleLookupDto"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/carwash/memberships": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["Cenvo.Modules.CarWash.Application.Memberships.SellMembershipInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Cenvo.Modules.CarWash.Application.Customers.MembershipDto"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/carwash/memberships/{id}/cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["Cenvo.Modules.CarWash.Application.Memberships.CancelMembershipInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Cenvo.Modules.CarWash.Application.Customers.MembershipDto"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/carwash/tickets/queue": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Cenvo.Modules.CarWash.Application.Tickets.QueueTicketDto"][];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/carwash/tickets": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query: {
+                    From: string;
+                    To: string;
+                    Q?: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Cenvo.Modules.CarWash.Application.Tickets.TicketHistoryDto"][];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["Cenvo.Modules.CarWash.Application.Tickets.CreateTicketInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Cenvo.Modules.CarWash.Application.Tickets.TicketDto"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/carwash/tickets/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Cenvo.Modules.CarWash.Application.Tickets.TicketDto"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/carwash/tickets/{id}/services": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["Cenvo.Modules.CarWash.Application.Tickets.TicketServiceInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Cenvo.Modules.CarWash.Application.Tickets.TicketDto"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/carwash/tickets/{id}/services/{lineId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                    lineId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Cenvo.Modules.CarWash.Application.Tickets.TicketDto"];
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/carwash/tickets/{id}/staff": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["Cenvo.Modules.CarWash.Application.Tickets.AssignStaffInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Cenvo.Modules.CarWash.Application.Tickets.TicketDto"];
+                    };
+                };
+            };
+        };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/carwash/tickets/{id}/start": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Cenvo.Modules.CarWash.Application.Tickets.TicketDto"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/carwash/tickets/{id}/return": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Cenvo.Modules.CarWash.Application.Tickets.TicketDto"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/carwash/tickets/{id}/complete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Cenvo.Modules.CarWash.Application.Tickets.TicketDto"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/carwash/tickets/{id}/deliver": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Cenvo.Modules.CarWash.Application.Tickets.TicketDto"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/carwash/tickets/{id}/pay": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["Cenvo.Modules.CarWash.Application.Tickets.PayTicketInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Cenvo.Modules.CarWash.Application.Tickets.TicketDto"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/carwash/tickets/{id}/cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["Cenvo.Modules.CarWash.Application.Tickets.CancelTicketInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Cenvo.Modules.CarWash.Application.Tickets.TicketDto"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/carwash/tickets/{id}/photos": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "multipart/form-data": {
+                        /** Format: binary */
+                        file: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Cenvo.Modules.CarWash.Application.Tickets.TicketPhotoDto"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/carwash/tickets/{id}/photos/{photoId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                    photoId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                    photoId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/carwash/services": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: {
+                    all?: boolean;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Cenvo.Modules.CarWash.Application.Setup.OfferingDto"][];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["Cenvo.Modules.CarWash.Application.Setup.OfferingInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": string;
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/carwash/services/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["Cenvo.Modules.CarWash.Application.Setup.OfferingInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": string;
+                    };
+                };
+            };
+        };
+        post?: never;
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/carwash/packages": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: {
+                    all?: boolean;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Cenvo.Modules.CarWash.Application.Setup.PackageDto"][];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["Cenvo.Modules.CarWash.Application.Setup.PackageInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": string;
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/carwash/packages/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["Cenvo.Modules.CarWash.Application.Setup.PackageInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": string;
+                    };
+                };
+            };
+        };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/carwash/staff": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Cenvo.Modules.CarWash.Application.Tickets.WasherDto"][];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -2673,6 +3802,11 @@ export interface components {
             /** Format: double */
             amount: number;
             reference?: string | null;
+        };
+        "Cenvo.Modules.Cafe.Application.Orders.ReceiptDto": {
+            order: components["schemas"]["Cenvo.Modules.Cafe.Application.Orders.OrderDto"];
+            store: components["schemas"]["Cenvo.Modules.Organization.Contracts.BranchContact"];
+            cashierName?: string | null;
         };
         "Cenvo.Modules.Cafe.Application.Orders.ToppingDto": {
             /** Format: uuid */
@@ -2894,6 +4028,20 @@ export interface components {
             /** Format: double */
             difference?: number | null;
             note?: string | null;
+            otherTakings: components["schemas"]["Cenvo.Modules.Cafe.Contracts.ShiftTakings"][];
+        };
+        "Cenvo.Modules.Cafe.Contracts.ShiftTakings": {
+            source: string;
+            /** Format: int32 */
+            count: number;
+            /** Format: double */
+            revenue: number;
+            payments: components["schemas"]["Cenvo.Modules.Cafe.Contracts.ShiftTakingsPayment"][];
+        };
+        "Cenvo.Modules.Cafe.Contracts.ShiftTakingsPayment": {
+            method: components["schemas"]["Cenvo.Modules.Cafe.Domain.PaymentMethod"];
+            /** Format: double */
+            amount: number;
         };
         "Cenvo.Modules.Cafe.Domain.Calculations.TenderedPayment": {
             method: components["schemas"]["Cenvo.Modules.Cafe.Domain.PaymentMethod"];
@@ -2901,31 +4049,357 @@ export interface components {
             amount: number;
             reference?: string | null;
         };
-        /**
-         * Format: int32
-         * @enum {integer}
-         */
-        "Cenvo.Modules.Cafe.Domain.KitchenStatus": 0 | 1 | 2 | 3 | 4;
-        /**
-         * Format: int32
-         * @enum {integer}
-         */
-        "Cenvo.Modules.Cafe.Domain.OrderStatus": 1 | 2 | 3;
-        /**
-         * Format: int32
-         * @enum {integer}
-         */
-        "Cenvo.Modules.Cafe.Domain.OrderType": 1 | 2;
-        /**
-         * Format: int32
-         * @enum {integer}
-         */
-        "Cenvo.Modules.Cafe.Domain.PaymentMethod": 1 | 2 | 3;
-        /**
-         * Format: int32
-         * @enum {integer}
-         */
-        "Cenvo.Modules.Cafe.Domain.ShiftStatus": 1 | 2;
+        /** @enum {string} */
+        "Cenvo.Modules.Cafe.Domain.KitchenStatus": "New" | "Sent" | "Preparing" | "Done" | "Served";
+        /** @enum {string} */
+        "Cenvo.Modules.Cafe.Domain.OrderStatus": "Open" | "Paid" | "Cancelled";
+        /** @enum {string} */
+        "Cenvo.Modules.Cafe.Domain.OrderType": "DineIn" | "TakeAway";
+        /** @enum {string} */
+        "Cenvo.Modules.Cafe.Domain.PaymentMethod": "Cash" | "Transfer" | "Card";
+        /** @enum {string} */
+        "Cenvo.Modules.Cafe.Domain.ShiftStatus": "Open" | "Closed";
+        "Cenvo.Modules.CarWash.Application.Customers.CustomerDetailDto": {
+            /** Format: uuid */
+            id: string;
+            name: string;
+            phone: string;
+            note?: string | null;
+            vehicles: components["schemas"]["Cenvo.Modules.CarWash.Application.Customers.VehicleDto"][];
+            memberships: components["schemas"]["Cenvo.Modules.CarWash.Application.Customers.MembershipDto"][];
+            recentTickets: components["schemas"]["Cenvo.Modules.CarWash.Application.Tickets.TicketHistoryDto"][];
+        };
+        "Cenvo.Modules.CarWash.Application.Customers.CustomerInput": {
+            name?: string | null;
+            phone: string;
+            note?: string | null;
+        };
+        "Cenvo.Modules.CarWash.Application.Customers.CustomerListItemDto": {
+            /** Format: uuid */
+            id: string;
+            name: string;
+            phone: string;
+            plates: string[];
+        };
+        "Cenvo.Modules.CarWash.Application.Customers.CustomerRef": {
+            /** Format: uuid */
+            id: string;
+            name: string;
+            phone: string;
+        };
+        "Cenvo.Modules.CarWash.Application.Customers.MembershipDto": {
+            /** Format: uuid */
+            id: string;
+            code: string;
+            /** Format: uuid */
+            customerId: string;
+            packageName: string;
+            /** Format: uuid */
+            offeringId: string;
+            offeringName: string;
+            vehicleType: components["schemas"]["Cenvo.Modules.CarWash.Domain.VehicleType"];
+            /** Format: int32 */
+            totalUses: number;
+            /** Format: int32 */
+            remainingUses: number;
+            /** Format: double */
+            price: number;
+            /** Format: date-time */
+            paidAt: string;
+            /** Format: date-time */
+            expiresAt: string;
+            status: components["schemas"]["Cenvo.Modules.CarWash.Domain.MembershipStatus"];
+            isUsable: boolean;
+        };
+        "Cenvo.Modules.CarWash.Application.Customers.VehicleDto": {
+            /** Format: uuid */
+            id: string;
+            plate: string;
+            vehicleType: components["schemas"]["Cenvo.Modules.CarWash.Domain.VehicleType"];
+            description: string | null;
+        };
+        "Cenvo.Modules.CarWash.Application.Customers.VehicleLookupDto": {
+            vehicle: components["schemas"]["Cenvo.Modules.CarWash.Application.Customers.VehicleDto"];
+            customer?: components["schemas"]["Cenvo.Modules.CarWash.Application.Customers.CustomerRef"];
+            memberships: components["schemas"]["Cenvo.Modules.CarWash.Application.Customers.MembershipDto"][];
+            recentTickets: components["schemas"]["Cenvo.Modules.CarWash.Application.Tickets.TicketHistoryDto"][];
+            openTicket?: components["schemas"]["Cenvo.Modules.CarWash.Application.Tickets.TicketHistoryDto"];
+        };
+        "Cenvo.Modules.CarWash.Application.Memberships.CancelMembershipInput": {
+            reason: string;
+        };
+        "Cenvo.Modules.CarWash.Application.Memberships.SellMembershipInput": {
+            /** Format: uuid */
+            packageId: string;
+            customerPhone: string;
+            customerName?: string | null;
+            payments: components["schemas"]["Cenvo.Modules.Cafe.Domain.Calculations.TenderedPayment"][];
+        };
+        "Cenvo.Modules.CarWash.Application.Reports.CommissionReport": {
+            /** Format: date */
+            from: string;
+            /** Format: date */
+            to: string;
+            /** Format: double */
+            total: number;
+            staff: components["schemas"]["Cenvo.Modules.CarWash.Application.Reports.StaffCommissionDto"][];
+        };
+        "Cenvo.Modules.CarWash.Application.Reports.StaffCommissionDto": {
+            /** Format: uuid */
+            userId: string;
+            fullName: string;
+            /** Format: int32 */
+            ticketCount: number;
+            /** Format: double */
+            commission: number;
+        };
+        "Cenvo.Modules.CarWash.Application.Setup.OfferingDto": {
+            /** Format: uuid */
+            id: string;
+            code: string;
+            name: string;
+            /** Format: int32 */
+            durationMinutes: number;
+            commissionType: components["schemas"]["Cenvo.Modules.CarWash.Domain.CommissionType"];
+            /** Format: double */
+            commissionValue: number;
+            /** Format: int32 */
+            sortOrder: number;
+            isActive: boolean;
+            prices: components["schemas"]["Cenvo.Modules.CarWash.Application.Setup.OfferingPriceDto"][];
+            supplies: components["schemas"]["Cenvo.Modules.CarWash.Application.Setup.OfferingSupplyDto"][];
+        };
+        "Cenvo.Modules.CarWash.Application.Setup.OfferingInput": {
+            code: string;
+            name: string;
+            /** Format: int32 */
+            durationMinutes: number;
+            commissionType: components["schemas"]["Cenvo.Modules.CarWash.Domain.CommissionType"];
+            /** Format: double */
+            commissionValue: number;
+            /** Format: int32 */
+            sortOrder: number;
+            isActive: boolean;
+            prices: components["schemas"]["Cenvo.Modules.CarWash.Application.Setup.OfferingPriceInput"][];
+            supplies: components["schemas"]["Cenvo.Modules.CarWash.Application.Setup.OfferingSupplyInput"][];
+        };
+        "Cenvo.Modules.CarWash.Application.Setup.OfferingPriceDto": {
+            vehicleType: components["schemas"]["Cenvo.Modules.CarWash.Domain.VehicleType"];
+            /** Format: double */
+            price: number;
+        };
+        "Cenvo.Modules.CarWash.Application.Setup.OfferingPriceInput": {
+            vehicleType: components["schemas"]["Cenvo.Modules.CarWash.Domain.VehicleType"];
+            /** Format: double */
+            price: number;
+        };
+        "Cenvo.Modules.CarWash.Application.Setup.OfferingSupplyDto": {
+            /** Format: uuid */
+            productId: string;
+            productName: string;
+            /** Format: uuid */
+            unitId?: string | null;
+            unitName: string;
+            /** Format: double */
+            quantity: number;
+        };
+        "Cenvo.Modules.CarWash.Application.Setup.OfferingSupplyInput": {
+            /** Format: uuid */
+            productId: string;
+            /** Format: uuid */
+            unitId?: string | null;
+            /** Format: double */
+            quantity: number;
+        };
+        "Cenvo.Modules.CarWash.Application.Setup.PackageDto": {
+            /** Format: uuid */
+            id: string;
+            code: string;
+            name: string;
+            /** Format: uuid */
+            offeringId: string;
+            offeringName: string;
+            vehicleType: components["schemas"]["Cenvo.Modules.CarWash.Domain.VehicleType"];
+            /** Format: double */
+            price: number;
+            /** Format: int32 */
+            uses: number;
+            /** Format: int32 */
+            validDays: number;
+            isActive: boolean;
+        };
+        "Cenvo.Modules.CarWash.Application.Setup.PackageInput": {
+            code: string;
+            name: string;
+            /** Format: uuid */
+            offeringId: string;
+            vehicleType?: components["schemas"]["Cenvo.Modules.CarWash.Domain.VehicleType"];
+            /** Format: double */
+            price: number;
+            /** Format: int32 */
+            uses: number;
+            /** Format: int32 */
+            validDays: number;
+            isActive: boolean;
+        };
+        "Cenvo.Modules.CarWash.Application.Tickets.AssignStaffInput": {
+            staffIds: string[];
+        };
+        "Cenvo.Modules.CarWash.Application.Tickets.CancelTicketInput": {
+            reason: string;
+        };
+        "Cenvo.Modules.CarWash.Application.Tickets.CreateTicketInput": {
+            plate: string;
+            vehicleType: components["schemas"]["Cenvo.Modules.CarWash.Domain.VehicleType"];
+            vehicleDescription?: string | null;
+            customerName?: string | null;
+            customerPhone?: string | null;
+            services: components["schemas"]["Cenvo.Modules.CarWash.Application.Tickets.TicketServiceInput"][];
+            staffIds?: string[] | null;
+            note?: string | null;
+        };
+        "Cenvo.Modules.CarWash.Application.Tickets.PayTicketInput": {
+            payments: components["schemas"]["Cenvo.Modules.Cafe.Domain.Calculations.TenderedPayment"][];
+        };
+        "Cenvo.Modules.CarWash.Application.Tickets.QueueTicketDto": {
+            /** Format: uuid */
+            id: string;
+            code: string;
+            plate: string;
+            vehicleType: components["schemas"]["Cenvo.Modules.CarWash.Domain.VehicleType"];
+            vehicleDescription: string | null;
+            customerName: string | null;
+            status: components["schemas"]["Cenvo.Modules.CarWash.Domain.WashStatus"];
+            isPaid: boolean;
+            /** Format: double */
+            total: number;
+            /** Format: int32 */
+            estimatedMinutes: number;
+            services: string[];
+            staff: string[];
+            /** Format: int32 */
+            photoCount: number;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            startedAt: string | null;
+            /** Format: date-time */
+            completedAt: string | null;
+            /** Format: date-time */
+            deliveredAt: string | null;
+        };
+        "Cenvo.Modules.CarWash.Application.Tickets.TicketDto": {
+            /** Format: uuid */
+            id: string;
+            code: string;
+            /** Format: uuid */
+            vehicleId: string;
+            plate: string;
+            vehicleType: components["schemas"]["Cenvo.Modules.CarWash.Domain.VehicleType"];
+            vehicleDescription: string | null;
+            /** Format: uuid */
+            customerId: string | null;
+            customerName: string | null;
+            customerPhone: string | null;
+            note: string | null;
+            status: components["schemas"]["Cenvo.Modules.CarWash.Domain.WashStatus"];
+            isPaid: boolean;
+            isEditable: boolean;
+            /** Format: double */
+            subtotal: number;
+            /** Format: double */
+            membershipCovered: number;
+            /** Format: double */
+            total: number;
+            /** Format: double */
+            cashReceived: number;
+            /** Format: double */
+            changeAmount: number;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            startedAt: string | null;
+            /** Format: date-time */
+            completedAt: string | null;
+            /** Format: date-time */
+            deliveredAt: string | null;
+            /** Format: date-time */
+            paidAt: string | null;
+            /** Format: date-time */
+            cancelledAt: string | null;
+            cancelReason: string | null;
+            lines: components["schemas"]["Cenvo.Modules.CarWash.Application.Tickets.TicketLineDto"][];
+            staff: components["schemas"]["Cenvo.Modules.CarWash.Application.Tickets.TicketStaffDto"][];
+            payments: components["schemas"]["Cenvo.Modules.CarWash.Application.Tickets.TicketPaymentDto"][];
+            photos: components["schemas"]["Cenvo.Modules.CarWash.Application.Tickets.TicketPhotoDto"][];
+        };
+        "Cenvo.Modules.CarWash.Application.Tickets.TicketHistoryDto": {
+            /** Format: uuid */
+            id: string;
+            code: string;
+            plate: string;
+            customerName: string | null;
+            status: components["schemas"]["Cenvo.Modules.CarWash.Domain.WashStatus"];
+            isPaid: boolean;
+            /** Format: double */
+            total: number;
+            services: string[];
+            /** Format: date-time */
+            createdAt: string;
+        };
+        "Cenvo.Modules.CarWash.Application.Tickets.TicketLineDto": {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            offeringId: string;
+            name: string;
+            /** Format: double */
+            price: number;
+            /** Format: double */
+            amount: number;
+            /** Format: uuid */
+            membershipId?: string | null;
+            /** Format: int32 */
+            durationMinutes: number;
+        };
+        "Cenvo.Modules.CarWash.Application.Tickets.TicketPaymentDto": {
+            method: components["schemas"]["Cenvo.Modules.Cafe.Domain.PaymentMethod"];
+            /** Format: double */
+            amount: number;
+            reference?: string | null;
+        };
+        "Cenvo.Modules.CarWash.Application.Tickets.TicketPhotoDto": {
+            /** Format: uuid */
+            id: string;
+            /** Format: date-time */
+            takenAt: string;
+        };
+        "Cenvo.Modules.CarWash.Application.Tickets.TicketServiceInput": {
+            /** Format: uuid */
+            offeringId: string;
+            /** Format: uuid */
+            membershipId?: string | null;
+        };
+        "Cenvo.Modules.CarWash.Application.Tickets.TicketStaffDto": {
+            /** Format: uuid */
+            userId: string;
+            fullName: string;
+            /** Format: double */
+            commission: number;
+        };
+        "Cenvo.Modules.CarWash.Application.Tickets.WasherDto": {
+            /** Format: uuid */
+            userId: string;
+            fullName: string;
+        };
+        /** @enum {string} */
+        "Cenvo.Modules.CarWash.Domain.CommissionType": "Percent" | "FixedAmount";
+        /** @enum {string} */
+        "Cenvo.Modules.CarWash.Domain.MembershipStatus": "Active" | "Cancelled";
+        /** @enum {string} */
+        "Cenvo.Modules.CarWash.Domain.VehicleType": "Sedan" | "SevenSeater" | "Pickup" | "Suv";
+        /** @enum {string} */
+        "Cenvo.Modules.CarWash.Domain.WashStatus": "Waiting" | "Washing" | "Done" | "Delivered" | "Cancelled";
         "Cenvo.Modules.Catalog.Application.Categories.CategoryDto": {
             /** Format: uuid */
             id: string;
@@ -2998,11 +4472,8 @@ export interface components {
             id: string;
             name: string;
         };
-        /**
-         * Format: int32
-         * @enum {integer}
-         */
-        "Cenvo.Modules.Catalog.Domain.ProductKind": 1 | 2 | 3 | 4;
+        /** @enum {string} */
+        "Cenvo.Modules.Catalog.Domain.ProductKind": "Ingredient" | "FinishedGood" | "Merchandise" | "Supply";
         "Cenvo.Modules.Inventory.Application.Documents.StockDocumentDto": {
             /** Format: uuid */
             id: string;
@@ -3170,16 +4641,10 @@ export interface components {
             name: string;
             isDefault: boolean;
         };
-        /**
-         * Format: int32
-         * @enum {integer}
-         */
-        "Cenvo.Modules.Inventory.Domain.StockDocumentType": 1 | 2 | 3 | 4 | 5 | 6 | 7;
-        /**
-         * Format: int32
-         * @enum {integer}
-         */
-        "Cenvo.Modules.Inventory.Domain.TransferState": 0 | 1 | 2;
+        /** @enum {string} */
+        "Cenvo.Modules.Inventory.Domain.StockDocumentType": "PurchaseReceipt" | "DisposalIssue" | "InternalIssue" | "Transfer" | "Stocktake" | "SaleIssue" | "OpeningBalance";
+        /** @enum {string} */
+        "Cenvo.Modules.Inventory.Domain.TransferState": "None" | "InTransit" | "Received";
         "Cenvo.Modules.Inventory.Posting.StockWarning": {
             /** Format: uuid */
             productId: string;
@@ -3237,11 +4702,13 @@ export interface components {
             branchIds: string[];
             isActive: boolean;
         };
-        /**
-         * Format: int32
-         * @enum {integer}
-         */
-        "Cenvo.SharedKernel.DocumentStatus": 0 | 1 | 2;
+        "Cenvo.Modules.Organization.Contracts.BranchContact": {
+            name: string;
+            address?: string | null;
+            phone?: string | null;
+        };
+        /** @enum {string} */
+        "Cenvo.SharedKernel.DocumentStatus": "Draft" | "Posted" | "Cancelled";
     };
     responses: never;
     parameters: never;

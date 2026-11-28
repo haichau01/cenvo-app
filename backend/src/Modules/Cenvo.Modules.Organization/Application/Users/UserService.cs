@@ -1,6 +1,6 @@
 namespace Cenvo.Modules.Organization.Application.Users;
 
-public class UserService(AppDbContext db)
+public class UserService(AppDbContext db) : IStaffDirectory
 {
     public Task<List<UserDto>> List(CancellationToken ct) =>
         db.Set<AppUser>().AsNoTracking().OrderBy(u => u.UserName)
@@ -28,4 +28,14 @@ public class UserService(AppDbContext db)
         await db.SaveChangesAsync(ct);
         return user.Id;
     }
+
+    public Task<List<StaffMember>> InBranch(Guid branchId, string role, CancellationToken ct) =>
+        db.Set<AppUser>().AsNoTracking()
+            .Where(u => u.IsActive
+                        && u.Branches.Any(b => b.BranchId == branchId)
+                        && u.Roles.Any(r => r.Role == role))
+            .OrderBy(u => u.FullName)
+            .Take(Limits.MaxListSize)
+            .Select(u => new StaffMember(u.Id, u.FullName))
+            .ToListAsync(ct);
 }

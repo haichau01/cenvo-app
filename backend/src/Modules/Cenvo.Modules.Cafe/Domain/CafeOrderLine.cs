@@ -12,8 +12,8 @@ public class CafeOrderLine
     public decimal DiscountAmount { get; set; }
     public decimal Amount { get; set; }
     public string? Note { get; set; }
-    public KitchenStatus KitchenStatus { get; set; }
-    public DateTime? SentAt { get; set; }
+    public KitchenStatus KitchenStatus { get; private set; }
+    public DateTime? SentAt { get; private set; }
     public int SortOrder { get; set; }
     public List<CafeOrderLineTopping> Toppings { get; set; } = [];
 
@@ -49,6 +49,26 @@ public class CafeOrderLine
         var gross = (UnitPrice + Toppings.Sum(t => t.UnitPrice * t.Quantity)) * Quantity;
         DiscountAmount = Math.Clamp(DiscountAmount, 0, gross);
         Amount = gross - DiscountAmount;
+    }
+
+    // ---------------- Kitchen ----------------
+    internal void SendToKitchen(DateTime now)
+    {
+        if (KitchenStatus != KitchenStatus.New) return; // already sent earlier
+        KitchenStatus = KitchenStatus.Sent;
+        SentAt = now;
+    }
+
+    /// <summary>Paid without ever being sent (e.g. bottled water): nothing left to prepare.</summary>
+    internal void MarkServedWithoutKitchen()
+    {
+        if (KitchenStatus == KitchenStatus.New) KitchenStatus = KitchenStatus.Served;
+    }
+
+    internal void MoveInKitchen(KitchenStatus target)
+    {
+        if (!KitchenFlow.CanMove(KitchenStatus, target)) throw new BusinessException(CafeErrors.KitchenMoveNotAllowed(KitchenStatus, target));
+        KitchenStatus = target;
     }
 
     private static string ToppingKey(IEnumerable<CafeOrderLineTopping> toppings) =>

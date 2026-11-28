@@ -20,6 +20,7 @@ public class ApiFixture : IAsyncLifetime
             b.UseSetting("ConnectionStrings:Default", _pg.GetConnectionString());
             b.UseSetting("Database:Migrate", "true");
             b.UseSetting("Database:Seed", "true");
+            b.UseSetting("Storage:Photos:Root", Path.Combine(Path.GetTempPath(), "cenvo-test-photos"));
         });
         _factory.CreateClient(); // starts the host → migrate + seed
     }

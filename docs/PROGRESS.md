@@ -23,7 +23,65 @@
     - `npm run build`, `npm run lint` sạch; `npm test` 3/3.
     - Chạy thử bằng Playwright + Edge ở tablet, điện thoại và desktop: sai mật khẩu báo lỗi tiếng Việt; thu ngân vào thẳng Quận 1; admin vào toàn chuỗi rồi đổi sang Thủ Đức; tải lại trang vẫn giữ phiên.
   - Backend: bật `NonNullableReferenceTypesAsRequired` trong Swagger để sinh kiểu TS chính xác.
-- **Việc tiếp theo:** màn POS cà phê (bàn, menu, hóa đơn, thanh toán, mở/đóng ca), sau đó đến màn pha chế, kho, báo cáo ngày.
+- **Màn POS cà phê `/pos` (2026-11-27):** ✅
+  - Sơ đồ bàn theo khu + hóa đơn mang đi; thực đơn theo nhóm; tùy chọn món (số lượng, topping mỗi ly, ghi chú).
+  - Panel hóa đơn: tăng/giảm/xóa món, gửi pha chế, thanh toán (tiền mặt gợi ý mệnh giá, chuyển khoản, thẻ), hủy có lý do.
+  - Mở ca / đóng ca **đếm mù** (không hiện tiền mặt dự kiến trước khi nhập số đếm; báo lệch sau khi đóng).
+  - Realtime SignalR `ordersChanged` → máy khác thấy bàn đổi ngay; banner khi mất kết nối.
+  - Các thao tác trên hóa đơn chạy tuần tự (TanStack `scope`) — trước đó chạm nhanh gây 409 và mất món.
+  - Backend: sửa `/api/cafe/menu` trả 500 (OrderBy trên DTO), thêm `PosMenuTests`; Swagger sinh enum dạng chuỗi.
+  - Kiểm chứng: `dotnet test` 29/29; `npm test` 15/15, lint, build sạch; chạy Playwright + Edge 1180×820 trọn luồng.
+  - Chưa làm: chuyển/gộp bàn, giảm giá, in hóa đơn, sửa ghi chú dòng đã thêm.
+- **Refactor query dễ đọc (2026-11-27):** ✅
+  - Query Object `ProductQueries` (FinishedGoods/ActiveOnly/Matching/WithSellingPrice): giá bán chi nhánh từng chép 3 nơi, nay chỉ viết một lần.
+  - `MenuQueryService` tách khỏi `MenuService`; `CafeItem.Configure`; trạng thái pha chế đi qua `CafeOrder.ChangeKitchenStatus` + `KitchenFlow` (tiến tùy ý, lùi 1 bước).
+  - `LowStock` tính trong SQL; DTO dựng trong SQL đổi sang thuộc tính init (JSON không đổi).
+  - Sửa 2 lỗi có từ trước: báo cáo `/api/reports/cafe-sales` trả 500; số hóa đơn hủy đếm theo `PaidAt` (luôn thiếu).
+  - Skill mới `cenvo-readable-query`. Test: 41/41.
+- **Màn pha chế `/pha-che` (2026-11-27):** ✅
+  - 3 cột Chờ pha → Đang pha → Chờ mang ra; một chạm để chuyển cột, nút "Lùi" để sửa chạm nhầm (khớp `KitchenFlow`).
+  - Realtime: món gửi từ POS hiện sau khoảng 50 ms, nháy nền `lane` một lần; POS thấy trạng thái món đổi theo.
+  - Cờ "Chờ lâu" khi món chưa xong sau 10 phút; chế độ tối cho ca đêm, lưu trên máy.
+  - Thao tác tuần tự (TanStack scope) + cập nhật lạc quan; kiểm bằng Playwright 2 máy.
+- **Màn kho (2026-11-27):** ✅ bố cục desktop (`CoreLayout`, sidebar 240px), chỉ thủ kho/quản lý vào được (`RequireRole`).
+  - `/kho/ton-kho`: lọc kho, dưới mức tối thiểu, tìm không dấu (lọc ở trình duyệt); bấm dòng mở thẻ kho theo khoảng ngày.
+  - `/kho/phieu`: danh sách lọc theo loại/trạng thái; báo phiếu chuyển kho đang chờ nhận.
+  - `/kho/phieu/:id`: soạn 6 loại phiếu (cấu hình `DOCUMENT_TYPES`, không switch), chọn đơn vị quy đổi, lưu nháp/ghi sổ/xóa nháp; xem phiếu đã ghi sổ; hủy có lý do (quản lý); xác nhận nhận hàng chuyển kho; kiểm kê hiện sổ sách/thực tế/chênh lệch.
+  - Kiểm chứng: Playwright 1440×900 với thukho1, quanly1, quanly2, thungan1 — nhập 2 hộp = 2.000 ml, hủy hoàn kho, kiểm kê điều chỉnh, chuyển kho 2 chi nhánh.
+  - Còn treo: `/api/catalog/products?q=` và `/api/inventory/balances?q=` dùng ILIKE nên phân biệt dấu (cần extension `unaccent` nếu muốn tìm ở server).
+- **Báo cáo bán hàng `/bao-cao` (2026-11-27):** ✅ chỉ quản lý.
+  - Chọn kỳ: Hôm nay / Hôm qua / 7 ngày / Tháng này / Tháng trước hoặc ngày tùy chọn (giờ VN).
+  - Ô số: doanh thu (nổi bật), lãi gộp + biên, giá vốn, số hóa đơn, trung bình, số hủy.
+  - Biểu đồ cột doanh thu theo ngày (SVG tự vẽ, không thêm thư viện; tooltip bằng chuột và bàn phím; có dạng bảng).
+  - Món bán chạy, hình thức thanh toán, đối soát ca (chênh lệch tiền mặt), nguyên liệu đã dùng.
+  - Định dạng ngày giờ gom về `lib/format` (`formatDate`, `formatDateTime`, `formatShortDateTime`).
+- **In hóa đơn (2026-11-27):** ✅
+  - Backend `GET /api/cafe/orders/{id}/receipt` (`ReceiptQueryService`; thông tin chi nhánh qua contract mới `IBranchDirectory`; tên thu ngân lấy từ ca) + 3 integration test (có cô lập chi nhánh).
+  - POS: "In tạm tính"; ô "In hóa đơn sau khi thanh toán" (nhớ theo máy, mặc định bật); "In lại" hóa đơn đã thanh toán hôm nay.
+  - `/in/hoa-don/:id`: xem trước, chọn khổ 80/58 mm theo máy, in.
+  - In trong trang (không dùng iframe, để không xoay refresh token); khổ giấy đo theo chiều cao thật, PDF kiểm được 80 × 121 mm, 1 trang.
+- **Phân hệ Rửa xe (2026-11-28):** ✅ chưa commit.
+  - Nghiệp vụ đã chốt với người dùng: chỉ nhận ô tô (4–5 chỗ, 7 chỗ, bán tải, SUV); thu tiền tại POS, **chung ca thu ngân**; hoa hồng cấu hình theo dịch vụ (% giá hoặc số tiền/xe), chia đều cho người rửa, tính trên giá niêm yết kể cả khi gói trả.
+  - Backend `Cenvo.Modules.CarWash` (phụ thuộc Cafe):
+    - Dịch vụ (`WashOffering`): giá theo loại xe, định mức hóa chất mỗi xe.
+    - Phiếu: Chờ → Đang rửa → Xong → Đã giao. "Rửa xong" chia hoa hồng và phát `WashTicketCompleted` để trừ hóa chất qua `ISaleStockIssuer`. Hủy phiếu đã rửa thì hoàn kho; phiếu đã rửa hoặc đã thu tiền cần quản lý.
+    - Khách nhận diện bằng SĐT, xe bằng biển số chuẩn hóa; cả hai dùng chung toàn chuỗi. Không nhập SĐT thì phiếu thuộc chủ xe đã biết.
+    - Gói thành viên: bán trong ca; trừ lượt khi thêm dịch vụ vào phiếu, hoàn lượt khi bỏ dịch vụ hoặc hủy phiếu; chỉ hủy được gói chưa dùng, tại chi nhánh đã bán.
+    - Ảnh hiện trạng: kiểm định dạng bằng byte đầu (JPEG/PNG/WebP, ≤ 5 MB, ≤ 8 ảnh). Lưu đĩa ngoài web root (`Storage:Photos:Root`), chỉ đọc được qua phiếu (có lọc chi nhánh).
+    - Cafe thêm `ICashierShifts` và `IShiftTakingsSource`: đóng ca đối soát cả tiền rửa xe và tiền bán gói. Organization thêm `IStaffDirectory`, role `Washer`.
+    - Hub `/hubs/carwash`, tín hiệu `ticketsChanged`. Migration `AddCarWash` (chỉ tạo bảng mới). Seed rửa xe chạy riêng một lần, nên DB cũ cũng được bổ sung (`ruaxe1..3`).
+  - Frontend:
+    - `/rua-xe`: hàng chờ 4 làn, realtime, chế độ tối, sheet chi tiết (dịch vụ, người rửa, ảnh, thu tiền, hủy).
+    - `/rua-xe/tiep-nhan`: tra biển số, tự điền xe quen và dùng gói.
+    - `/rua-xe/khach-hang`: lịch sử, bán và hủy gói.
+    - `/rua-xe/dich-vu` và `/rua-xe/hoa-hong` cho quản lý.
+    - Chip `<Plate>`; realtime nhiều hub; `TouchRail` dùng chung.
+  - Kiểm chứng:
+    - `dotnet test` 77/77 (unit: hoa hồng, biển số, SĐT, ảnh, vòng đời phiếu; integration: trừ/hoàn hóa chất, tiền vào ca, gói, tra biển số, washer bị 403 khi thu tiền, ảnh và cô lập chi nhánh).
+    - `npm test` 54/54, lint và build sạch.
+    - Playwright + Edge 1180×820 / 1440×900: tiếp nhận → ảnh → máy thứ hai bắt đầu và xong → máy thu ngân thấy realtime → thu tiền; không có lỗi console.
+  - Còn lại: in phiếu rửa xe; nhắc khách quay lại; báo cáo doanh thu rửa xe; Payroll đọc hoa hồng (event đã mang sẵn dữ liệu).
+- **Việc tiếp theo:** commit phân hệ Rửa xe (chạy `/cenvo-security` + `/cenvo-review` trước); POS còn thiếu chuyển/gộp bàn, giảm giá.
 - Còn treo: 2 cảnh báo EF về global filter (Unit ↔ ProductUnit, Branch ↔ UserBranch). Chưa ảnh hưởng hành vi.
 
 > Phần dưới là nhật ký quá trình refactor, giữ lại để tham khảo.

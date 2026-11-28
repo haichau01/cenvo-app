@@ -8,7 +8,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Cenvo.Api.Seed;
 
-/// <summary>Sample data: 2 branches, users, ingredients, menu + recipes, tables, opening stock. Runs only on an empty database.</summary>
+/// <summary>
+/// Sample data: 2 branches, users, ingredients, menu + recipes, tables, opening stock (only on an empty database),
+/// then the car wash sample data (also added to databases seeded before the car wash module existed).
+/// </summary>
 public static class DataSeeder
 {
     public const string DefaultPassword = "123456";
@@ -21,8 +24,14 @@ public static class DataSeeder
         var currentUser = sp.GetRequiredService<CurrentUser>();
         currentUser.RunAs(SystemUser.AllBranches);
         var db = sp.GetRequiredService<AppDbContext>();
-        if (await db.Set<Branch>().AnyAsync(ct)) return;
+        if (!await db.Set<Branch>().AnyAsync(ct)) await SeedCafeAndStock(sp, db, currentUser, ct);
 
+        currentUser.RunAs(SystemUser.AllBranches);
+        await CarWashSeed.Run(sp, db, currentUser, ct);
+    }
+
+    private static async Task SeedCafeAndStock(IServiceProvider sp, AppDbContext db, CurrentUser currentUser, CancellationToken ct)
+    {
         var branches = SeedBranchesAndUsers(db);
         var catalog = SeedCatalog(db);
         SeedMenu(db, catalog);
@@ -139,10 +148,12 @@ public static class DataSeeder
     }
 
     /// <summary>Marks toppings and declares recipes (quantities in the ingredient's base unit).</summary>
+    private const int ToppingSortOrder = 99;
+
     private static void SeedMenu(AppDbContext db, SeededCatalog catalog)
     {
         db.AddRange(new[] { "TOP-TC", "TOP-SHOT", "TOP-DAO" }
-            .Select(code => new CafeItem { ProductId = catalog[code].Id, IsTopping = true, SortOrder = 99 }));
+            .Select(code => CafeItem.Topping(catalog[code].Id, ToppingSortOrder)));
 
         void Recipe(string menuCode, params (string IngredientCode, decimal Quantity)[] lines) =>
             db.AddRange(lines.Select(l => new RecipeLine

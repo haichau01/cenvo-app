@@ -7,7 +7,9 @@ public static class Roles
     public const string Cashier = "Cashier";
     public const string Barista = "Barista";
     public const string Storekeeper = "Storekeeper";
-    public static readonly string[] All = [Admin, BranchManager, Cashier, Barista, Storekeeper];
+    /// <summary>Car wash staff: takes vehicles in, washes them, earns commission.</summary>
+    public const string Washer = "Washer";
+    public static readonly string[] All = [Admin, BranchManager, Cashier, Barista, Storekeeper, Washer];
 
     /// <summary>May perform actions that require manager approval (cancel a paid order, remove an item being prepared...).</summary>
     public static bool IsManager(this ICurrentUser user) => user.IsInRole(Admin) || user.IsInRole(BranchManager);

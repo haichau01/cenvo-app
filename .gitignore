@@ -25,3 +25,6 @@ secrets.json
 .idea/
 .DS_Store
 Thumbs.db
+
+# Ảnh hiện trạng xe tải lên khi chạy dev
+App_Data/

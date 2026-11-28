@@ -122,11 +122,14 @@ public class CafeOrder : BaseEntity, IBranchScoped
     public void SendToKitchen(DateTime now)
     {
         EnsureOpen();
-        foreach (var line in Lines.Where(l => l.KitchenStatus == KitchenStatus.New))
-        {
-            line.KitchenStatus = KitchenStatus.Sent;
-            line.SentAt = now;
-        }
+        foreach (var line in Lines) line.SendToKitchen(now);
+    }
+
+    /// <summary>The kitchen moves one item along (Preparing, Done, Served). Paid orders are still prepared.</summary>
+    public void ChangeKitchenStatus(Guid lineId, KitchenStatus status)
+    {
+        if (Status == OrderStatus.Cancelled) throw new BusinessException(CafeErrors.OrderAlreadyCancelled);
+        FindLine(lineId).MoveInKitchen(status);
     }
 
     // ---------------- Payment & cancellation ----------------
@@ -148,7 +151,7 @@ public class CafeOrder : BaseEntity, IBranchScoped
         PaidAt = now;
         PaidBy = paidBy;
         ShiftId = shiftId;
-        foreach (var line in Lines.Where(l => l.KitchenStatus == KitchenStatus.New)) line.KitchenStatus = KitchenStatus.Served;
+        foreach (var line in Lines) line.MarkServedWithoutKitchen();
 
         Raise(new CafeOrderPaid(Id, BranchId, Code, Lines.SelectMany(l => l.SoldItems()).ToList()));
     }

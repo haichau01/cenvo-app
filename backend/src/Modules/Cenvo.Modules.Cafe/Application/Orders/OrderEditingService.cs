@@ -1,3 +1,5 @@
+using Cenvo.Modules.Catalog.Application.Products;
+
 namespace Cenvo.Modules.Cafe.Application.Orders;
 
 /// <summary>Opens orders and edits items on an open order.</summary>
@@ -74,14 +76,16 @@ public class OrderEditingService(
         return await queries.Get(order.Id, ct);
     }
 
-    /// <summary>Price at the current branch (ProductPrice is already branch-filtered), active items only.</summary>
+    /// <summary>Selling price at the current branch for the requested items (active finished goods only).</summary>
     private async Task<Dictionary<Guid, MenuPrice?>> MenuPrices(IEnumerable<Guid> productIds, CancellationToken ct)
     {
         var ids = productIds.Distinct().ToList();
         return await db.Set<Product>().AsNoTracking()
-            .Where(p => ids.Contains(p.Id) && p.IsActive && p.Kind == ProductKind.FinishedGood)
-            .Select(p => new MenuPrice(p.Id, p.Name,
-                db.Set<ProductPrice>().Where(x => x.ProductId == p.Id).Select(x => (decimal?)x.Price).FirstOrDefault() ?? p.DefaultPrice))
-            .ToDictionaryAsync(p => p.ProductId, p => (MenuPrice?)p, ct);
+            .FinishedGoods()
+            .ActiveOnly()
+            .Where(p => ids.Contains(p.Id))
+            .WithSellingPrice(db)
+            .Select(x => new MenuPrice(x.Product.Id, x.Product.Name, x.Price))
+            .ToDictionaryAsync(price => price.ProductId, price => (MenuPrice?)price, ct);
     }
 }
