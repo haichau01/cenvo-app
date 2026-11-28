@@ -1,8 +1,13 @@
 namespace Cenvo.Modules.Hr.Application.Employees;
 
-/// <summary>Owner (Admin) only: the whole chain's staff with personal data and pay.</summary>
-public class EmployeeQueryService(AppDbContext db, IUserAccounts accounts)
+/// <summary>Staff list and detail with personal data and pay (Admin-only endpoints); departments for other modules.</summary>
+public class EmployeeQueryService(AppDbContext db, IUserAccounts accounts) : IEmployeeDirectory
 {
+    public Task<Dictionary<Guid, Department>> Departments(IReadOnlyCollection<Guid> employeeIds, CancellationToken ct) =>
+        db.Set<Employee>().AsNoTracking()
+            .Where(e => employeeIds.Contains(e.Id))
+            .ToDictionaryAsync(e => e.Id, e => e.Department, ct);
+
     public async Task<List<EmployeeListItemDto>> List(CancellationToken ct)
     {
         var today = VnTime.Today;

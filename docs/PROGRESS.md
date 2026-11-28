@@ -123,7 +123,7 @@
     - Migration `AddCustomerReminders`: khách cũ mặc định nhận tin, backfill lần rửa cuối từ `wash_ticket`. `PlateNumber.Format` để tin có biển số dạng 51A-123.45.
   - Frontend: `/rua-xe/nhac-khach` (menu "Quản lý rửa xe"): 3 tab đến hạn + "Đã gửi", chọn rồi xác nhận gửi (xem trước tin), "Ngừng nhắc", dialog cài đặt; ô "Nhận tin nhắc" ở trang khách hàng.
   - Kiểm chứng: `dotnet test` 123/123; `npm test` 67/67, lint, build sạch; Playwright + Edge 1440×900 (dữ liệu "đến hạn" giả lập bằng route mock, không ghi DB dev).
-- **Nhân sự (2026-11-28, GĐ4 bước 1):** ✅ chưa commit.
+- **Nhân sự (2026-11-28, GĐ4 bước 1):** ✅ đã commit (`dd0d507`).
   - Người dùng chốt:
     - Làm theo đúng PLAN (Nhân sự → Lịch trực → Chấm công → Lương), không làm bảng lương với công nhập tay.
     - Chỉ lương tháng; kỳ lương = tháng dương lịch; trừ ngày nghỉ theo số ngày thực của tháng.
@@ -154,7 +154,29 @@
   - Kiểm chứng:
     - `dotnet test` 142/142; `npm test` 72/72, lint, build sạch.
     - Playwright + Edge 1440×900, không lỗi console. Dữ liệu HR mock vì DB dev chưa chạy `AddHr`: API :5001 chạy với `Database__Migrate=false`.
-- **Việc tiếp theo:** Lịch trực (GĐ4 bước 2), rồi Chấm công, rồi Lương (đọc hoa hồng). Khi có tài khoản Zalo OA/SMS: cài `IReminderSender` thật.
+- **Lịch trực (2026-11-28, GĐ4 bước 2, nhánh `feat/schedule` tạo từ `feat/carwash-print-report`):** ✅ chưa commit.
+  - Người dùng chốt:
+    - Phạm vi: ca mẫu, lưới tuần, cảnh báo, lịch của tôi. Đăng ký ca rảnh / đổi ca / nghỉ phép để bước sau.
+    - Không có bước công bố: nhân viên thấy ca ngay khi được xếp.
+    - Vượt 48 giờ/tuần (chỉnh theo chi nhánh) chỉ cảnh báo.
+    - Trùng giờ bị chặn, kể cả khác chi nhánh; hai ca nối tiếp vẫn được.
+    - Thiếu người theo bộ phận chỉ cảnh báo.
+  - Backend:
+    - Module mới `Cenvo.Modules.Schedule` (→ Hr).
+      - `ShiftTemplate`: theo chi nhánh, xóa mềm, có ca qua đêm, tối đa 16 giờ. `ShiftRequirement` là số người tối thiểu theo bộ phận.
+      - `ShiftAssignment` chụp lại tên và giờ ca, lưu `StartsAt/EndsAt` UTC và `Minutes`; unique (người, ngày, ca).
+      - `ScheduleSettings` (giờ tối đa/tuần).
+      - Hàm thuần: `ShiftWindow` (giờ VN → UTC, qua đêm, chồng giờ), `Week`, `Staffing.Shortfalls`.
+    - Hr thêm contract `IEmployeeDirectory.Departments`. Nhân viên chưa có hồ sơ được tính là bộ phận Chung.
+    - Không sửa lịch của ngày đã qua (để đối chiếu chấm công).
+    - API `/api/schedule/*` (Managers); `/api/schedule/mine` (mọi người, chỉ ca của mình, mọi chi nhánh).
+    - Migration `AddSchedule`: chỉ tạo bảng mới.
+  - Frontend `features/schedule`:
+    - `/lich-truc`: lưới ca × 7 ngày, thêm/bỏ người, nhãn "Thiếu n …" cho ngày tới, giờ/tuần từng người. Dialog "Ca làm" có giới hạn giờ.
+    - `/lich-cua-toi`: một cột cho điện thoại, tuần này và tuần sau.
+    - Nút ở trang chủ, mục "Lịch trực" trong menu Nhân sự.
+  - Kiểm chứng: `dotnet test` 162/162; `npm test` 75/75, lint, build sạch; Playwright 1440×900 và 390×844 (dữ liệu mock), không lỗi console.
+- **Việc tiếp theo:** Chấm công (GĐ4 bước 3), rồi Lương (đọc hoa hồng). Sau đó: đăng ký ca rảnh / đổi ca / nghỉ phép. Khi có tài khoản Zalo OA/SMS: cài `IReminderSender` thật.
 - Còn treo: 2 cảnh báo EF về global filter (Unit ↔ ProductUnit, Branch ↔ UserBranch). Chưa ảnh hưởng hành vi.
 
 > Phần dưới là nhật ký quá trình refactor, giữ lại để tham khảo.
