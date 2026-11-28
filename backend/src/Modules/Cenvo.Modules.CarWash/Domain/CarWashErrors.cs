@@ -17,7 +17,8 @@ public static class CarWashErrors
     public const string ServiceAlreadyOnTicket = "Dịch vụ này đã có trên phiếu.";
     public const string StaffRequired = "Gán ít nhất một nhân viên rửa xe trước khi bắt đầu.";
     public const string StaffNotInBranch = "Nhân viên được chọn không làm ở chi nhánh này hoặc không phải nhân viên rửa xe.";
-    public const string TicketNotEditable = "Phiếu đã rửa xong, đã thu tiền hoặc đã hủy — không sửa dịch vụ, nhân viên được nữa.";
+    public const string TicketNotEditable = "Phiếu đã rửa xong, đã thu tiền hoặc đã hủy — không sửa dịch vụ được nữa.";
+    public const string StaffLocked = "Xe đã rửa xong — không đổi người rửa được nữa (hoa hồng đã chia).";
     public const string OnlyWaitingCanStart = "Chỉ bắt đầu rửa được xe đang chờ.";
     public const string OnlyWashingCanReturn = "Chỉ đưa lại hàng chờ được xe đang rửa.";
     public const string OnlyWashingCanComplete = "Chỉ hoàn tất được xe đang rửa.";

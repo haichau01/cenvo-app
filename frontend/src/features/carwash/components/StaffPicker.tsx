@@ -16,7 +16,7 @@ export function StaffPicker({ ticket }: { ticket: WashTicket }) {
     assign.mutate({ id: ticket.id, staffIds: [...next] })
   }
 
-  if (!ticket.isEditable) {
+  if (!ticket.canAssignStaff) {
     return (
       <ul className="flex flex-wrap gap-2">
         {ticket.staff.map((member) => (

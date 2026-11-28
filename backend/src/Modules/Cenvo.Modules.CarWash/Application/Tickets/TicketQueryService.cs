@@ -51,6 +51,7 @@ public class TicketQueryService(AppDbContext db, IStaffDirectory staff, ICurrent
                    Status = ticket.Status,
                    IsPaid = ticket.PaidAt != null,
                    IsEditable = (ticket.Status == WashStatus.Waiting || ticket.Status == WashStatus.Washing) && ticket.PaidAt == null,
+                   CanAssignStaff = ticket.Status == WashStatus.Waiting || ticket.Status == WashStatus.Washing,
                    Subtotal = ticket.Subtotal,
                    MembershipCovered = ticket.MembershipCovered,
                    Total = ticket.Total,

@@ -17,13 +17,24 @@ public class CarWashFlowTests(ApiFixture api)
     private static async Task<Guid[]> WasherIds(HttpClient c) =>
         (await c.Get("/api/carwash/staff")).Arr().Select(s => s!.Id("userId")).ToArray();
 
-    private static async Task<JsonNode> Intake(HttpClient c, string serviceCode, Guid? membershipId = null, string? phone = null) =>
+    private static async Task<JsonNode> Intake(HttpClient c, string serviceCode, Guid? membershipId = null, string? phone = null,
+        bool withStaff = true) =>
         await c.Post("/api/carwash/tickets", new
         {
             plate = NewPlate(), vehicleType = "Sedan", customerPhone = phone, customerName = phone == null ? null : "Anh Tâm",
             services = new[] { new { offeringId = await ServiceId(c, serviceCode), membershipId } },
-            staffIds = await WasherIds(c),
+            staffIds = withStaff ? await WasherIds(c) : [],
         });
+
+    private static async Task<JsonNode> BuyMembership(HttpClient c, string phone)
+    {
+        var package = (await c.Get("/api/carwash/packages")).Arr().First(p => p!.Str("code") == "GOI-BOT-10")!;
+        return await c.Post("/api/carwash/memberships", new
+        {
+            packageId = package.Id(), customerPhone = phone, customerName = "Anh Tâm",
+            payments = new[] { new { method = "Transfer", amount = 1000000 } },
+        });
+    }
 
     private static async Task<decimal> ShiftCash(HttpClient cashier) =>
         (await cashier.Get("/api/cafe/shifts/current"))["byMethod"]!["Cash"]!.GetValue<decimal>();
@@ -99,6 +110,31 @@ public class CarWashFlowTests(ApiFixture api)
         await cashier.Post($"/api/carwash/tickets/{ticket.Id()}/cancel", new { reason = "Khách không rửa nữa" });
         customer = await cashier.Get($"/api/carwash/customers/{ticket.Id("customerId")}");
         Assert.Equal(12, customer["memberships"]![0]!["remainingUses"]!.GetValue<int>());
+    }
+
+    [Fact]
+    public async Task Washers_can_still_be_assigned_after_a_membership_ticket_is_settled()
+    {
+        var cashier = await api.LoginAs("thungan1");
+        await Seeded.EnsureShiftOpen(cashier);
+        var phone = $"09{Random.Shared.Next(10000000, 99999999)}";
+        var membership = await BuyMembership(cashier, phone);
+
+        var ticket = await Intake(cashier, "RX-BOT", membership.Id(), phone, withStaff: false);
+        ticket = await cashier.Post($"/api/carwash/tickets/{ticket.Id()}/pay", new { payments = Array.Empty<object>() }); // 0 VND
+        Assert.True(ticket["isPaid"]!.GetValue<bool>());
+        Assert.False(ticket["isEditable"]!.GetValue<bool>());
+
+        var washers = await WasherIds(cashier);
+        ticket = await cashier.Put($"/api/carwash/tickets/{ticket.Id()}/staff", new { staffIds = washers });
+        Assert.Equal(washers.Length, ticket["staff"]!.AsArray().Count);
+        await cashier.Post($"/api/carwash/tickets/{ticket.Id()}/start");
+        ticket = await cashier.Post($"/api/carwash/tickets/{ticket.Id()}/complete");
+
+        Assert.False(ticket["canAssignStaff"]!.GetValue<bool>());
+        var locked = await Assert.ThrowsAsync<HttpRequestException>(() =>
+            cashier.Put($"/api/carwash/tickets/{ticket.Id()}/staff", new { staffIds = washers.Take(1) }));
+        Assert.Equal(HttpStatusCode.BadRequest, locked.StatusCode);
     }
 
     [Fact]

@@ -52,6 +52,10 @@ public class WashTicket : BaseEntity, IBranchScoped
     /// <summary>Services and staff can change only before the wash is done and before payment.</summary>
     public bool IsEditable => (Status is WashStatus.Waiting or WashStatus.Washing) && !IsPaid;
 
+    /// <summary>Washers can change until the wash is done, even after payment (e.g. a prepaid or membership-covered ticket):
+    /// staff do not change the amount, and commission is only split on completion.</summary>
+    public bool CanAssignStaff => Status is WashStatus.Waiting or WashStatus.Washing;
+
     /// <param name="walkInName">Name typed for a customer without a phone number (no customer record is kept).</param>
     public static WashTicket Open(Guid branchId, string code, Vehicle vehicle, Customer? customer, string? walkInName, string? note) =>
         new()
@@ -86,7 +90,8 @@ public class WashTicket : BaseEntity, IBranchScoped
 
     public void AssignStaff(IReadOnlyCollection<StaffMember> staff)
     {
-        EnsureEditable();
+        EnsureNotCancelled();
+        if (!CanAssignStaff) throw new BusinessException(CarWashErrors.StaffLocked);
         Staff.RemoveAll(s => staff.All(w => w.UserId != s.UserId));
         Staff.AddRange(staff.Where(w => Staff.All(s => s.UserId != w.UserId))
             .Select(w => new WashTicketStaff { TicketId = Id, UserId = w.UserId, FullName = w.FullName }));
