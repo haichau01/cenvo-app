@@ -49,6 +49,7 @@ public record TicketDto
     public required WashStatus Status { get; init; }
     public required bool IsPaid { get; init; }
     public required bool IsEditable { get; init; }
+    public required bool CanAssignStaff { get; init; }
     public required decimal Subtotal { get; init; }
     public required decimal MembershipCovered { get; init; }
     public required decimal Total { get; init; }

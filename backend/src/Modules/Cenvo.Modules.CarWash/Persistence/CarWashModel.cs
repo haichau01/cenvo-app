@@ -64,6 +64,7 @@ public class CarWashModel : IModuleModel
             e.HasIndex(x => x.ShiftId);
             e.Ignore(x => x.IsPaid);
             e.Ignore(x => x.IsEditable);
+            e.Ignore(x => x.CanAssignStaff);
             e.HasOne<Vehicle>().WithMany().HasForeignKey(x => x.VehicleId).OnDelete(DeleteBehavior.Restrict);
             e.HasOne<Customer>().WithMany().HasForeignKey(x => x.CustomerId).OnDelete(DeleteBehavior.Restrict);
             e.HasOne<Shift>().WithMany().HasForeignKey(x => x.ShiftId).OnDelete(DeleteBehavior.Restrict);

@@ -4371,6 +4371,7 @@ export interface components {
             status: components["schemas"]["Cenvo.Modules.CarWash.Domain.WashStatus"];
             isPaid: boolean;
             isEditable: boolean;
+            canAssignStaff: boolean;
             /** Format: double */
             subtotal: number;
             /** Format: double */
