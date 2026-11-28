@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import type { MenuItem } from '@/lib/api/types'
 import { ALL_CATEGORIES, categoriesOf, itemsInCategory, splitMenu } from './menu'
-import { previewChange, suggestCash } from './payment'
+import { previewChange, suggestCash } from '@/lib/payment'
 
 function item(name: string, categoryId: string | null, isTopping = false): MenuItem {
   return {

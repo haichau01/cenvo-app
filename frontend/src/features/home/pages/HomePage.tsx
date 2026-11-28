@@ -3,10 +3,10 @@ import { Wordmark } from '@/components/cenvo/Wordmark'
 import { Button } from '@/components/ui/Button'
 import { useLogout } from '@/features/auth/api/auth'
 import { canWorkAcrossBranches, currentBranchName } from '@/features/auth/lib/branches'
-import { canManageStock, isManager } from '@/lib/auth/roles'
+import { canManageStock, canWash, isManager } from '@/lib/auth/roles'
 import { useSession } from '@/lib/auth/session'
 
-/** Temporary home page after login — entry to POS, kitchen and inventory. */
+/** Temporary home page after login — entry to POS, kitchen, car wash and inventory. */
 export function HomePage() {
   const user = useSession()!.user
   const logout = useLogout()
@@ -35,6 +35,8 @@ export function HomePage() {
         <nav aria-label="Màn làm việc" className="mt-8 flex flex-wrap gap-3">
           <ScreenLink to="/pos" module="cafe">Mở màn bán hàng</ScreenLink>
           <ScreenLink to="/pha-che" module="cafe">Màn pha chế</ScreenLink>
+          {canWash(user) && <ScreenLink to="/rua-xe" module="wash">Hàng chờ rửa xe</ScreenLink>}
+          {canWash(user) && <ScreenLink to="/rua-xe/tiep-nhan" module="wash">Tiếp nhận xe</ScreenLink>}
           {canManageStock(user) && <ScreenLink to="/kho/ton-kho" module="core">Kho</ScreenLink>}
           {isManager(user) && <ScreenLink to="/bao-cao" module="core">Báo cáo</ScreenLink>}
         </nav>
@@ -43,7 +45,7 @@ export function HomePage() {
   )
 }
 
-function ScreenLink({ to, module, children }: { to: string; module: 'cafe' | 'core'; children: string }) {
+function ScreenLink({ to, module, children }: { to: string; module: 'cafe' | 'wash' | 'core'; children: string }) {
   return (
     <Link to={to} data-module={module}
       className="inline-flex h-14 items-center rounded-(--radius-control) bg-(--module) px-6 text-lg font-semibold text-white">

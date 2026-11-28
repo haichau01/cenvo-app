@@ -49,6 +49,10 @@ function CloseShiftForm({ shift, onDone }: { shift: ShiftSummary; onDone: () => 
       <dl className="grid grid-cols-2 gap-x-6 gap-y-2 text-table">
         <Row label="Mở lúc" value={formatTime(shift.openedAt)} />
         <Row label="Số hóa đơn" value={`${shift.orderCount} (hủy ${shift.cancelledCount})`} />
+        {/* Car wash tickets / packages paid in this shift are in the same till. */}
+        {shift.otherTakings.filter((takings) => takings.count > 0).map((takings) => (
+          <Row key={takings.source} label={takings.source} value={`${takings.count} phiếu`} />
+        ))}
         <Row label="Chuyển khoản" value={<Money value={shift.byMethod.Transfer ?? 0} />} />
         <Row label="Thẻ" value={<Money value={shift.byMethod.Card ?? 0} />} />
       </dl>

@@ -1,6 +1,6 @@
 import { NavLink, Outlet } from 'react-router'
 import type { UserIdentity } from '@/lib/api/types'
-import { canManageStock, isManager } from '@/lib/auth/roles'
+import { canManageStock, canWash, isManager } from '@/lib/auth/roles'
 import { Wordmark } from '@/components/cenvo/Wordmark'
 import { currentBranchName } from '@/features/auth/lib/branches'
 import { useSession } from '@/lib/auth/session'
@@ -22,6 +22,12 @@ const SECTIONS: NavSection[] = [
   { title: 'Báo cáo', items: [{ to: '/bao-cao', label: 'Doanh thu' }], visible: isManager },
   { title: 'Kho', items: [{ to: '/kho/ton-kho', label: 'Tồn kho' }, { to: '/kho/phieu', label: 'Phiếu kho' }], visible: canManageStock },
   { title: 'Cà phê', items: [{ to: '/pos', label: 'Bán hàng' }, { to: '/pha-che', label: 'Pha chế' }] },
+  { title: 'Rửa xe', items: [{ to: '/rua-xe', label: 'Hàng chờ', end: true }, { to: '/rua-xe/khach-hang', label: 'Khách hàng' }], visible: canWash },
+  {
+    title: 'Thiết lập rửa xe',
+    items: [{ to: '/rua-xe/dich-vu', label: 'Dịch vụ & gói' }, { to: '/rua-xe/hoa-hong', label: 'Hoa hồng' }],
+    visible: isManager,
+  },
   { title: '', items: [{ to: '/', label: 'Trang chủ', end: true }] },
 ]
 

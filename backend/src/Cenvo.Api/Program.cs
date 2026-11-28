@@ -5,7 +5,10 @@ using Cenvo.Api.Hubs;
 using Cenvo.Api.Seed;
 using Cenvo.Infrastructure;
 using Cenvo.Infrastructure.Persistence;
+using Cenvo.Api.Storage;
 using Cenvo.Modules.Cafe.Contracts;
+using Cenvo.Modules.CarWash.Contracts;
+using Cenvo.Modules.CarWash.Persistence;
 using Cenvo.Modules.Cafe.Persistence;
 using Cenvo.Modules.Catalog.Persistence;
 using Cenvo.Modules.Inventory.Persistence;
@@ -25,9 +28,12 @@ builder.Services.AddScoped<CurrentUser>();
 builder.Services.AddScoped<ICurrentUser>(sp => sp.GetRequiredService<CurrentUser>());
 builder.Services.AddInfrastructure(builder.Configuration.GetConnectionString("Default")
                                    ?? throw new InvalidOperationException("Thiếu ConnectionStrings:Default"));
-foreach (var module in new[] { typeof(OrganizationModel), typeof(CatalogModel), typeof(InventoryModel), typeof(CafeModel) })
+foreach (var module in new[] { typeof(OrganizationModel), typeof(CatalogModel), typeof(InventoryModel), typeof(CafeModel), typeof(CarWashModel) })
     builder.Services.AddModule(module.Assembly);
 builder.Services.AddScoped<IKitchenNotifier, KitchenNotifier>();
+builder.Services.AddScoped<IWashNotifier, WashNotifier>();
+builder.Services.Configure<PhotoStorageOptions>(builder.Configuration.GetSection("Storage:Photos"));
+builder.Services.AddSingleton<IPhotoStorage, LocalPhotoStorage>();
 
 // ---------- Auth ----------
 var jwtSection = builder.Configuration.GetSection("Jwt");
@@ -99,7 +105,9 @@ app.MapOrganizationEndpoints();
 app.MapCatalogEndpoints();
 app.MapInventoryEndpoints();
 app.MapCafeEndpoints();
+app.MapCarWashEndpoints();
 app.MapHub<KitchenHub>("/hubs/kitchen");
+app.MapHub<WashHub>("/hubs/carwash");
 app.MapGet("/health", () => Results.Ok(new { status = "ok" }));
 
 if (app.Configuration.GetValue("Database:Migrate", true))

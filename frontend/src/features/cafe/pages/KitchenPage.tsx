@@ -1,9 +1,10 @@
 import { useQueryClient } from '@tanstack/react-query'
-import { useCallback, useState } from 'react'
+import { useCallback } from 'react'
 import { EmptyState } from '@/components/cenvo/EmptyState'
 import { Button } from '@/components/ui/Button'
 import type { KitchenTicket } from '@/lib/api/types'
 import { useRealtimeEvent } from '@/lib/realtime'
+import { useFreshIds } from '@/lib/useFreshIds'
 import { useStoredFlag } from '@/lib/useStoredFlag'
 import { useKitchenQueue, useMoveTicket } from '../api/kitchen'
 import { cafeKeys } from '../api/keys'
@@ -11,6 +12,7 @@ import { KitchenBoard } from '../components/KitchenBoard'
 import { isQueueStatus, nextStatus, previousStatus } from '../lib/kitchen'
 
 const DARK_MODE_KEY = 'cenvo.kitchen.dark'
+const lineIdOf = (ticket: KitchenTicket) => ticket.lineId
 
 /** Bar screen: drinks sent from the POS, moved along by the barista. Dark mode for evening shifts. */
 export function KitchenPage() {
@@ -18,7 +20,7 @@ export function KitchenPage() {
   const queue = useKitchenQueue()
   const { mutate: move } = useMoveTicket()
   const [dark, setDark] = useStoredFlag(DARK_MODE_KEY)
-  const freshIds = useFreshIds(queue.data)
+  const freshIds = useFreshIds(queue.data, lineIdOf)
 
   useRealtimeEvent('ordersChanged', () => void queryClient.invalidateQueries({ queryKey: cafeKeys.kitchen }))
 
@@ -64,30 +66,4 @@ function KitchenContent({ queue, freshIds, onForward, onBack }: KitchenContentPr
       description="Món thu ngân bấm “Gửi pha chế” sẽ hiện ở đây ngay lập tức." />
   }
   return <KitchenBoard tickets={queue.data} freshIds={freshIds} onForward={onForward} onBack={onBack} />
-}
-
-interface FreshState {
-  source: KitchenTicket[] | undefined
-  /** null until the first load: drinks already waiting when the screen opens are not "new". */
-  seen: ReadonlySet<string> | null
-  fresh: ReadonlySet<string>
-}
-
-/** Line ids that arrived after the first load — highlighted once so new orders catch the eye. */
-function useFreshIds(tickets: KitchenTicket[] | undefined): ReadonlySet<string> {
-  const [state, setState] = useState<FreshState>({ source: undefined, seen: null, fresh: new Set() })
-  // Adjusting state while rendering when the input changes (React's recommended alternative to an effect).
-  if (tickets && tickets !== state.source) setState(trackArrivals(state, tickets))
-  return state.fresh
-}
-
-function trackArrivals(state: FreshState, tickets: KitchenTicket[]): FreshState {
-  const seen = new Set(state.seen)
-  const fresh = new Set(state.fresh)
-  for (const ticket of tickets) {
-    if (seen.has(ticket.lineId)) continue
-    seen.add(ticket.lineId)
-    if (state.seen !== null) fresh.add(ticket.lineId)
-  }
-  return { source: tickets, seen, fresh }
 }

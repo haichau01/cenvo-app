@@ -7,6 +7,7 @@ export const Role = {
   Cashier: 'Cashier',
   Barista: 'Barista',
   Storekeeper: 'Storekeeper',
+  Washer: 'Washer',
 } as const
 
 function hasAnyRole(user: UserIdentity, roles: string[]): boolean {
@@ -21,3 +22,6 @@ export const canCheckout = (user: UserIdentity) => hasAnyRole(user, [Role.Admin,
 
 /** Policies.Storekeepers — inventory screens. */
 export const canManageStock = (user: UserIdentity) => hasAnyRole(user, [Role.Admin, Role.BranchManager, Role.Storekeeper])
+
+/** Policies.WashStaff — car wash intake, queue, photos. */
+export const canWash = (user: UserIdentity) => hasAnyRole(user, [Role.Admin, Role.BranchManager, Role.Cashier, Role.Washer])

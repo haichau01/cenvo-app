@@ -14,6 +14,9 @@
   /* Module colors on dark backgrounds (brand panel, dark mode) */
   --color-robusta-bright: #A9714E;
   --color-foam-bright: #4AA8D8;
+  /* A licence plate looks the same in light and dark mode (white plate, dark letters). */
+  --color-plate: #FFFFFF;
+  --color-plate-ink: #18263A;
 
   --font-sans: "Barlow", system-ui, sans-serif;
   --font-display: "Barlow Semi Condensed", "Barlow", system-ui, sans-serif;

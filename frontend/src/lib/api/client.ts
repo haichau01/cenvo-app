@@ -25,25 +25,42 @@ interface RequestOptions {
 
 export async function apiFetch<T>(path: string, options: RequestOptions = {}): Promise<T> {
   if (options.anonymous) return parse<T>(await send(path, options, null))
+  return parse<T>(await sendAuthorized(path, options))
+}
 
+/** Binary download that needs the token (e.g. vehicle photos — they are not public files). */
+export async function apiBlob(path: string): Promise<Blob> {
+  const response = await sendAuthorized(path, {})
+  if (!response.ok) return parse<never>(response)
+  return response.blob()
+}
+
+async function sendAuthorized(path: string, options: RequestOptions): Promise<Response> {
   let token = sessionStore.accessToken() ?? (await refreshAccessToken())
   let response = await send(path, options, token)
   if (response.status === 401) {
     token = await refreshAccessToken()
     response = await send(path, options, token)
   }
-  return parse<T>(response)
+  return response
 }
 
+/** `FormData` bodies (file uploads) are sent as multipart; anything else as JSON. */
 async function send(path: string, { method = 'GET', body }: RequestOptions, token: string | null) {
   const headers: Record<string, string> = {}
-  if (body !== undefined) headers['Content-Type'] = 'application/json'
+  const isForm = body instanceof FormData
+  if (body !== undefined && !isForm) headers['Content-Type'] = 'application/json'
   if (token) headers.Authorization = `Bearer ${token}`
   try {
-    return await fetch(path, { method, headers, body: body === undefined ? undefined : JSON.stringify(body) })
+    return await fetch(path, { method, headers, body: serialize(body) })
   } catch {
     throw new ApiError(0, NETWORK_ERROR)
   }
+}
+
+function serialize(body: unknown): BodyInit | undefined {
+  if (body === undefined || body instanceof FormData) return body
+  return JSON.stringify(body)
 }
 
 async function parse<T>(response: Response): Promise<T> {

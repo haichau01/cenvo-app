@@ -576,6 +576,845 @@ namespace Cenvo.Infrastructure.Persistence.Migrations
                     b.ToTable("shift", (string)null);
                 });
 
+            modelBuilder.Entity("Cenvo.Modules.CarWash.Domain.Customer", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("created_by");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_deleted");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("name");
+
+                    b.Property<string>("Note")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("note");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("phone");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("updated_by");
+
+                    b.HasKey("Id")
+                        .HasName("pk_customer");
+
+                    b.HasIndex("Name")
+                        .HasDatabaseName("ix_customer_name");
+
+                    b.HasIndex("Phone")
+                        .IsUnique()
+                        .HasDatabaseName("ix_customer_phone")
+                        .HasFilter("is_deleted = false");
+
+                    b.ToTable("customer", (string)null);
+                });
+
+            modelBuilder.Entity("Cenvo.Modules.CarWash.Domain.CustomerMembership", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("CancelReason")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("cancel_reason");
+
+                    b.Property<DateTime?>("CancelledAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("cancelled_at");
+
+                    b.Property<decimal>("CashReceived")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)")
+                        .HasColumnName("cash_received");
+
+                    b.Property<decimal>("ChangeAmount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)")
+                        .HasColumnName("change_amount");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("code");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("created_by");
+
+                    b.Property<Guid>("CustomerId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("customer_id");
+
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("expires_at");
+
+                    b.Property<Guid>("OfferingId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("offering_id");
+
+                    b.Property<Guid>("PackageId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("package_id");
+
+                    b.Property<string>("PackageName")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("package_name");
+
+                    b.Property<DateTime>("PaidAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("paid_at");
+
+                    b.Property<Guid?>("PaidBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("paid_by");
+
+                    b.Property<decimal>("Price")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)")
+                        .HasColumnName("price");
+
+                    b.Property<int>("RemainingUses")
+                        .HasColumnType("integer")
+                        .HasColumnName("remaining_uses");
+
+                    b.Property<Guid>("ShiftId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("shift_id");
+
+                    b.Property<Guid>("SoldBranchId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("sold_branch_id");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer")
+                        .HasColumnName("status");
+
+                    b.Property<int>("TotalUses")
+                        .HasColumnType("integer")
+                        .HasColumnName("total_uses");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("updated_by");
+
+                    b.Property<int?>("VehicleType")
+                        .HasColumnType("integer")
+                        .HasColumnName("vehicle_type");
+
+                    b.Property<uint>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.HasKey("Id")
+                        .HasName("pk_customer_membership");
+
+                    b.HasIndex("PackageId")
+                        .HasDatabaseName("ix_customer_membership_package_id");
+
+                    b.HasIndex("ShiftId")
+                        .HasDatabaseName("ix_customer_membership_shift_id");
+
+                    b.HasIndex("CustomerId", "Status")
+                        .HasDatabaseName("ix_customer_membership_customer_id_status");
+
+                    b.HasIndex("SoldBranchId", "Code")
+                        .IsUnique()
+                        .HasDatabaseName("ix_customer_membership_sold_branch_id_code");
+
+                    b.ToTable("customer_membership", (string)null);
+                });
+
+            modelBuilder.Entity("Cenvo.Modules.CarWash.Domain.MembershipPackage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("code");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("created_by");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_active");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_deleted");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("name");
+
+                    b.Property<Guid>("OfferingId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("offering_id");
+
+                    b.Property<decimal>("Price")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)")
+                        .HasColumnName("price");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("updated_by");
+
+                    b.Property<int>("Uses")
+                        .HasColumnType("integer")
+                        .HasColumnName("uses");
+
+                    b.Property<int>("ValidDays")
+                        .HasColumnType("integer")
+                        .HasColumnName("valid_days");
+
+                    b.Property<int?>("VehicleType")
+                        .HasColumnType("integer")
+                        .HasColumnName("vehicle_type");
+
+                    b.HasKey("Id")
+                        .HasName("pk_membership_package");
+
+                    b.HasIndex("Code")
+                        .IsUnique()
+                        .HasDatabaseName("ix_membership_package_code")
+                        .HasFilter("is_deleted = false");
+
+                    b.HasIndex("OfferingId")
+                        .HasDatabaseName("ix_membership_package_offering_id");
+
+                    b.ToTable("membership_package", (string)null);
+                });
+
+            modelBuilder.Entity("Cenvo.Modules.CarWash.Domain.MembershipPayment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<decimal>("Amount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)")
+                        .HasColumnName("amount");
+
+                    b.Property<Guid>("MembershipId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("membership_id");
+
+                    b.Property<int>("Method")
+                        .HasColumnType("integer")
+                        .HasColumnName("method");
+
+                    b.Property<string>("Reference")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("reference");
+
+                    b.HasKey("Id")
+                        .HasName("pk_membership_payment");
+
+                    b.HasIndex("MembershipId")
+                        .HasDatabaseName("ix_membership_payment_membership_id");
+
+                    b.ToTable("membership_payment", (string)null);
+                });
+
+            modelBuilder.Entity("Cenvo.Modules.CarWash.Domain.Vehicle", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("created_by");
+
+                    b.Property<Guid?>("CustomerId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("customer_id");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("description");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_deleted");
+
+                    b.Property<string>("Plate")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("plate");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("updated_by");
+
+                    b.Property<int>("VehicleType")
+                        .HasColumnType("integer")
+                        .HasColumnName("vehicle_type");
+
+                    b.HasKey("Id")
+                        .HasName("pk_vehicle");
+
+                    b.HasIndex("CustomerId")
+                        .HasDatabaseName("ix_vehicle_customer_id");
+
+                    b.HasIndex("Plate")
+                        .IsUnique()
+                        .HasDatabaseName("ix_vehicle_plate")
+                        .HasFilter("is_deleted = false");
+
+                    b.ToTable("vehicle", (string)null);
+                });
+
+            modelBuilder.Entity("Cenvo.Modules.CarWash.Domain.WashOffering", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("code");
+
+                    b.Property<int>("CommissionType")
+                        .HasColumnType("integer")
+                        .HasColumnName("commission_type");
+
+                    b.Property<decimal>("CommissionValue")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)")
+                        .HasColumnName("commission_value");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("created_by");
+
+                    b.Property<int>("DurationMinutes")
+                        .HasColumnType("integer")
+                        .HasColumnName("duration_minutes");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_active");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_deleted");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("name");
+
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("integer")
+                        .HasColumnName("sort_order");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("updated_by");
+
+                    b.HasKey("Id")
+                        .HasName("pk_wash_offering");
+
+                    b.HasIndex("Code")
+                        .IsUnique()
+                        .HasDatabaseName("ix_wash_offering_code")
+                        .HasFilter("is_deleted = false");
+
+                    b.ToTable("wash_offering", (string)null);
+                });
+
+            modelBuilder.Entity("Cenvo.Modules.CarWash.Domain.WashOfferingPrice", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<Guid>("OfferingId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("offering_id");
+
+                    b.Property<decimal>("Price")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)")
+                        .HasColumnName("price");
+
+                    b.Property<int>("VehicleType")
+                        .HasColumnType("integer")
+                        .HasColumnName("vehicle_type");
+
+                    b.HasKey("Id")
+                        .HasName("pk_wash_offering_price");
+
+                    b.HasIndex("OfferingId", "VehicleType")
+                        .IsUnique()
+                        .HasDatabaseName("ix_wash_offering_price_offering_id_vehicle_type");
+
+                    b.ToTable("wash_offering_price", (string)null);
+                });
+
+            modelBuilder.Entity("Cenvo.Modules.CarWash.Domain.WashOfferingSupply", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<Guid>("OfferingId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("offering_id");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("product_id");
+
+                    b.Property<decimal>("Quantity")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)")
+                        .HasColumnName("quantity");
+
+                    b.Property<Guid?>("UnitId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("unit_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_wash_offering_supply");
+
+                    b.HasIndex("OfferingId")
+                        .HasDatabaseName("ix_wash_offering_supply_offering_id");
+
+                    b.HasIndex("ProductId")
+                        .HasDatabaseName("ix_wash_offering_supply_product_id");
+
+                    b.ToTable("wash_offering_supply", (string)null);
+                });
+
+            modelBuilder.Entity("Cenvo.Modules.CarWash.Domain.WashPayment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<decimal>("Amount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)")
+                        .HasColumnName("amount");
+
+                    b.Property<int>("Method")
+                        .HasColumnType("integer")
+                        .HasColumnName("method");
+
+                    b.Property<string>("Reference")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("reference");
+
+                    b.Property<Guid>("TicketId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("ticket_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_wash_payment");
+
+                    b.HasIndex("TicketId")
+                        .HasDatabaseName("ix_wash_payment_ticket_id");
+
+                    b.ToTable("wash_payment", (string)null);
+                });
+
+            modelBuilder.Entity("Cenvo.Modules.CarWash.Domain.WashTicket", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<Guid>("BranchId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("branch_id");
+
+                    b.Property<string>("CancelReason")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("cancel_reason");
+
+                    b.Property<DateTime?>("CancelledAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("cancelled_at");
+
+                    b.Property<decimal>("CashReceived")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)")
+                        .HasColumnName("cash_received");
+
+                    b.Property<decimal>("ChangeAmount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)")
+                        .HasColumnName("change_amount");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("code");
+
+                    b.Property<DateTime?>("CompletedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("completed_at");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("created_by");
+
+                    b.Property<Guid?>("CustomerId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("customer_id");
+
+                    b.Property<string>("CustomerName")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("customer_name");
+
+                    b.Property<string>("CustomerPhone")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("customer_phone");
+
+                    b.Property<DateTime?>("DeliveredAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("delivered_at");
+
+                    b.Property<decimal>("MembershipCovered")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)")
+                        .HasColumnName("membership_covered");
+
+                    b.Property<string>("Note")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("note");
+
+                    b.Property<DateTime?>("PaidAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("paid_at");
+
+                    b.Property<Guid?>("PaidBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("paid_by");
+
+                    b.Property<string>("Plate")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("plate");
+
+                    b.Property<Guid?>("ShiftId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("shift_id");
+
+                    b.Property<DateTime?>("StartedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("started_at");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer")
+                        .HasColumnName("status");
+
+                    b.Property<decimal>("Subtotal")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)")
+                        .HasColumnName("subtotal");
+
+                    b.Property<decimal>("Total")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)")
+                        .HasColumnName("total");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("updated_by");
+
+                    b.Property<string>("VehicleDescription")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("vehicle_description");
+
+                    b.Property<Guid>("VehicleId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("vehicle_id");
+
+                    b.Property<int>("VehicleType")
+                        .HasColumnType("integer")
+                        .HasColumnName("vehicle_type");
+
+                    b.Property<uint>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.HasKey("Id")
+                        .HasName("pk_wash_ticket");
+
+                    b.HasIndex("CustomerId")
+                        .HasDatabaseName("ix_wash_ticket_customer_id");
+
+                    b.HasIndex("ShiftId")
+                        .HasDatabaseName("ix_wash_ticket_shift_id");
+
+                    b.HasIndex("VehicleId")
+                        .HasDatabaseName("ix_wash_ticket_vehicle_id");
+
+                    b.HasIndex("BranchId", "Code")
+                        .IsUnique()
+                        .HasDatabaseName("ix_wash_ticket_branch_id_code");
+
+                    b.HasIndex("BranchId", "CompletedAt")
+                        .HasDatabaseName("ix_wash_ticket_branch_id_completed_at");
+
+                    b.HasIndex("BranchId", "CreatedAt")
+                        .HasDatabaseName("ix_wash_ticket_branch_id_created_at");
+
+                    b.HasIndex("BranchId", "Status")
+                        .HasDatabaseName("ix_wash_ticket_branch_id_status");
+
+                    b.HasIndex("BranchId", "VehicleId")
+                        .HasDatabaseName("ix_wash_ticket_branch_id_vehicle_id");
+
+                    b.ToTable("wash_ticket", (string)null);
+                });
+
+            modelBuilder.Entity("Cenvo.Modules.CarWash.Domain.WashTicketLine", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<decimal>("Amount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)")
+                        .HasColumnName("amount");
+
+                    b.Property<int>("CommissionType")
+                        .HasColumnType("integer")
+                        .HasColumnName("commission_type");
+
+                    b.Property<decimal>("CommissionValue")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)")
+                        .HasColumnName("commission_value");
+
+                    b.Property<int>("DurationMinutes")
+                        .HasColumnType("integer")
+                        .HasColumnName("duration_minutes");
+
+                    b.Property<Guid?>("MembershipId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("membership_id");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("name");
+
+                    b.Property<Guid>("OfferingId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("offering_id");
+
+                    b.Property<decimal>("Price")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)")
+                        .HasColumnName("price");
+
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("integer")
+                        .HasColumnName("sort_order");
+
+                    b.Property<Guid>("TicketId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("ticket_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_wash_ticket_line");
+
+                    b.HasIndex("MembershipId")
+                        .HasDatabaseName("ix_wash_ticket_line_membership_id");
+
+                    b.HasIndex("OfferingId")
+                        .HasDatabaseName("ix_wash_ticket_line_offering_id");
+
+                    b.HasIndex("TicketId")
+                        .HasDatabaseName("ix_wash_ticket_line_ticket_id");
+
+                    b.ToTable("wash_ticket_line", (string)null);
+                });
+
+            modelBuilder.Entity("Cenvo.Modules.CarWash.Domain.WashTicketPhoto", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("ContentType")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("content_type");
+
+                    b.Property<long>("SizeBytes")
+                        .HasColumnType("bigint")
+                        .HasColumnName("size_bytes");
+
+                    b.Property<string>("StorageKey")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("storage_key");
+
+                    b.Property<DateTime>("TakenAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("taken_at");
+
+                    b.Property<Guid?>("TakenBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("taken_by");
+
+                    b.Property<Guid>("TicketId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("ticket_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_wash_ticket_photo");
+
+                    b.HasIndex("TicketId")
+                        .HasDatabaseName("ix_wash_ticket_photo_ticket_id");
+
+                    b.ToTable("wash_ticket_photo", (string)null);
+                });
+
+            modelBuilder.Entity("Cenvo.Modules.CarWash.Domain.WashTicketStaff", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<decimal>("Commission")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)")
+                        .HasColumnName("commission");
+
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("full_name");
+
+                    b.Property<Guid>("TicketId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("ticket_id");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_wash_ticket_staff");
+
+                    b.HasIndex("TicketId")
+                        .HasDatabaseName("ix_wash_ticket_staff_ticket_id");
+
+                    b.HasIndex("UserId")
+                        .HasDatabaseName("ix_wash_ticket_staff_user_id");
+
+                    b.ToTable("wash_ticket_staff", (string)null);
+                });
+
             modelBuilder.Entity("Cenvo.Modules.Catalog.Domain.Category", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1555,6 +2394,161 @@ namespace Cenvo.Infrastructure.Persistence.Migrations
                         .HasConstraintName("fk_recipe_line_product_menu_product_id");
                 });
 
+            modelBuilder.Entity("Cenvo.Modules.CarWash.Domain.CustomerMembership", b =>
+                {
+                    b.HasOne("Cenvo.Modules.CarWash.Domain.Customer", null)
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_customer_membership_customer_customer_id");
+
+                    b.HasOne("Cenvo.Modules.CarWash.Domain.MembershipPackage", null)
+                        .WithMany()
+                        .HasForeignKey("PackageId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_customer_membership_membership_package_package_id");
+
+                    b.HasOne("Cenvo.Modules.Cafe.Domain.Shift", null)
+                        .WithMany()
+                        .HasForeignKey("ShiftId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_customer_membership_shift_shift_id");
+                });
+
+            modelBuilder.Entity("Cenvo.Modules.CarWash.Domain.MembershipPackage", b =>
+                {
+                    b.HasOne("Cenvo.Modules.CarWash.Domain.WashOffering", null)
+                        .WithMany()
+                        .HasForeignKey("OfferingId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_membership_package_wash_offering_offering_id");
+                });
+
+            modelBuilder.Entity("Cenvo.Modules.CarWash.Domain.MembershipPayment", b =>
+                {
+                    b.HasOne("Cenvo.Modules.CarWash.Domain.CustomerMembership", null)
+                        .WithMany("Payments")
+                        .HasForeignKey("MembershipId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_membership_payment_customer_membership_membership_id");
+                });
+
+            modelBuilder.Entity("Cenvo.Modules.CarWash.Domain.Vehicle", b =>
+                {
+                    b.HasOne("Cenvo.Modules.CarWash.Domain.Customer", null)
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .HasConstraintName("fk_vehicle_customer_customer_id");
+                });
+
+            modelBuilder.Entity("Cenvo.Modules.CarWash.Domain.WashOfferingPrice", b =>
+                {
+                    b.HasOne("Cenvo.Modules.CarWash.Domain.WashOffering", null)
+                        .WithMany("Prices")
+                        .HasForeignKey("OfferingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_wash_offering_price_wash_offering_offering_id");
+                });
+
+            modelBuilder.Entity("Cenvo.Modules.CarWash.Domain.WashOfferingSupply", b =>
+                {
+                    b.HasOne("Cenvo.Modules.CarWash.Domain.WashOffering", null)
+                        .WithMany("Supplies")
+                        .HasForeignKey("OfferingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_wash_offering_supply_wash_offering_offering_id");
+
+                    b.HasOne("Cenvo.Modules.Catalog.Domain.Product", null)
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_wash_offering_supply_product_product_id");
+                });
+
+            modelBuilder.Entity("Cenvo.Modules.CarWash.Domain.WashPayment", b =>
+                {
+                    b.HasOne("Cenvo.Modules.CarWash.Domain.WashTicket", null)
+                        .WithMany("Payments")
+                        .HasForeignKey("TicketId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_wash_payment_wash_ticket_ticket_id");
+                });
+
+            modelBuilder.Entity("Cenvo.Modules.CarWash.Domain.WashTicket", b =>
+                {
+                    b.HasOne("Cenvo.Modules.CarWash.Domain.Customer", null)
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasConstraintName("fk_wash_ticket_customer_customer_id");
+
+                    b.HasOne("Cenvo.Modules.Cafe.Domain.Shift", null)
+                        .WithMany()
+                        .HasForeignKey("ShiftId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasConstraintName("fk_wash_ticket_shift_shift_id");
+
+                    b.HasOne("Cenvo.Modules.CarWash.Domain.Vehicle", null)
+                        .WithMany()
+                        .HasForeignKey("VehicleId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_wash_ticket_vehicle_vehicle_id");
+                });
+
+            modelBuilder.Entity("Cenvo.Modules.CarWash.Domain.WashTicketLine", b =>
+                {
+                    b.HasOne("Cenvo.Modules.CarWash.Domain.CustomerMembership", null)
+                        .WithMany()
+                        .HasForeignKey("MembershipId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasConstraintName("fk_wash_ticket_line_customer_membership_membership_id");
+
+                    b.HasOne("Cenvo.Modules.CarWash.Domain.WashOffering", null)
+                        .WithMany()
+                        .HasForeignKey("OfferingId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_wash_ticket_line_wash_offering_offering_id");
+
+                    b.HasOne("Cenvo.Modules.CarWash.Domain.WashTicket", null)
+                        .WithMany("Lines")
+                        .HasForeignKey("TicketId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_wash_ticket_line_wash_ticket_ticket_id");
+                });
+
+            modelBuilder.Entity("Cenvo.Modules.CarWash.Domain.WashTicketPhoto", b =>
+                {
+                    b.HasOne("Cenvo.Modules.CarWash.Domain.WashTicket", null)
+                        .WithMany("Photos")
+                        .HasForeignKey("TicketId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_wash_ticket_photo_wash_ticket_ticket_id");
+                });
+
+            modelBuilder.Entity("Cenvo.Modules.CarWash.Domain.WashTicketStaff", b =>
+                {
+                    b.HasOne("Cenvo.Modules.CarWash.Domain.WashTicket", null)
+                        .WithMany("Staff")
+                        .HasForeignKey("TicketId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_wash_ticket_staff_wash_ticket_ticket_id");
+                });
+
             modelBuilder.Entity("Cenvo.Modules.Catalog.Domain.Product", b =>
                 {
                     b.HasOne("Cenvo.Modules.Catalog.Domain.Unit", "BaseUnit")
@@ -1698,6 +2692,29 @@ namespace Cenvo.Infrastructure.Persistence.Migrations
             modelBuilder.Entity("Cenvo.Modules.Cafe.Domain.CafeOrderLine", b =>
                 {
                     b.Navigation("Toppings");
+                });
+
+            modelBuilder.Entity("Cenvo.Modules.CarWash.Domain.CustomerMembership", b =>
+                {
+                    b.Navigation("Payments");
+                });
+
+            modelBuilder.Entity("Cenvo.Modules.CarWash.Domain.WashOffering", b =>
+                {
+                    b.Navigation("Prices");
+
+                    b.Navigation("Supplies");
+                });
+
+            modelBuilder.Entity("Cenvo.Modules.CarWash.Domain.WashTicket", b =>
+                {
+                    b.Navigation("Lines");
+
+                    b.Navigation("Payments");
+
+                    b.Navigation("Photos");
+
+                    b.Navigation("Staff");
                 });
 
             modelBuilder.Entity("Cenvo.Modules.Catalog.Domain.Product", b =>

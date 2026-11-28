@@ -60,7 +60,28 @@
   - POS: "In tạm tính"; ô "In hóa đơn sau khi thanh toán" (nhớ theo máy, mặc định bật); "In lại" hóa đơn đã thanh toán hôm nay.
   - `/in/hoa-don/:id`: xem trước, chọn khổ 80/58 mm theo máy, in.
   - In trong trang (không dùng iframe, để không xoay refresh token); khổ giấy đo theo chiều cao thật, PDF kiểm được 80 × 121 mm, 1 trang.
-- **Việc tiếp theo:** phân hệ Rửa xe (backend + màn tiếp nhận/hàng chờ); POS còn thiếu chuyển/gộp bàn, giảm giá, in hóa đơn.
+- **Phân hệ Rửa xe (2026-11-28):** ✅ chưa commit.
+  - Nghiệp vụ đã chốt với người dùng: chỉ nhận ô tô (4–5 chỗ, 7 chỗ, bán tải, SUV); thu tiền tại POS, **chung ca thu ngân**; hoa hồng cấu hình theo dịch vụ (% giá hoặc số tiền/xe), chia đều cho người rửa, tính trên giá niêm yết kể cả khi gói trả.
+  - Backend `Cenvo.Modules.CarWash` (phụ thuộc Cafe):
+    - Dịch vụ (`WashOffering`): giá theo loại xe, định mức hóa chất mỗi xe.
+    - Phiếu: Chờ → Đang rửa → Xong → Đã giao. "Rửa xong" chia hoa hồng và phát `WashTicketCompleted` để trừ hóa chất qua `ISaleStockIssuer`. Hủy phiếu đã rửa thì hoàn kho; phiếu đã rửa hoặc đã thu tiền cần quản lý.
+    - Khách nhận diện bằng SĐT, xe bằng biển số chuẩn hóa; cả hai dùng chung toàn chuỗi. Không nhập SĐT thì phiếu thuộc chủ xe đã biết.
+    - Gói thành viên: bán trong ca; trừ lượt khi thêm dịch vụ vào phiếu, hoàn lượt khi bỏ dịch vụ hoặc hủy phiếu; chỉ hủy được gói chưa dùng, tại chi nhánh đã bán.
+    - Ảnh hiện trạng: kiểm định dạng bằng byte đầu (JPEG/PNG/WebP, ≤ 5 MB, ≤ 8 ảnh). Lưu đĩa ngoài web root (`Storage:Photos:Root`), chỉ đọc được qua phiếu (có lọc chi nhánh).
+    - Cafe thêm `ICashierShifts` và `IShiftTakingsSource`: đóng ca đối soát cả tiền rửa xe và tiền bán gói. Organization thêm `IStaffDirectory`, role `Washer`.
+    - Hub `/hubs/carwash`, tín hiệu `ticketsChanged`. Migration `AddCarWash` (chỉ tạo bảng mới). Seed rửa xe chạy riêng một lần, nên DB cũ cũng được bổ sung (`ruaxe1..3`).
+  - Frontend:
+    - `/rua-xe`: hàng chờ 4 làn, realtime, chế độ tối, sheet chi tiết (dịch vụ, người rửa, ảnh, thu tiền, hủy).
+    - `/rua-xe/tiep-nhan`: tra biển số, tự điền xe quen và dùng gói.
+    - `/rua-xe/khach-hang`: lịch sử, bán và hủy gói.
+    - `/rua-xe/dich-vu` và `/rua-xe/hoa-hong` cho quản lý.
+    - Chip `<Plate>`; realtime nhiều hub; `TouchRail` dùng chung.
+  - Kiểm chứng:
+    - `dotnet test` 77/77 (unit: hoa hồng, biển số, SĐT, ảnh, vòng đời phiếu; integration: trừ/hoàn hóa chất, tiền vào ca, gói, tra biển số, washer bị 403 khi thu tiền, ảnh và cô lập chi nhánh).
+    - `npm test` 54/54, lint và build sạch.
+    - Playwright + Edge 1180×820 / 1440×900: tiếp nhận → ảnh → máy thứ hai bắt đầu và xong → máy thu ngân thấy realtime → thu tiền; không có lỗi console.
+  - Còn lại: in phiếu rửa xe; nhắc khách quay lại; báo cáo doanh thu rửa xe; Payroll đọc hoa hồng (event đã mang sẵn dữ liệu).
+- **Việc tiếp theo:** commit phân hệ Rửa xe (chạy `/cenvo-security` + `/cenvo-review` trước); POS còn thiếu chuyển/gộp bàn, giảm giá.
 - Còn treo: 2 cảnh báo EF về global filter (Unit ↔ ProductUnit, Branch ↔ UserBranch). Chưa ảnh hưởng hành vi.
 
 > Phần dưới là nhật ký quá trình refactor, giữ lại để tham khảo.

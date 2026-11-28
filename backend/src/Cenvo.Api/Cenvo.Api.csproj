@@ -21,6 +21,7 @@
     <ProjectReference Include="..\Modules\Cenvo.Modules.Catalog\Cenvo.Modules.Catalog.csproj" />
     <ProjectReference Include="..\Modules\Cenvo.Modules.Inventory\Cenvo.Modules.Inventory.csproj" />
     <ProjectReference Include="..\Modules\Cenvo.Modules.Cafe\Cenvo.Modules.Cafe.csproj" />
+    <ProjectReference Include="..\Modules\Cenvo.Modules.CarWash\Cenvo.Modules.CarWash.csproj" />
   </ItemGroup>
 
 </Project>

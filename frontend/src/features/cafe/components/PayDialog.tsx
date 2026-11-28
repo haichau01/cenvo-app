@@ -10,7 +10,7 @@ import { formatVnd } from '@/lib/format'
 import { usePayOrder } from '../api/orders'
 import { usePrintReceipt } from '../api/receipts'
 import { useStoredFlag } from '@/lib/useStoredFlag'
-import { previewChange, suggestCash } from '../lib/payment'
+import { previewChange, suggestCash } from '@/lib/payment'
 
 const PRINT_AFTER_PAY_KEY = 'cenvo.pos.printAfterPay'
 

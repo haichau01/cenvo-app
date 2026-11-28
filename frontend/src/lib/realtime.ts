@@ -2,74 +2,89 @@ import { HubConnectionBuilder, HubConnectionState, LogLevel, type HubConnection 
 import { useEffect, useRef, useSyncExternalStore } from 'react'
 import { getAccessToken } from '@/lib/api/client'
 
+/** SignalR hubs of the API; each joins the user's branch group on the server. */
+export const Hub = {
+  kitchen: '/hubs/kitchen',
+  carWash: '/hubs/carwash',
+} as const
+export type HubPath = (typeof Hub)[keyof typeof Hub]
+
 /**
- * One SignalR connection for the whole app. The server only sends "something changed" signals
- * (e.g. `ordersChanged`); screens react by invalidating their queries.
+ * One SignalR connection per hub, shared by the whole app. The server only sends "something changed" signals
+ * (e.g. `ordersChanged`, `ticketsChanged`); screens react by invalidating their queries.
  */
-let connection: HubConnection | null = null
+const connections = new Map<HubPath, HubConnection>()
+const disconnected = new Set<HubPath>()
 let connected = true
 const statusListeners = new Set<() => void>()
-const reconnectHandlers = new Set<() => void>()
+const reconnectHandlers = new Map<HubPath, Set<() => void>>()
 
-function setConnected(value: boolean) {
-  connected = value
+function setHubConnected(path: HubPath, value: boolean) {
+  if (value) disconnected.delete(path)
+  else disconnected.add(path)
+  connected = disconnected.size === 0
   statusListeners.forEach((listener) => listener())
 }
 
-function ensureConnection(): HubConnection {
-  if (connection) return connection
+function ensureConnection(path: HubPath): HubConnection {
+  const existing = connections.get(path)
+  if (existing) return existing
   const hub = new HubConnectionBuilder()
-    .withUrl('/hubs/kitchen', { accessTokenFactory: getAccessToken })
+    .withUrl(path, { accessTokenFactory: getAccessToken })
     .withAutomaticReconnect([0, 2_000, 5_000, 10_000, 30_000])
     .configureLogging(LogLevel.Warning)
     .build()
-  hub.onreconnecting(() => setConnected(false))
+  const isCurrent = () => connections.get(path) === hub
+  hub.onreconnecting(() => setHubConnected(path, false))
   hub.onreconnected(() => {
-    setConnected(true)
-    reconnectHandlers.forEach((handler) => handler())
+    setHubConnected(path, true)
+    reconnectHandlers.get(path)?.forEach((handler) => handler())
   })
   // A connection stopped by stopRealtime() is no longer current and must not flip the status.
-  hub.onclose(() => hub === connection && setConnected(false))
-  connection = hub
-  void start(hub)
+  hub.onclose(() => isCurrent() && setHubConnected(path, false))
+  connections.set(path, hub)
+  void start(path, hub, isCurrent)
   return hub
 }
 
-async function start(hub: HubConnection) {
+async function start(path: HubPath, hub: HubConnection, isCurrent: () => boolean) {
   try {
     await hub.start()
-    setConnected(true)
+    setHubConnected(path, true)
   } catch {
-    setConnected(false)
-    setTimeout(() => hub === connection && hub.state === HubConnectionState.Disconnected && void start(hub), 5_000)
+    setHubConnected(path, false)
+    setTimeout(() => isCurrent() && hub.state === HubConnectionState.Disconnected && void start(path, hub, isCurrent), 5_000)
   }
 }
 
-/** Stop the connection — call on logout / branch switch so the next connection joins the right branch group. */
+/** Stop every connection — call on logout / branch switch so the next connections join the right branch group. */
 export async function stopRealtime() {
-  const hub = connection
-  connection = null
-  setConnected(true)
-  await hub?.stop()
+  const hubs = [...connections.values()]
+  connections.clear()
+  disconnected.clear()
+  connected = true
+  statusListeners.forEach((listener) => listener())
+  await Promise.all(hubs.map((hub) => hub.stop()))
 }
 
-/** Runs `handler` whenever the server sends `event`, and once after reconnecting (signals may have been missed). */
-export function useRealtimeEvent(event: string, handler: () => void) {
+/** Runs `handler` whenever the hub sends `event`, and once after reconnecting (signals may have been missed). */
+export function useRealtimeEvent(event: string, handler: () => void, path: HubPath = Hub.kitchen) {
   const handlerRef = useRef(handler)
   useEffect(() => {
     handlerRef.current = handler
   })
 
   useEffect(() => {
-    const hub = ensureConnection()
+    const hub = ensureConnection(path)
     const listener = () => handlerRef.current()
     hub.on(event, listener)
-    reconnectHandlers.add(listener)
+    const handlers = reconnectHandlers.get(path) ?? new Set()
+    reconnectHandlers.set(path, handlers.add(listener))
     return () => {
       hub.off(event, listener)
-      reconnectHandlers.delete(listener)
+      handlers.delete(listener)
     }
-  }, [event])
+  }, [event, path])
 }
 
 export function useRealtimeConnected(): boolean {

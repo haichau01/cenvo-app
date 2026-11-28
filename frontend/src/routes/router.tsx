@@ -1,6 +1,7 @@
 import { createBrowserRouter, Navigate } from 'react-router'
 import { prefetchKitchen, prefetchPos } from '@/features/cafe/prefetch'
-import { canManageStock, isManager } from '@/lib/auth/roles'
+import { prefetchIntake, prefetchQueue } from '@/features/carwash/prefetch'
+import { canManageStock, canWash, isManager } from '@/lib/auth/roles'
 import { RequireAuth } from './RequireAuth'
 import { RequireRole } from './RequireRole'
 
@@ -33,6 +34,29 @@ export const router = createBrowserRouter([
             element: <RequireRole allow={isManager} who="quản lý" />,
             children: [
               { path: '/bao-cao', lazy: async () => ({ Component: (await import('@/features/reports/pages/ReportsPage')).ReportsPage }) },
+              { path: '/rua-xe/dich-vu', lazy: async () => ({ Component: (await import('@/features/carwash/pages/WashSetupPage')).WashSetupPage }) },
+              { path: '/rua-xe/hoa-hong', lazy: async () => ({ Component: (await import('@/features/carwash/pages/CommissionPage')).CommissionPage }) },
+            ],
+          },
+        ],
+      },
+      {
+        lazy: async () => ({ Component: (await import('./layouts/WashLayout')).WashLayout }),
+        children: [
+          {
+            element: <RequireRole allow={canWash} who="nhân viên rửa xe, thu ngân và quản lý" />,
+            children: [
+              {
+                path: '/rua-xe',
+                loader: prefetchQueue,
+                lazy: async () => ({ Component: (await import('@/features/carwash/pages/WashQueuePage')).WashQueuePage }),
+              },
+              {
+                path: '/rua-xe/tiep-nhan',
+                loader: prefetchIntake,
+                lazy: async () => ({ Component: (await import('@/features/carwash/pages/IntakePage')).IntakePage }),
+              },
+              { path: '/rua-xe/khach-hang', lazy: async () => ({ Component: (await import('@/features/carwash/pages/CustomersPage')).CustomersPage }) },
             ],
           },
         ],
