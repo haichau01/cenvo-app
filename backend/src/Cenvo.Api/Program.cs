@@ -5,6 +5,7 @@ using Cenvo.Api.Hubs;
 using Cenvo.Api.Seed;
 using Cenvo.Infrastructure;
 using Cenvo.Infrastructure.Persistence;
+using Cenvo.Infrastructure.Security;
 using Cenvo.Api.Messaging;
 using Cenvo.Api.Storage;
 using Cenvo.Modules.Cafe.Contracts;
@@ -12,6 +13,7 @@ using Cenvo.Modules.CarWash.Contracts;
 using Cenvo.Modules.CarWash.Persistence;
 using Cenvo.Modules.Cafe.Persistence;
 using Cenvo.Modules.Catalog.Persistence;
+using Cenvo.Modules.Hr.Persistence;
 using Cenvo.Modules.Inventory.Persistence;
 using Cenvo.Modules.Organization.Persistence;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -29,12 +31,16 @@ builder.Services.AddScoped<CurrentUser>();
 builder.Services.AddScoped<ICurrentUser>(sp => sp.GetRequiredService<CurrentUser>());
 builder.Services.AddInfrastructure(builder.Configuration.GetConnectionString("Default")
                                    ?? throw new InvalidOperationException("Thiếu ConnectionStrings:Default"));
-foreach (var module in new[] { typeof(OrganizationModel), typeof(CatalogModel), typeof(InventoryModel), typeof(CafeModel), typeof(CarWashModel) })
+foreach (var module in new[] { typeof(OrganizationModel), typeof(CatalogModel), typeof(InventoryModel), typeof(CafeModel), typeof(CarWashModel),
+             typeof(HrModel) })
     builder.Services.AddModule(module.Assembly);
 builder.Services.AddScoped<IKitchenNotifier, KitchenNotifier>();
 builder.Services.AddScoped<IWashNotifier, WashNotifier>();
 builder.Services.Configure<PhotoStorageOptions>(builder.Configuration.GetSection("Storage:Photos"));
 builder.Services.AddSingleton<IPhotoStorage, LocalPhotoStorage>();
+// National ID / phone encryption key: only in appsettings.Development.json for dev; elsewhere from an environment
+// variable or secret store (PersonalData__Key). Missing → the app refuses to start rather than store them in clear.
+builder.Services.AddSingleton<IPersonalDataCipher>(AesGcmPersonalDataCipher.FromBase64(builder.Configuration["PersonalData:Key"]));
 // No Zalo OA / SMS account yet: reminders are only logged. Swap for the real provider here.
 builder.Services.AddSingleton<IReminderSender, LogReminderSender>();
 
@@ -111,6 +117,7 @@ app.MapCatalogEndpoints();
 app.MapInventoryEndpoints();
 app.MapCafeEndpoints();
 app.MapCarWashEndpoints();
+app.MapHrEndpoints();
 app.MapHub<KitchenHub>("/hubs/kitchen");
 app.MapHub<WashHub>("/hubs/carwash");
 app.MapGet("/health", () => Results.Ok(new { status = "ok" }));

@@ -2605,7 +2605,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["Cenvo.Modules.Organization.Application.Users.UserDto"][];
+                        "application/json": components["schemas"]["Cenvo.Modules.Organization.Contracts.UserAccount"][];
                     };
                 };
             };
@@ -2620,7 +2620,7 @@ export interface paths {
             };
             requestBody: {
                 content: {
-                    "application/json": components["schemas"]["Cenvo.Modules.Organization.Application.Users.UserInput"];
+                    "application/json": components["schemas"]["Cenvo.Modules.Organization.Contracts.UserAccountInput"];
                 };
             };
             responses: {
@@ -2660,7 +2660,7 @@ export interface paths {
             };
             requestBody: {
                 content: {
-                    "application/json": components["schemas"]["Cenvo.Modules.Organization.Application.Users.UserInput"];
+                    "application/json": components["schemas"]["Cenvo.Modules.Organization.Contracts.UserAccountInput"];
                 };
             };
             responses: {
@@ -2676,6 +2676,497 @@ export interface paths {
             };
         };
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/hr/employees": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Cenvo.Modules.Hr.Application.Employees.EmployeeListItemDto"][];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["Cenvo.Modules.Hr.Application.Employees.EmployeeInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": string;
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/hr/employees/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Cenvo.Modules.Hr.Application.Employees.EmployeeDetailDto"];
+                    };
+                };
+            };
+        };
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["Cenvo.Modules.Hr.Application.Employees.EmployeeInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": string;
+                    };
+                };
+            };
+        };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/hr/employees/{id}/leave": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["Cenvo.Modules.Hr.Application.Employees.LeaveInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/hr/employees/{id}/rehire": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/hr/employees/{id}/contracts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["Cenvo.Modules.Hr.Application.Employees.ContractInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": string;
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/hr/employees/{id}/contracts/{contractId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                    contractId: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["Cenvo.Modules.Hr.Application.Employees.ContractInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": string;
+                    };
+                };
+            };
+        };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/hr/employees/{id}/salary-rates": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["Cenvo.Modules.Hr.Application.Employees.SalaryRateInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": string;
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/hr/employees/{id}/salary-rates/{rateId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                    rateId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": string;
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/hr/adjustments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query: {
+                    from: string;
+                    to: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Cenvo.Modules.Hr.Application.Adjustments.AdjustmentDto"][];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["Cenvo.Modules.Hr.Application.Adjustments.AdjustmentInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": string;
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/hr/adjustments/staff": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Cenvo.Modules.Organization.Contracts.StaffMember"][];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/hr/adjustments/{id}/cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["Cenvo.Modules.Hr.Application.Adjustments.CancelAdjustmentInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
         delete?: never;
         options?: never;
         head?: never;
@@ -5046,6 +5537,149 @@ export interface components {
         };
         /** @enum {string} */
         "Cenvo.Modules.Catalog.Domain.ProductKind": "Ingredient" | "FinishedGood" | "Merchandise" | "Supply";
+        "Cenvo.Modules.Hr.Application.Adjustments.AdjustmentDto": {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            employeeId: string;
+            employeeName: string;
+            kind: components["schemas"]["Cenvo.Modules.Hr.Domain.AdjustmentKind"];
+            /** Format: double */
+            amount: number;
+            /** Format: date */
+            date: string;
+            reason: string;
+            recordedByName: string;
+            /** Format: uuid */
+            recordedBy: string | null;
+            status: components["schemas"]["Cenvo.Modules.Hr.Domain.AdjustmentStatus"];
+            cancelReason: string | null;
+            canCancel: boolean;
+        };
+        "Cenvo.Modules.Hr.Application.Adjustments.AdjustmentInput": {
+            /** Format: uuid */
+            employeeId: string;
+            kind: components["schemas"]["Cenvo.Modules.Hr.Domain.AdjustmentKind"];
+            /** Format: double */
+            amount: number;
+            /** Format: date */
+            date: string;
+            reason: string;
+        };
+        "Cenvo.Modules.Hr.Application.Adjustments.CancelAdjustmentInput": {
+            reason: string;
+        };
+        "Cenvo.Modules.Hr.Application.Employees.ContractDto": {
+            /** Format: uuid */
+            id: string;
+            type: components["schemas"]["Cenvo.Modules.Hr.Domain.ContractType"];
+            /** Format: date */
+            startDate: string;
+            /** Format: date */
+            endDate?: string | null;
+            note?: string | null;
+        };
+        "Cenvo.Modules.Hr.Application.Employees.ContractInput": {
+            type: components["schemas"]["Cenvo.Modules.Hr.Domain.ContractType"];
+            /** Format: date */
+            startDate: string;
+            /** Format: date */
+            endDate?: string | null;
+            note?: string | null;
+        };
+        "Cenvo.Modules.Hr.Application.Employees.EmployeeDetailDto": {
+            account: components["schemas"]["Cenvo.Modules.Organization.Contracts.UserAccount"];
+            profile?: components["schemas"]["Cenvo.Modules.Hr.Application.Employees.EmployeeProfileDto"];
+            contracts: components["schemas"]["Cenvo.Modules.Hr.Application.Employees.ContractDto"][];
+            salaryRates: components["schemas"]["Cenvo.Modules.Hr.Application.Employees.SalaryRateDto"][];
+            currentRate?: components["schemas"]["Cenvo.Modules.Hr.Application.Employees.SalaryRateDto"];
+        };
+        "Cenvo.Modules.Hr.Application.Employees.EmployeeInput": {
+            userName: string;
+            fullName: string;
+            password?: string | null;
+            roles: string[];
+            branchIds: string[];
+            department: components["schemas"]["Cenvo.Modules.Hr.Domain.Department"];
+            position: string;
+            /** Format: date */
+            hireDate: string;
+            nationalId?: string | null;
+            phone?: string | null;
+            /** Format: date */
+            birthDate?: string | null;
+            address?: string | null;
+            note?: string | null;
+        };
+        "Cenvo.Modules.Hr.Application.Employees.EmployeeListItemDto": {
+            /** Format: uuid */
+            id: string;
+            userName: string;
+            fullName: string;
+            isActive: boolean;
+            roles: string[];
+            branchIds: string[];
+            hasProfile: boolean;
+            department?: components["schemas"]["Cenvo.Modules.Hr.Domain.Department"];
+            position?: string | null;
+            /** Format: date */
+            hireDate?: string | null;
+            /** Format: date */
+            leaveDate?: string | null;
+            contractType?: components["schemas"]["Cenvo.Modules.Hr.Domain.ContractType"];
+            /** Format: date */
+            contractEnd?: string | null;
+            contractEndsSoon: boolean;
+            /** Format: double */
+            monthlySalary?: number | null;
+        };
+        "Cenvo.Modules.Hr.Application.Employees.EmployeeProfileDto": {
+            department: components["schemas"]["Cenvo.Modules.Hr.Domain.Department"];
+            position: string;
+            /** Format: date */
+            hireDate: string;
+            /** Format: date */
+            leaveDate: string | null;
+            nationalId: string | null;
+            phone: string | null;
+            /** Format: date */
+            birthDate: string | null;
+            address: string | null;
+            note: string | null;
+        };
+        "Cenvo.Modules.Hr.Application.Employees.LeaveInput": {
+            /** Format: date */
+            leaveDate: string;
+        };
+        "Cenvo.Modules.Hr.Application.Employees.SalaryRateDto": {
+            /** Format: uuid */
+            id: string;
+            /** Format: date */
+            effectiveFrom: string;
+            /** Format: double */
+            monthlySalary: number;
+            /** Format: double */
+            allowance: number;
+            reason: string;
+            canRemove: boolean;
+        };
+        "Cenvo.Modules.Hr.Application.Employees.SalaryRateInput": {
+            /** Format: date */
+            effectiveFrom: string;
+            /** Format: double */
+            monthlySalary: number;
+            /** Format: double */
+            allowance: number;
+            reason: string;
+        };
+        /** @enum {string} */
+        "Cenvo.Modules.Hr.Domain.AdjustmentKind": "Advance" | "Bonus" | "Penalty";
+        /** @enum {string} */
+        "Cenvo.Modules.Hr.Domain.AdjustmentStatus": "Active" | "Cancelled";
+        /** @enum {string} */
+        "Cenvo.Modules.Hr.Domain.ContractType": "Seasonal" | "PartTime" | "FullTime";
+        /** @enum {string} */
+        "Cenvo.Modules.Hr.Domain.Department": "Cafe" | "CarWash" | "General";
         "Cenvo.Modules.Inventory.Application.Documents.StockDocumentDto": {
             /** Format: uuid */
             id: string;
@@ -5257,7 +5891,17 @@ export interface components {
             phone?: string | null;
             allowNegativeStock: boolean;
         };
-        "Cenvo.Modules.Organization.Application.Users.UserDto": {
+        "Cenvo.Modules.Organization.Contracts.BranchContact": {
+            name: string;
+            address?: string | null;
+            phone?: string | null;
+        };
+        "Cenvo.Modules.Organization.Contracts.StaffMember": {
+            /** Format: uuid */
+            userId: string;
+            fullName: string;
+        };
+        "Cenvo.Modules.Organization.Contracts.UserAccount": {
             /** Format: uuid */
             id: string;
             userName: string;
@@ -5266,18 +5910,13 @@ export interface components {
             roles: string[];
             branchIds: string[];
         };
-        "Cenvo.Modules.Organization.Application.Users.UserInput": {
+        "Cenvo.Modules.Organization.Contracts.UserAccountInput": {
             userName: string;
             fullName: string;
             password?: string | null;
             roles: string[];
             branchIds: string[];
             isActive: boolean;
-        };
-        "Cenvo.Modules.Organization.Contracts.BranchContact": {
-            name: string;
-            address?: string | null;
-            phone?: string | null;
         };
         /** @enum {string} */
         "Cenvo.SharedKernel.DocumentStatus": "Draft" | "Posted" | "Cancelled";

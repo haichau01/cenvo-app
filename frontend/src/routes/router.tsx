@@ -1,7 +1,7 @@
 import { createBrowserRouter, Navigate } from 'react-router'
 import { prefetchKitchen, prefetchPos } from '@/features/cafe/prefetch'
 import { prefetchIntake, prefetchQueue } from '@/features/carwash/prefetch'
-import { canManageStock, canWash, isManager } from '@/lib/auth/roles'
+import { canManageStock, canWash, isManager, isOwner } from '@/lib/auth/roles'
 import { RequireAuth } from './RequireAuth'
 import { RequireRole } from './RequireRole'
 
@@ -37,6 +37,15 @@ export const router = createBrowserRouter([
               { path: '/rua-xe/dich-vu', lazy: async () => ({ Component: (await import('@/features/carwash/pages/WashSetupPage')).WashSetupPage }) },
               { path: '/rua-xe/hoa-hong', lazy: async () => ({ Component: (await import('@/features/carwash/pages/CommissionPage')).CommissionPage }) },
               { path: '/rua-xe/nhac-khach', lazy: async () => ({ Component: (await import('@/features/carwash/pages/RemindersPage')).RemindersPage }) },
+              { path: '/thuong-phat', lazy: async () => ({ Component: (await import('@/features/hr/pages/AdjustmentsPage')).AdjustmentsPage }) },
+            ],
+          },
+          {
+            element: <RequireRole allow={isOwner} who="chủ quán" />,
+            children: [
+              { path: '/nhan-su', lazy: async () => ({ Component: (await import('@/features/hr/pages/EmployeesPage')).EmployeesPage }) },
+              { path: '/nhan-su/moi', lazy: async () => ({ Component: (await import('@/features/hr/pages/EmployeePage')).EmployeePage }) },
+              { path: '/nhan-su/:id', lazy: async () => ({ Component: (await import('@/features/hr/pages/EmployeePage')).EmployeePage }) },
             ],
           },
         ],

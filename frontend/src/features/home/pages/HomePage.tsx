@@ -3,7 +3,7 @@ import { Wordmark } from '@/components/cenvo/Wordmark'
 import { Button } from '@/components/ui/Button'
 import { useLogout } from '@/features/auth/api/auth'
 import { canWorkAcrossBranches, currentBranchName } from '@/features/auth/lib/branches'
-import { canManageStock, canWash, isManager } from '@/lib/auth/roles'
+import { canManageStock, canWash, isManager, isOwner } from '@/lib/auth/roles'
 import { useSession } from '@/lib/auth/session'
 
 /** Temporary home page after login — entry to POS, kitchen, car wash and inventory. */
@@ -39,6 +39,8 @@ export function HomePage() {
           {canWash(user) && <ScreenLink to="/rua-xe/tiep-nhan" module="wash">Tiếp nhận xe</ScreenLink>}
           {canManageStock(user) && <ScreenLink to="/kho/ton-kho" module="core">Kho</ScreenLink>}
           {isManager(user) && <ScreenLink to="/bao-cao" module="core">Báo cáo</ScreenLink>}
+          {isOwner(user) && <ScreenLink to="/nhan-su" module="core">Nhân viên</ScreenLink>}
+          {isManager(user) && <ScreenLink to="/thuong-phat" module="core">Thưởng, phạt, tạm ứng</ScreenLink>}
         </nav>
       </main>
     </div>

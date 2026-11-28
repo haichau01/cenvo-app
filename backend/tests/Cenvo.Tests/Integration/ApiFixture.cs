@@ -26,6 +26,7 @@ public class ApiFixture : IAsyncLifetime
             b.UseSetting("Database:Seed", "true");
             b.UseSetting("Storage:Photos:Root", Path.Combine(Path.GetTempPath(), "cenvo-test-photos"));
             b.UseSetting("RateLimits:CredentialAttemptsPerMinute", "100000"); // every test logs in many times from one address
+            b.UseSetting("PersonalData:Key", Convert.ToBase64String(new byte[32])); // test-only key (all zero bytes)
         });
         _factory.CreateClient(); // starts the host → migrate + seed
     }
