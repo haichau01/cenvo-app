@@ -1,6 +1,6 @@
 namespace Cenvo.Modules.Hr.Domain;
 
-/// <summary>Monthly salary + fixed monthly allowance from a month on, until the next rate. Append-only history.</summary>
+/// <summary>Monthly salary + fixed monthly allowance + overtime pay per approved hour from a month on, until the next rate. Append-only history.</summary>
 public class SalaryRate : BaseEntity
 {
     public Guid EmployeeId { get; set; }
@@ -8,18 +8,22 @@ public class SalaryRate : BaseEntity
     public DateOnly EffectiveFrom { get; set; }
     public decimal MonthlySalary { get; set; }
     public decimal Allowance { get; set; }
+    /// <summary>Fixed pay per approved overtime hour (a holiday multiplies it).</summary>
+    public decimal OvertimeHourlyRate { get; set; }
     public string Reason { get; set; } = "";
 
-    public static SalaryRate Create(Guid employeeId, DateOnly effectiveFrom, decimal monthlySalary, decimal allowance, string? reason)
+    public static SalaryRate Create(Guid employeeId, DateOnly effectiveFrom, decimal monthlySalary, decimal allowance, string? reason,
+        decimal overtimeHourlyRate = 0)
     {
         if (effectiveFrom.Day != 1) throw new BusinessException(HrErrors.RateNotFirstOfMonth);
-        if (monthlySalary < 0 || allowance < 0) throw new BusinessException(HrErrors.InvalidSalary);
+        if (monthlySalary < 0 || allowance < 0 || overtimeHourlyRate < 0) throw new BusinessException(HrErrors.InvalidSalary);
         if (string.IsNullOrWhiteSpace(reason)) throw new BusinessException(HrErrors.ReasonRequired);
         return new SalaryRate
         {
             EmployeeId = employeeId, EffectiveFrom = effectiveFrom,
             MonthlySalary = Math.Round(monthlySalary, 0, MidpointRounding.AwayFromZero),
             Allowance = Math.Round(allowance, 0, MidpointRounding.AwayFromZero),
+            OvertimeHourlyRate = Math.Round(overtimeHourlyRate, 0, MidpointRounding.AwayFromZero),
             Reason = reason.Trim(),
         };
     }

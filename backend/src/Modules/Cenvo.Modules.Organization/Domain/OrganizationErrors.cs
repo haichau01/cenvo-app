@@ -13,5 +13,10 @@ public static class OrganizationErrors
     public const string FullNameRequired = "Nhập họ tên.";
     public const string PasswordTooShort = "Mật khẩu cần ít nhất 6 ký tự.";
     public const string UnknownBranch = "Chi nhánh được chọn không tồn tại hoặc đã ngừng hoạt động.";
+    public const string InvalidPin = "Mã PIN gồm 4 đến 6 chữ số.";
+    public const string PinNotSet = "Nhân viên chưa đặt mã PIN — đặt trong \"Tài khoản của tôi\" hoặc quét mã QR.";
+    public const string PinLocked = "Nhập sai PIN quá 5 lần — thử lại sau 15 phút hoặc quét mã QR.";
+    public const string WrongPin = "Sai mã PIN.";
+    public const string WrongPassword = "Mật khẩu hiện tại không đúng.";
     public const string NotBranchManager = "Tài khoản này không phải quản lý của chi nhánh — nhờ quản lý chi nhánh nhập tài khoản của họ.";
 }

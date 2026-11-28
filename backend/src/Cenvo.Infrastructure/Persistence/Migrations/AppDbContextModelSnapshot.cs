@@ -43,6 +43,231 @@ namespace Cenvo.Infrastructure.Persistence.Migrations
                     b.ToTable("document_sequence", (string)null);
                 });
 
+            modelBuilder.Entity("Cenvo.Modules.Attendance.Domain.AttendanceEdit", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("At")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("at");
+
+                    b.Property<Guid>("AttendanceRecordId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("attendance_record_id");
+
+                    b.Property<Guid>("EditorId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("editor_id");
+
+                    b.Property<string>("EditorName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("editor_name");
+
+                    b.Property<DateTime>("NewCheckIn")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("new_check_in");
+
+                    b.Property<DateTime?>("NewCheckOut")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("new_check_out");
+
+                    b.Property<DateTime?>("OldCheckIn")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("old_check_in");
+
+                    b.Property<DateTime?>("OldCheckOut")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("old_check_out");
+
+                    b.Property<string>("Reason")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("character varying(300)")
+                        .HasColumnName("reason");
+
+                    b.HasKey("Id")
+                        .HasName("pk_attendance_edit");
+
+                    b.HasIndex("AttendanceRecordId")
+                        .HasDatabaseName("ix_attendance_edit_attendance_record_id");
+
+                    b.ToTable("attendance_edit", (string)null);
+                });
+
+            modelBuilder.Entity("Cenvo.Modules.Attendance.Domain.AttendanceRecord", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<int>("Approval")
+                        .HasColumnType("integer")
+                        .HasColumnName("approval");
+
+                    b.Property<Guid>("BranchId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("branch_id");
+
+                    b.Property<DateTime>("CheckInAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("check_in_at");
+
+                    b.Property<int>("CheckInMethod")
+                        .HasColumnType("integer")
+                        .HasColumnName("check_in_method");
+
+                    b.Property<DateTime?>("CheckOutAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("check_out_at");
+
+                    b.Property<int?>("CheckOutMethod")
+                        .HasColumnType("integer")
+                        .HasColumnName("check_out_method");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("created_by");
+
+                    b.Property<Guid>("EmployeeId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("employee_id");
+
+                    b.Property<string>("EmployeeName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("employee_name");
+
+                    b.Property<bool>("OnOwnScreen")
+                        .HasColumnType("boolean")
+                        .HasColumnName("on_own_screen");
+
+                    b.Property<int?>("OvertimeApprovedMinutes")
+                        .HasColumnType("integer")
+                        .HasColumnName("overtime_approved_minutes");
+
+                    b.Property<string>("ReviewNote")
+                        .HasMaxLength(300)
+                        .HasColumnType("character varying(300)")
+                        .HasColumnName("review_note");
+
+                    b.Property<string>("ReviewedBy")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("reviewed_by");
+
+                    b.Property<DateTime?>("ScheduledEnd")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("scheduled_end");
+
+                    b.Property<DateTime?>("ScheduledStart")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("scheduled_start");
+
+                    b.Property<Guid?>("ShiftAssignmentId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("shift_assignment_id");
+
+                    b.Property<string>("ShiftName")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("shift_name");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("updated_by");
+
+                    b.Property<uint>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.Property<DateOnly>("WorkDate")
+                        .HasColumnType("date")
+                        .HasColumnName("work_date");
+
+                    b.HasKey("Id")
+                        .HasName("pk_attendance_record");
+
+                    b.HasIndex("ShiftAssignmentId")
+                        .IsUnique()
+                        .HasDatabaseName("ix_attendance_record_shift_assignment_id")
+                        .HasFilter("shift_assignment_id IS NOT NULL");
+
+                    b.HasIndex("BranchId", "WorkDate")
+                        .HasDatabaseName("ix_attendance_record_branch_id_work_date");
+
+                    b.HasIndex("EmployeeId", "CheckInAt")
+                        .HasDatabaseName("ix_attendance_record_employee_id_check_in_at");
+
+                    b.ToTable("attendance_record", (string)null);
+                });
+
+            modelBuilder.Entity("Cenvo.Modules.Attendance.Domain.Holiday", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("created_by");
+
+                    b.Property<DateOnly>("Date")
+                        .HasColumnType("date")
+                        .HasColumnName("date");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_deleted");
+
+                    b.Property<decimal>("Multiplier")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)")
+                        .HasColumnName("multiplier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("name");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("updated_by");
+
+                    b.HasKey("Id")
+                        .HasName("pk_holiday");
+
+                    b.HasIndex("Date")
+                        .IsUnique()
+                        .HasDatabaseName("ix_holiday_date")
+                        .HasFilter("is_deleted = false");
+
+                    b.ToTable("holiday", (string)null);
+                });
+
             modelBuilder.Entity("Cenvo.Modules.Cafe.Domain.Area", b =>
                 {
                     b.Property<Guid>("Id")
@@ -2141,6 +2366,11 @@ namespace Cenvo.Infrastructure.Persistence.Migrations
                         .HasColumnType("numeric(18,2)")
                         .HasColumnName("monthly_salary");
 
+                    b.Property<decimal>("OvertimeHourlyRate")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)")
+                        .HasColumnName("overtime_hourly_rate");
+
                     b.Property<string>("Reason")
                         .IsRequired()
                         .HasMaxLength(500)
@@ -2626,6 +2856,19 @@ namespace Cenvo.Infrastructure.Persistence.Migrations
                         .HasColumnType("character varying(500)")
                         .HasColumnName("password_hash");
 
+                    b.Property<int>("PinFailedCount")
+                        .HasColumnType("integer")
+                        .HasColumnName("pin_failed_count");
+
+                    b.Property<string>("PinHash")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("pin_hash");
+
+                    b.Property<DateTime?>("PinLockedUntil")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("pin_locked_until");
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("updated_at");
@@ -3007,6 +3250,16 @@ namespace Cenvo.Infrastructure.Persistence.Migrations
                         .HasDatabaseName("ix_shift_template_branch_id_sort_order");
 
                     b.ToTable("shift_template", (string)null);
+                });
+
+            modelBuilder.Entity("Cenvo.Modules.Attendance.Domain.AttendanceEdit", b =>
+                {
+                    b.HasOne("Cenvo.Modules.Attendance.Domain.AttendanceRecord", null)
+                        .WithMany("Edits")
+                        .HasForeignKey("AttendanceRecordId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_attendance_edit_attendance_record_attendance_record_id");
                 });
 
             modelBuilder.Entity("Cenvo.Modules.Cafe.Domain.CafeItem", b =>
@@ -3431,6 +3684,11 @@ namespace Cenvo.Infrastructure.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_shift_requirement_shift_template_shift_template_id");
+                });
+
+            modelBuilder.Entity("Cenvo.Modules.Attendance.Domain.AttendanceRecord", b =>
+                {
+                    b.Navigation("Edits");
                 });
 
             modelBuilder.Entity("Cenvo.Modules.Cafe.Domain.CafeOrder", b =>

@@ -38,6 +38,7 @@ export function SalarySection({ employeeId, detail }: { employeeId: string; deta
               <th className="py-2 text-left font-medium">Áp dụng từ</th>
               <th className="py-2 text-right font-medium">Lương</th>
               <th className="py-2 text-right font-medium">Phụ cấp</th>
+              <th className="py-2 text-right font-medium">Tăng ca / giờ</th>
               <th className="py-2 pl-6 text-left font-medium">Lý do</th>
               <th><span className="sr-only">Thao tác</span></th>
             </tr>
@@ -48,6 +49,7 @@ export function SalarySection({ employeeId, detail }: { employeeId: string; deta
                 <td className="tabular-nums">{monthLabel(rate.effectiveFrom)}</td>
                 <td className="text-right"><Money value={rate.monthlySalary} /></td>
                 <td className="text-right"><Money value={rate.allowance} /></td>
+                <td className="text-right"><Money value={rate.overtimeHourlyRate} /></td>
                 <td className="pl-6">{rate.reason}</td>
                 <td className="text-right">
                   {rate.canRemove && (
@@ -75,11 +77,12 @@ function AddRateDialog({ employeeId, current, onClose }: {
   const [month, setMonth] = useState(() => (current ? nextMonth(vnDate(Date.now())) : vnDate(Date.now()).slice(0, 7)))
   const [salary, setSalary] = useState(current?.monthlySalary ?? 0)
   const [allowance, setAllowance] = useState(current?.allowance ?? 0)
+  const [overtime, setOvertime] = useState(current?.overtimeHourlyRate ?? 0)
   const [reason, setReason] = useState(current ? '' : 'Mức khởi điểm')
 
   function handleSubmit(event: React.SyntheticEvent<HTMLFormElement>) {
     event.preventDefault()
-    add.mutate({ id: employeeId, input: { effectiveFrom: firstOfMonth(month), monthlySalary: salary, allowance, reason } },
+    add.mutate({ id: employeeId, input: { effectiveFrom: firstOfMonth(month), monthlySalary: salary, allowance, overtimeHourlyRate: overtime, reason } },
       { onSuccess: () => { toast.success('Đã lưu mức lương mới'); onClose() } })
   }
 
@@ -89,6 +92,7 @@ function AddRateDialog({ employeeId, current, onClose }: {
         <TextField label="Áp dụng từ tháng" type="month" required value={month} onChange={(e) => setMonth(e.target.value)} />
         <MoneyField label="Lương tháng" value={salary} onChange={setSalary} />
         <MoneyField label="Phụ cấp cố định mỗi tháng" value={allowance} onChange={setAllowance} />
+        <MoneyField label="Tiền tăng ca mỗi giờ (đã duyệt)" value={overtime} onChange={setOvertime} />
         <TextField label="Lý do" required maxLength={200} value={reason} onChange={(e) => setReason(e.target.value)} />
         <p className="text-caption text-ink-muted">Mức cũ giữ nguyên trong lịch sử; kỳ lương nào dùng mức của kỳ đó.</p>
         <FormError message={add.error?.message} />

@@ -52,7 +52,7 @@ public class EmployeeService(AppDbContext db, ICurrentUser user, IUserAccounts a
         }, ct);
 
     public Task<Guid> AddSalaryRate(Guid id, SalaryRateInput input, CancellationToken ct) =>
-        Change(id, e => e.AddSalaryRate(input.EffectiveFrom, input.MonthlySalary, input.Allowance, input.Reason).Id, ct);
+        Change(id, e => e.AddSalaryRate(input.EffectiveFrom, input.MonthlySalary, input.Allowance, input.Reason, input.OvertimeHourlyRate).Id, ct);
 
     public Task<Guid> RemoveSalaryRate(Guid id, Guid rateId, CancellationToken ct) =>
         Change(id, e => e.RemoveSalaryRate(rateId, VnTime.Today).Id, ct);

@@ -1,4 +1,5 @@
 using Cenvo.Modules.Organization.Application.Auth;
+using Cenvo.Modules.Organization.Application.Pins;
 
 namespace Cenvo.Api.Endpoints;
 
@@ -24,6 +25,12 @@ public static class AuthEndpoints
         auth.MapPost("/switch-branch", async (SwitchBranchRequest r, CurrentUser me, AuthService svc, JwtTokenService jwt,
             CancellationToken ct) => await Issue(await svc.SwitchBranch(me.UserId!.Value, r.BranchId, ct), svc, jwt, ct))
             .RequireAuthorization();
+
+        // Punch PIN for the shop POS: set by the person themselves (asks for the password again).
+        auth.MapGet("/me/pin", async (CurrentUser me, PinService svc, CancellationToken ct) =>
+            new { hasPin = await svc.HasPin(me.UserId!.Value, ct) }).RequireAuthorization();
+        auth.MapPut("/me/pin", (SetPinInput i, CurrentUser me, PinService svc, CancellationToken ct) => svc.SetOwn(me.UserId!.Value, i, ct))
+            .RequireAuthorization().RequireRateLimiting(RateLimits.Credentials);
     }
 
     private static async Task<TokenResponse> Issue(UserIdentity identity, AuthService svc, JwtTokenService jwt, CancellationToken ct)

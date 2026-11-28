@@ -11,7 +11,7 @@ public static class HrErrors
     public const string NotLeft = "Nhân viên đang làm việc.";
     public const string ContractEndBeforeStart = "Ngày hết hạn hợp đồng phải sau ngày bắt đầu.";
     public const string RateNotFirstOfMonth = "Mức lương mới áp dụng từ ngày 1 của một tháng (kỳ lương theo tháng).";
-    public const string InvalidSalary = "Lương và phụ cấp phải lớn hơn hoặc bằng 0.";
+    public const string InvalidSalary = "Lương, phụ cấp và đơn giá tăng ca phải lớn hơn hoặc bằng 0.";
     public const string ReasonRequired = "Nhập lý do.";
     public const string RateDateTaken = "Đã có mức lương áp dụng từ tháng này — xóa mức đó (nếu chưa áp dụng) rồi nhập lại.";
     public const string RateAlreadyApplied = "Mức lương đã bắt đầu áp dụng — không xóa được. Nhập mức mới từ tháng sau.";

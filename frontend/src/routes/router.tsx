@@ -1,7 +1,7 @@
 import { createBrowserRouter, Navigate } from 'react-router'
 import { prefetchKitchen, prefetchPos } from '@/features/cafe/prefetch'
 import { prefetchIntake, prefetchQueue } from '@/features/carwash/prefetch'
-import { canManageStock, canWash, isManager, isOwner } from '@/lib/auth/roles'
+import { canCheckout, canManageStock, canWash, isManager, isOwner } from '@/lib/auth/roles'
 import { RequireAuth } from './RequireAuth'
 import { RequireRole } from './RequireRole'
 
@@ -17,6 +17,14 @@ export const router = createBrowserRouter([
     children: [
       { index: true, lazy: async () => ({ Component: (await import('@/features/home/pages/HomePage')).HomePage }) },
       { path: '/lich-cua-toi', lazy: async () => ({ Component: (await import('@/features/schedule/pages/MySchedulePage')).MySchedulePage }) },
+      { path: '/cham-cong', lazy: async () => ({ Component: (await import('@/features/attendance/pages/MyAttendancePage')).MyAttendancePage }) },
+      { path: '/cham-cong/quet', lazy: async () => ({ Component: (await import('@/features/attendance/pages/PunchPage')).PunchPage }) },
+      {
+        element: <RequireRole allow={canCheckout} who="thu ngân và quản lý" />,
+        children: [
+          { path: '/may-cham-cong', lazy: async () => ({ Component: (await import('@/features/attendance/pages/KioskPage')).KioskPage }) },
+        ],
+      },
       { path: '/in/hoa-don/:id', lazy: async () => ({ Component: (await import('@/features/cafe/pages/ReceiptPreviewPage')).ReceiptPreviewPage }) },
       {
         lazy: async () => ({ Component: (await import('./layouts/CoreLayout')).CoreLayout }),
@@ -40,6 +48,7 @@ export const router = createBrowserRouter([
               { path: '/rua-xe/nhac-khach', lazy: async () => ({ Component: (await import('@/features/carwash/pages/RemindersPage')).RemindersPage }) },
               { path: '/thuong-phat', lazy: async () => ({ Component: (await import('@/features/hr/pages/AdjustmentsPage')).AdjustmentsPage }) },
               { path: '/lich-truc', lazy: async () => ({ Component: (await import('@/features/schedule/pages/SchedulePage')).SchedulePage }) },
+              { path: '/cham-cong/quan-ly', lazy: async () => ({ Component: (await import('@/features/attendance/pages/AttendancePage')).AttendancePage }) },
             ],
           },
           {

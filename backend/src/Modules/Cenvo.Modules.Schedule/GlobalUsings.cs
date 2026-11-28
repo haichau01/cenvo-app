@@ -6,3 +6,4 @@ global using Cenvo.Modules.Schedule.Domain;
 global using Cenvo.Modules.Schedule.Domain.Calculations;
 global using Cenvo.SharedKernel;
 global using Microsoft.EntityFrameworkCore;
+global using Cenvo.Modules.Schedule.Contracts;

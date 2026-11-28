@@ -158,6 +158,62 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/auth/me/pin": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["<>f__AnonymousType1`1[[System.Boolean, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"];
+                    };
+                };
+            };
+        };
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["Cenvo.Modules.Organization.Application.Pins.SetPinInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/reports/cafe-sales": {
         parameters: {
             query?: never;
@@ -1459,6 +1515,648 @@ export interface paths {
         };
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/attendance/punch": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["Cenvo.Modules.Attendance.Application.Punching.PunchByCodeInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Cenvo.Modules.Attendance.Application.Punching.PunchResult"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/attendance/mine": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query: {
+                    month: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Cenvo.Modules.Attendance.Application.Review.MyAttendanceDto"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/attendance/holidays": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query: {
+                    year: number;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Cenvo.Modules.Attendance.Application.Holidays.HolidayDto"][];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["Cenvo.Modules.Attendance.Application.Holidays.HolidayInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": string;
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/attendance/kiosk/code": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Cenvo.Modules.Attendance.Application.Punching.KioskCodeDto"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/attendance/kiosk/staff": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Cenvo.Modules.Organization.Contracts.StaffMember"][];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/attendance/kiosk/pin": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["Cenvo.Modules.Attendance.Application.Punching.PunchByPinInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Cenvo.Modules.Attendance.Application.Punching.PunchResult"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/attendance/holidays/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["Cenvo.Modules.Attendance.Application.Holidays.HolidayInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": string;
+                    };
+                };
+            };
+        };
+        post?: never;
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/attendance/day": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query: {
+                    date: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Cenvo.Modules.Attendance.Application.Review.AttendanceDayDto"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/attendance/to-review": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Cenvo.Modules.Attendance.Application.Review.AttendanceRowDto"][];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/attendance/timesheet": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query: {
+                    month: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Cenvo.Modules.Attendance.Application.Review.TimesheetDto"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/attendance/records/{id}/edits": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Cenvo.Modules.Attendance.Application.Review.AttendanceEditDto"][];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/attendance/records": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["Cenvo.Modules.Attendance.Application.Review.ManualInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": string;
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/attendance/records/{id}/times": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["Cenvo.Modules.Attendance.Application.Review.CorrectInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/attendance/records/{id}/approve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/attendance/records/{id}/reject": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["Cenvo.Modules.Attendance.Application.Review.RejectInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/attendance/records/{id}/overtime": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["Cenvo.Modules.Attendance.Application.Review.OvertimeInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
         delete?: never;
         options?: never;
         head?: never;
@@ -4835,6 +5533,9 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        "<>f__AnonymousType1`1[[System.Boolean, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]": {
+            hasPin: boolean;
+        };
         "Cenvo.Api.Auth.TokenResponse": {
             accessToken: string;
             refreshToken: string;
@@ -4865,6 +5566,215 @@ export interface components {
             /** Format: uuid */
             branchId: string;
         };
+        "Cenvo.Modules.Attendance.Application.Holidays.HolidayDto": {
+            /** Format: uuid */
+            id: string;
+            /** Format: date */
+            date: string;
+            name: string;
+            /** Format: double */
+            multiplier: number;
+        };
+        "Cenvo.Modules.Attendance.Application.Holidays.HolidayInput": {
+            /** Format: date */
+            date: string;
+            name: string;
+            /** Format: double */
+            multiplier: number;
+        };
+        "Cenvo.Modules.Attendance.Application.Punching.KioskCodeDto": {
+            code: string;
+            /** Format: date-time */
+            expiresAt: string;
+        };
+        /** @enum {string} */
+        "Cenvo.Modules.Attendance.Application.Punching.PunchAction": "CheckIn" | "CheckOut";
+        "Cenvo.Modules.Attendance.Application.Punching.PunchByCodeInput": {
+            code: string;
+        };
+        "Cenvo.Modules.Attendance.Application.Punching.PunchByPinInput": {
+            /** Format: uuid */
+            employeeId: string;
+            pin: string;
+        };
+        "Cenvo.Modules.Attendance.Application.Punching.PunchResult": {
+            action: components["schemas"]["Cenvo.Modules.Attendance.Application.Punching.PunchAction"];
+            employeeName: string;
+            /** Format: date-time */
+            at: string;
+            shiftName?: string | null;
+            needsApproval: boolean;
+            /** Format: int32 */
+            lateMinutes: number;
+            /** Format: int32 */
+            workedMinutes: number;
+        };
+        "Cenvo.Modules.Attendance.Application.Review.AttendanceDayDto": {
+            /** Format: date */
+            date: string;
+            records: components["schemas"]["Cenvo.Modules.Attendance.Application.Review.AttendanceRowDto"][];
+            unpunched: components["schemas"]["Cenvo.Modules.Attendance.Application.Review.UnpunchedShiftDto"][];
+        };
+        "Cenvo.Modules.Attendance.Application.Review.AttendanceEditDto": {
+            /** Format: date-time */
+            at: string;
+            editorName: string;
+            /** Format: date-time */
+            oldCheckIn: string | null;
+            /** Format: date-time */
+            oldCheckOut: string | null;
+            /** Format: date-time */
+            newCheckIn: string;
+            /** Format: date-time */
+            newCheckOut: string | null;
+            reason: string;
+        };
+        "Cenvo.Modules.Attendance.Application.Review.AttendanceRowDto": {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            branchId: string;
+            branchName: string;
+            /** Format: uuid */
+            employeeId: string;
+            employeeName: string;
+            /** Format: date */
+            workDate: string;
+            shiftName: string | null;
+            /** Format: date-time */
+            scheduledStart: string | null;
+            /** Format: date-time */
+            scheduledEnd: string | null;
+            /** Format: date-time */
+            checkInAt: string;
+            /** Format: date-time */
+            checkOutAt: string | null;
+            checkInMethod: components["schemas"]["Cenvo.Modules.Attendance.Domain.PunchMethod"];
+            checkOutMethod: components["schemas"]["Cenvo.Modules.Attendance.Domain.PunchMethod"];
+            onOwnScreen: boolean;
+            approval: components["schemas"]["Cenvo.Modules.Attendance.Domain.ApprovalStatus"];
+            reviewedBy: string | null;
+            reviewNote: string | null;
+            counts: boolean;
+            forgotten: boolean;
+            /** Format: int32 */
+            workedMinutes: number;
+            /** Format: int32 */
+            lateMinutes: number;
+            /** Format: int32 */
+            earlyLeaveMinutes: number;
+            /** Format: int32 */
+            proposedOvertimeMinutes: number;
+            /** Format: int32 */
+            overtimeLimitMinutes: number;
+            /** Format: int32 */
+            overtimeApprovedMinutes: number | null;
+            /** Format: int32 */
+            editCount: number;
+        };
+        "Cenvo.Modules.Attendance.Application.Review.CorrectInput": {
+            /** Format: date-time */
+            checkInAt: string;
+            /** Format: date-time */
+            checkOutAt: string;
+            reason: string;
+        };
+        "Cenvo.Modules.Attendance.Application.Review.ManualInput": {
+            /** Format: uuid */
+            employeeId: string;
+            /** Format: date */
+            workDate: string;
+            /** Format: uuid */
+            shiftAssignmentId?: string | null;
+            /** Format: date-time */
+            checkInAt: string;
+            /** Format: date-time */
+            checkOutAt: string;
+            reason: string;
+        };
+        "Cenvo.Modules.Attendance.Application.Review.MyAttendanceDto": {
+            /** Format: date */
+            month: string;
+            /** Format: int32 */
+            daysInMonth: number;
+            holidays: components["schemas"]["Cenvo.Modules.Attendance.Application.Holidays.HolidayDto"][];
+            totals: components["schemas"]["Cenvo.Modules.Attendance.Domain.Calculations.TimesheetTotals"];
+            records: components["schemas"]["Cenvo.Modules.Attendance.Application.Review.AttendanceRowDto"][];
+        };
+        "Cenvo.Modules.Attendance.Application.Review.OvertimeInput": {
+            /** Format: int32 */
+            minutes: number;
+        };
+        "Cenvo.Modules.Attendance.Application.Review.RejectInput": {
+            reason: string;
+        };
+        "Cenvo.Modules.Attendance.Application.Review.TimesheetDto": {
+            /** Format: date */
+            month: string;
+            /** Format: int32 */
+            daysInMonth: number;
+            holidays: components["schemas"]["Cenvo.Modules.Attendance.Application.Holidays.HolidayDto"][];
+            rows: components["schemas"]["Cenvo.Modules.Attendance.Application.Review.TimesheetRowDto"][];
+        };
+        "Cenvo.Modules.Attendance.Application.Review.TimesheetRowDto": {
+            /** Format: uuid */
+            employeeId: string;
+            employeeName: string;
+            totals: components["schemas"]["Cenvo.Modules.Attendance.Domain.Calculations.TimesheetTotals"];
+        };
+        "Cenvo.Modules.Attendance.Application.Review.UnpunchedShiftDto": {
+            /** Format: uuid */
+            assignmentId: string;
+            /** Format: uuid */
+            employeeId: string;
+            employeeName: string;
+            shiftName: string;
+            /** Format: date-time */
+            startsAt: string;
+            /** Format: date-time */
+            endsAt: string;
+            isOver: boolean;
+        };
+        /** @enum {string} */
+        "Cenvo.Modules.Attendance.Domain.ApprovalStatus": "NotNeeded" | "Pending" | "Approved" | "Rejected";
+        "Cenvo.Modules.Attendance.Domain.Calculations.TimesheetTotals": {
+            /** Format: int32 */
+            plannedShifts: number;
+            /** Format: int32 */
+            workedShifts: number;
+            /** Format: int32 */
+            absentShifts: number;
+            /** Format: int32 */
+            workDays: number;
+            /** Format: int32 */
+            holidaysWorked: number;
+            /** Format: int32 */
+            holidaysOff: number;
+            /** Format: double */
+            paidDays: number;
+            /** Format: int32 */
+            workedMinutes: number;
+            /** Format: int32 */
+            lateCount: number;
+            /** Format: int32 */
+            lateMinutes: number;
+            /** Format: int32 */
+            earlyLeaveCount: number;
+            /** Format: int32 */
+            overtimeMinutes: number;
+            /** Format: int32 */
+            holidayOvertimeMinutes: number;
+            /** Format: int32 */
+            unreviewedOvertimeMinutes: number;
+            /** Format: int32 */
+            pendingApprovals: number;
+            /** Format: int32 */
+            forgottenCheckOuts: number;
+            /** Format: int32 */
+            ownScreenPunches: number;
+        };
+        /** @enum {string} */
+        "Cenvo.Modules.Attendance.Domain.PunchMethod": "Qr" | "Pin" | "Manual";
         "Cenvo.Modules.Cafe.Application.Kitchen.KitchenStatusInput": {
             status: components["schemas"]["Cenvo.Modules.Cafe.Domain.KitchenStatus"];
         };
@@ -5983,6 +6893,8 @@ export interface components {
             monthlySalary: number;
             /** Format: double */
             allowance: number;
+            /** Format: double */
+            overtimeHourlyRate: number;
             reason: string;
             canRemove: boolean;
         };
@@ -5994,6 +6906,8 @@ export interface components {
             /** Format: double */
             allowance: number;
             reason: string;
+            /** Format: double */
+            overtimeHourlyRate: number;
         };
         /** @enum {string} */
         "Cenvo.Modules.Hr.Domain.AdjustmentKind": "Advance" | "Bonus" | "Penalty";
@@ -6213,6 +7127,10 @@ export interface components {
             address?: string | null;
             phone?: string | null;
             allowNegativeStock: boolean;
+        };
+        "Cenvo.Modules.Organization.Application.Pins.SetPinInput": {
+            currentPassword: string;
+            pin: string;
         };
         "Cenvo.Modules.Organization.Contracts.BranchContact": {
             name: string;

@@ -33,6 +33,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cenvo.Modules.Hr", "src\Mod
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cenvo.Modules.Schedule", "src\Modules\Cenvo.Modules.Schedule\Cenvo.Modules.Schedule.csproj", "{354A5337-1D12-4BC2-B4D2-6B7E22776CD8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cenvo.Modules.Attendance", "src\Modules\Cenvo.Modules.Attendance\Cenvo.Modules.Attendance.csproj", "{9ABE7666-6E9E-4D3D-80C4-DECA8B551D78}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -175,6 +177,18 @@ Global
 		{354A5337-1D12-4BC2-B4D2-6B7E22776CD8}.Release|x64.Build.0 = Release|Any CPU
 		{354A5337-1D12-4BC2-B4D2-6B7E22776CD8}.Release|x86.ActiveCfg = Release|Any CPU
 		{354A5337-1D12-4BC2-B4D2-6B7E22776CD8}.Release|x86.Build.0 = Release|Any CPU
+		{9ABE7666-6E9E-4D3D-80C4-DECA8B551D78}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9ABE7666-6E9E-4D3D-80C4-DECA8B551D78}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9ABE7666-6E9E-4D3D-80C4-DECA8B551D78}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{9ABE7666-6E9E-4D3D-80C4-DECA8B551D78}.Debug|x64.Build.0 = Debug|Any CPU
+		{9ABE7666-6E9E-4D3D-80C4-DECA8B551D78}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{9ABE7666-6E9E-4D3D-80C4-DECA8B551D78}.Debug|x86.Build.0 = Debug|Any CPU
+		{9ABE7666-6E9E-4D3D-80C4-DECA8B551D78}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9ABE7666-6E9E-4D3D-80C4-DECA8B551D78}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9ABE7666-6E9E-4D3D-80C4-DECA8B551D78}.Release|x64.ActiveCfg = Release|Any CPU
+		{9ABE7666-6E9E-4D3D-80C4-DECA8B551D78}.Release|x64.Build.0 = Release|Any CPU
+		{9ABE7666-6E9E-4D3D-80C4-DECA8B551D78}.Release|x86.ActiveCfg = Release|Any CPU
+		{9ABE7666-6E9E-4D3D-80C4-DECA8B551D78}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -192,5 +206,6 @@ Global
 		{311A6063-8ADA-4FCD-A590-7E84B3B1EEC4} = {EC447DCF-ABFA-6E24-52A5-D7FD48A5C558}
 		{665B5CFD-EAD1-4CF8-A13A-CFF1CAEDF202} = {CA253913-39DE-BFD0-C9A3-4B7EC6FBDF17}
 		{354A5337-1D12-4BC2-B4D2-6B7E22776CD8} = {CA253913-39DE-BFD0-C9A3-4B7EC6FBDF17}
+		{9ABE7666-6E9E-4D3D-80C4-DECA8B551D78} = {CA253913-39DE-BFD0-C9A3-4B7EC6FBDF17}
 	EndGlobalSection
 EndGlobal

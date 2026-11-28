@@ -74,5 +74,5 @@ public class EmployeeQueryService(AppDbContext db, IUserAccounts accounts) : IEm
     };
 
     private static SalaryRateDto ToDto(SalaryRate r, DateOnly today) =>
-        new(r.Id, r.EffectiveFrom, r.MonthlySalary, r.Allowance, r.Reason, CanRemove: r.EffectiveFrom > today);
+        new(r.Id, r.EffectiveFrom, r.MonthlySalary, r.Allowance, r.OvertimeHourlyRate, r.Reason, CanRemove: r.EffectiveFrom > today);
 }

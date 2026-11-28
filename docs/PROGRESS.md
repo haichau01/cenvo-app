@@ -154,7 +154,7 @@
   - Kiểm chứng:
     - `dotnet test` 142/142; `npm test` 72/72, lint, build sạch.
     - Playwright + Edge 1440×900, không lỗi console. Dữ liệu HR mock vì DB dev chưa chạy `AddHr`: API :5001 chạy với `Database__Migrate=false`.
-- **Lịch trực (2026-11-28, GĐ4 bước 2, nhánh `feat/schedule` tạo từ `feat/carwash-print-report`):** ✅ chưa commit.
+- **Lịch trực (2026-11-28, GĐ4 bước 2, nhánh `feat/schedule` tạo từ `feat/carwash-print-report`):** ✅ đã commit (`a92ac6a`).
   - Người dùng chốt:
     - Phạm vi: ca mẫu, lưới tuần, cảnh báo, lịch của tôi. Đăng ký ca rảnh / đổi ca / nghỉ phép để bước sau.
     - Không có bước công bố: nhân viên thấy ca ngay khi được xếp.
@@ -176,7 +176,30 @@
     - `/lich-cua-toi`: một cột cho điện thoại, tuần này và tuần sau.
     - Nút ở trang chủ, mục "Lịch trực" trong menu Nhân sự.
   - Kiểm chứng: `dotnet test` 162/162; `npm test` 75/75, lint, build sạch; Playwright 1440×900 và 390×844 (dữ liệu mock), không lỗi console.
-- **Việc tiếp theo:** Chấm công (GĐ4 bước 3), rồi Lương (đọc hoa hồng). Sau đó: đăng ký ca rảnh / đổi ca / nghỉ phép. Khi có tài khoản Zalo OA/SMS: cài `IReminderSender` thật.
+- **Chấm công (2026-11-28, GĐ4 bước 3, nhánh `feat/attendance` tạo từ `feat/schedule`):** ✅
+  - Người dùng chốt:
+    - Vào/ra ca: quét mã QR động trên máy ở quán bằng điện thoại; dự phòng PIN 4–6 số trên máy ở quán (nhân viên tự đặt, sai 5 lần khóa 15 phút).
+    - Một ngày công = có ít nhất một ca đã xếp được chấm vào + ra. Đi muộn/về sớm chỉ ghi nhận.
+    - Chấm ngoài lịch: được chấm, chỉ tính công sau khi quản lý duyệt.
+    - Quên chấm ra: quản lý sửa giờ, bắt buộc lý do, giữ lịch sử.
+    - Tăng ca = phần làm sau giờ kết thúc ca, chỉ trả phần quản lý duyệt; đơn giá tăng ca cố định/giờ theo từng nhân viên (dòng mức lương).
+    - Ngày lễ làm luôn: đi làm ngày lễ = hệ số × 1 công, tăng ca ngày lễ × hệ số; nghỉ lễ vẫn tính 1 công.
+  - Backend:
+    - Module mới `Cenvo.Modules.Attendance` (→ Schedule). `AttendanceRecord` (chụp giờ ca, `[Timestamp]`, unique theo ca đã xếp), `AttendanceEdit` (lịch sử sửa), `Holiday` (toàn chuỗi, xóa mềm).
+    - Hàm thuần: `PunchCode` (mã HMAC theo chi nhánh + người mở máy + cửa sổ 30 giây, nhận thêm 1 cửa sổ), `Timesheet.Calculate` (ngày công, lễ, vắng, muộn, tăng ca).
+    - Chấm công theo chi nhánh của mã QR / máy ở quán, không theo chi nhánh đang đăng nhập. Quét lần 2 trong 1 phút bị bỏ qua.
+    - Quản lý không tự duyệt/sửa chấm công của mình (chỉ Admin). Lượt chấm trên máy đăng nhập chính tài khoản của người chấm được đánh dấu `OnOwnScreen`.
+    - Schedule thêm contract `IShiftRoster`; Organization thêm `IStaffPin` + PIN trên `AppUser`; HR thêm `OvertimeHourlyRate` vào mức lương.
+    - API: `/api/attendance/punch`, `/mine`, `/holidays` (mọi người); `/kiosk/*` (Cashiers, PIN có rate limit); `/day`, `/to-review`, `/timesheet`, `/records/*` (Managers); thêm/sửa/xóa ngày lễ (Admin); `/api/auth/me/pin`.
+    - Migration `AddAttendance`: chỉ thêm bảng và cột mới (cột mới có mặc định).
+  - Frontend `features/attendance` (thêm gói `uqr` để vẽ QR):
+    - `/may-cham-cong` (tablet thu ngân): QR tự đổi + chọn tên nhập PIN.
+    - `/cham-cong/quet?ma=…` (camera điện thoại mở link): chấm một lần, báo kết quả. `/cham-cong`: tháng của tôi + đặt PIN.
+    - `/cham-cong/quan-ly`: Cần xử lý, Theo ngày (nhập giờ cho ca chưa chấm), Bảng công tháng, Ngày lễ (Admin sửa).
+    - Mức lương có thêm "Tiền tăng ca mỗi giờ".
+  - Kiểm chứng: `dotnet test` 179/179; `npm test` 82/82, lint, build sạch; Playwright 1180×820, 390×844, 1440×900 (dữ liệu mock), không lỗi console.
+  - Còn mở: chấm hộ từ xa bằng tài khoản thu ngân/quản lý chỉ được đánh dấu, chưa chặn (cần đăng ký thiết bị chấm công).
+- **Việc tiếp theo:** Lương (đọc bảng công + hoa hồng). Sau đó: đăng ký ca rảnh / đổi ca / nghỉ phép. Khi có tài khoản Zalo OA/SMS: cài `IReminderSender` thật.
 - Còn treo: 2 cảnh báo EF về global filter (Unit ↔ ProductUnit, Branch ↔ UserBranch). Chưa ảnh hưởng hành vi.
 
 > Phần dưới là nhật ký quá trình refactor, giữ lại để tham khảo.

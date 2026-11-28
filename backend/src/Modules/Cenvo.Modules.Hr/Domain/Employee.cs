@@ -62,10 +62,11 @@ public class Employee : BaseEntity
     }
 
     /// <summary>A pay change is a new row from the first day of a month; existing rows are never edited.</summary>
-    public SalaryRate AddSalaryRate(DateOnly effectiveFrom, decimal monthlySalary, decimal allowance, string? reason)
+    public SalaryRate AddSalaryRate(DateOnly effectiveFrom, decimal monthlySalary, decimal allowance, string? reason,
+        decimal overtimeHourlyRate = 0)
     {
         if (SalaryRates.Any(r => r.EffectiveFrom == effectiveFrom)) throw new BusinessException(HrErrors.RateDateTaken);
-        var rate = SalaryRate.Create(Id, effectiveFrom, monthlySalary, allowance, reason);
+        var rate = SalaryRate.Create(Id, effectiveFrom, monthlySalary, allowance, reason, overtimeHourlyRate);
         SalaryRates.Add(rate);
         return rate;
     }

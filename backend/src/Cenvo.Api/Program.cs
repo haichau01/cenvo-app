@@ -15,6 +15,8 @@ using Cenvo.Modules.Cafe.Persistence;
 using Cenvo.Modules.Catalog.Persistence;
 using Cenvo.Modules.Hr.Persistence;
 using Cenvo.Modules.Schedule.Persistence;
+using Cenvo.Modules.Attendance.Contracts;
+using Cenvo.Modules.Attendance.Persistence;
 using Cenvo.Modules.Inventory.Persistence;
 using Cenvo.Modules.Organization.Persistence;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -33,7 +35,7 @@ builder.Services.AddScoped<ICurrentUser>(sp => sp.GetRequiredService<CurrentUser
 builder.Services.AddInfrastructure(builder.Configuration.GetConnectionString("Default")
                                    ?? throw new InvalidOperationException("Thiếu ConnectionStrings:Default"));
 foreach (var module in new[] { typeof(OrganizationModel), typeof(CatalogModel), typeof(InventoryModel), typeof(CafeModel), typeof(CarWashModel),
-             typeof(HrModel), typeof(ScheduleModel) })
+             typeof(HrModel), typeof(ScheduleModel), typeof(AttendanceModel) })
     builder.Services.AddModule(module.Assembly);
 builder.Services.AddScoped<IKitchenNotifier, KitchenNotifier>();
 builder.Services.AddScoped<IWashNotifier, WashNotifier>();
@@ -51,6 +53,7 @@ builder.Services.Configure<JwtOptions>(jwtSection);
 var jwt = jwtSection.Get<JwtOptions>() ?? new JwtOptions();
 if (jwt.Key.Length < 32) throw new InvalidOperationException("Jwt:Key phải dài ít nhất 32 ký tự.");
 builder.Services.AddSingleton<JwtTokenService>();
+builder.Services.AddSingleton<IPunchCodeSigner>(new HmacPunchCodeSigner(jwt.Key));
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(o =>
 {
     o.MapInboundClaims = false;
@@ -120,6 +123,7 @@ app.MapCafeEndpoints();
 app.MapCarWashEndpoints();
 app.MapHrEndpoints();
 app.MapScheduleEndpoints();
+app.MapAttendanceEndpoints();
 app.MapHub<KitchenHub>("/hubs/kitchen");
 app.MapHub<WashHub>("/hubs/carwash");
 app.MapGet("/health", () => Results.Ok(new { status = "ok" }));

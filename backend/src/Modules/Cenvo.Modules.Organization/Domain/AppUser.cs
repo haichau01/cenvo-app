@@ -13,6 +13,10 @@ public class AppUser : BaseEntity, ISoftDelete
     public bool IsDeleted { get; set; }
     public List<UserRole> Roles { get; set; } = [];
     public List<UserBranch> Branches { get; set; } = [];
+    /// <summary>Hashed 4–6 digit PIN for punching in on the shop POS when the phone cannot scan; null = not set.</summary>
+    public string? PinHash { get; set; }
+    public int PinFailedCount { get; set; }
+    public DateTime? PinLockedUntil { get; set; }
 
     public const int MinPasswordLength = 6;
 
@@ -44,6 +48,35 @@ public class AppUser : BaseEntity, ISoftDelete
 
     public bool VerifyPassword(string password) =>
         Hasher.VerifyHashedPassword(this, PasswordHash, password) != PasswordVerificationResult.Failed;
+
+    public const int MaxPinAttempts = 5;
+    public static readonly TimeSpan PinLockout = TimeSpan.FromMinutes(15);
+
+    public void SetPin(string? pin)
+    {
+        if (pin is not { Length: >= 4 and <= 6 } || !pin.All(char.IsAsciiDigit)) throw new BusinessException(OrganizationErrors.InvalidPin);
+        PinHash = Hasher.HashPassword(this, pin);
+        PinFailedCount = 0;
+        PinLockedUntil = null;
+    }
+
+    /// <summary>Five wrong PINs in a row lock PIN punching for 15 minutes (a PIN has few combinations).</summary>
+    public bool VerifyPin(string pin, DateTime now)
+    {
+        if (PinHash == null) throw new BusinessException(OrganizationErrors.PinNotSet);
+        if (PinLockedUntil > now) throw new BusinessException(OrganizationErrors.PinLocked);
+        if (Hasher.VerifyHashedPassword(this, PinHash, pin) != PasswordVerificationResult.Failed)
+        {
+            PinFailedCount = 0;
+            return true;
+        }
+        if (++PinFailedCount >= MaxPinAttempts)
+        {
+            PinFailedCount = 0;
+            PinLockedUntil = now.Add(PinLockout);
+        }
+        return false;
+    }
 
     public void SetRoles(IEnumerable<string> roles)
     {

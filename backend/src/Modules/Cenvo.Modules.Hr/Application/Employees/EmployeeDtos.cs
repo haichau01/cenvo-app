@@ -11,7 +11,7 @@ public record LeaveInput(DateOnly LeaveDate);
 
 public record ContractInput(ContractType Type, DateOnly StartDate, DateOnly? EndDate, string? Note);
 
-public record SalaryRateInput(DateOnly EffectiveFrom, decimal MonthlySalary, decimal Allowance, string Reason);
+public record SalaryRateInput(DateOnly EffectiveFrom, decimal MonthlySalary, decimal Allowance, string Reason, decimal OvertimeHourlyRate = 0);
 
 /// <summary>Current contract and pay of a profile, as of today.</summary>
 /// <remarks>Built in SQL → init properties.</remarks>
@@ -56,7 +56,8 @@ public record EmployeeProfileDto
 
 public record ContractDto(Guid Id, ContractType Type, DateOnly StartDate, DateOnly? EndDate, string? Note);
 
-public record SalaryRateDto(Guid Id, DateOnly EffectiveFrom, decimal MonthlySalary, decimal Allowance, string Reason, bool CanRemove);
+public record SalaryRateDto(Guid Id, DateOnly EffectiveFrom, decimal MonthlySalary, decimal Allowance, decimal OvertimeHourlyRate, string Reason,
+    bool CanRemove);
 
 public record EmployeeDetailDto(
     UserAccount Account, EmployeeProfileDto? Profile, List<ContractDto> Contracts, List<SalaryRateDto> SalaryRates,

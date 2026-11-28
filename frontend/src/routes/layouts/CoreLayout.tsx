@@ -39,6 +39,7 @@ const SECTIONS: NavSection[] = [
     items: [
       { to: '/nhan-su', label: 'Nhân viên', visible: isOwner },
       { to: '/lich-truc', label: 'Lịch trực' },
+      { to: '/cham-cong/quan-ly', label: 'Chấm công' },
       { to: '/thuong-phat', label: 'Thưởng, phạt, tạm ứng' },
     ],
     visible: isManager,

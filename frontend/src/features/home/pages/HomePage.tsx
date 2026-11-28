@@ -3,7 +3,7 @@ import { Wordmark } from '@/components/cenvo/Wordmark'
 import { Button } from '@/components/ui/Button'
 import { useLogout } from '@/features/auth/api/auth'
 import { canWorkAcrossBranches, currentBranchName } from '@/features/auth/lib/branches'
-import { canManageStock, canWash, isManager, isOwner } from '@/lib/auth/roles'
+import { canCheckout, canManageStock, canWash, isManager, isOwner } from '@/lib/auth/roles'
 import { useSession } from '@/lib/auth/session'
 
 /** Temporary home page after login — entry to POS, kitchen, car wash and inventory. */
@@ -34,6 +34,8 @@ export function HomePage() {
         </p>
         <nav aria-label="Màn làm việc" className="mt-8 flex flex-wrap gap-3">
           <ScreenLink to="/lich-cua-toi" module="core">Lịch của tôi</ScreenLink>
+          <ScreenLink to="/cham-cong" module="core">Chấm công của tôi</ScreenLink>
+          {canCheckout(user) && <ScreenLink to="/may-cham-cong" module="core">Máy chấm công</ScreenLink>}
           <ScreenLink to="/pos" module="cafe">Mở màn bán hàng</ScreenLink>
           <ScreenLink to="/pha-che" module="cafe">Màn pha chế</ScreenLink>
           {canWash(user) && <ScreenLink to="/rua-xe" module="wash">Hàng chờ rửa xe</ScreenLink>}
@@ -42,6 +44,7 @@ export function HomePage() {
           {isManager(user) && <ScreenLink to="/bao-cao" module="core">Báo cáo</ScreenLink>}
           {isOwner(user) && <ScreenLink to="/nhan-su" module="core">Nhân viên</ScreenLink>}
           {isManager(user) && <ScreenLink to="/lich-truc" module="core">Lịch trực</ScreenLink>}
+          {isManager(user) && <ScreenLink to="/cham-cong/quan-ly" module="core">Chấm công</ScreenLink>}
           {isManager(user) && <ScreenLink to="/thuong-phat" module="core">Thưởng, phạt, tạm ứng</ScreenLink>}
         </nav>
       </main>
