@@ -1,5 +1,6 @@
 using Cenvo.Modules.CarWash.Application.Customers;
 using Cenvo.Modules.CarWash.Application.Memberships;
+using Cenvo.Modules.CarWash.Application.Printing;
 using Cenvo.Modules.CarWash.Application.Reports;
 using Cenvo.Modules.CarWash.Application.Setup;
 using Cenvo.Modules.CarWash.Application.Tickets;
@@ -18,6 +19,8 @@ public static class CarWashEndpoints
         MapCustomers(app.MapGroup("/api/carwash").WithTags("Rửa xe — khách hàng").RequireAuthorization(Policies.WashStaff));
         MapTickets(app.MapGroup("/api/carwash/tickets").WithTags("Rửa xe — phiếu").RequireAuthorization(Policies.WashStaff));
 
+        app.MapGet("/api/reports/carwash-sales", (DateOnly from, DateOnly to, WashSalesReportService svc, CancellationToken ct) =>
+            svc.Sales(from, to, ct)).WithTags("Báo cáo").RequireAuthorization(Policies.Managers);
         app.MapGet("/api/reports/carwash-commissions", (DateOnly from, DateOnly to, CommissionQueryService svc, CancellationToken ct) =>
             svc.Summary(from, to, ct)).WithTags("Báo cáo").RequireAuthorization(Policies.Managers);
     }
@@ -52,6 +55,8 @@ public static class CarWashEndpoints
 
         g.MapPost("/memberships", (SellMembershipInput i, MembershipService svc, CancellationToken ct) => svc.Sell(i, ct))
             .RequireAuthorization(Policies.Cashiers);
+        g.MapGet("/memberships/{id:guid}/receipt", (Guid id, WashPrintQueryService svc, CancellationToken ct) =>
+            svc.Membership(id, ct)).RequireAuthorization(Policies.Cashiers);
         g.MapPost("/memberships/{id:guid}/cancel", (Guid id, CancelMembershipInput i, MembershipService svc, CancellationToken ct) =>
             svc.Cancel(id, i, ct)).RequireAuthorization(Policies.Managers);
     }
@@ -61,6 +66,7 @@ public static class CarWashEndpoints
         g.MapGet("/queue", (TicketQueryService svc, CancellationToken ct) => svc.Queue(ct));
         g.MapGet("/", ([AsParameters] TicketHistoryFilter f, TicketQueryService svc, CancellationToken ct) => svc.History(f, ct));
         g.MapGet("/{id:guid}", (Guid id, TicketQueryService svc, CancellationToken ct) => svc.Get(id, ct));
+        g.MapGet("/{id:guid}/receipt", (Guid id, WashPrintQueryService svc, CancellationToken ct) => svc.Ticket(id, ct));
 
         g.MapPost("/", (CreateTicketInput i, TicketIntakeService svc, CancellationToken ct) => svc.Create(i, ct));
         g.MapPost("/{id:guid}/services", (Guid id, TicketServiceInput i, TicketIntakeService svc, CancellationToken ct) =>

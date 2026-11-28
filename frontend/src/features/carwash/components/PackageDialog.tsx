@@ -8,7 +8,7 @@ import { TextField } from '@/components/ui/TextField'
 import { toast } from '@/components/ui/toastStore'
 import type { VehicleType, WashOffering, WashPackage, WashPackageInput } from '@/lib/api/types'
 import { useSavePackage } from '../api/setup'
-import { VEHICLE_TYPES } from '../lib/vehicle'
+import { VEHICLE_TYPES } from '@/lib/vehicle'
 
 const DEFAULT_USES = 12
 const DEFAULT_VALID_DAYS = 180

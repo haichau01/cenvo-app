@@ -9,6 +9,7 @@ import { toast } from '@/components/ui/toastStore'
 import type { WashMembership } from '@/lib/api/types'
 import { formatDate } from '@/lib/format'
 import { useCancelMembership } from '../api/customers'
+import { usePrintMembership } from '../api/printing'
 
 function membershipState(membership: WashMembership): { label: string; tone: PillTone } {
   if (membership.status === 'Cancelled') return { label: 'Đã hủy', tone: 'stop' }
@@ -16,8 +17,18 @@ function membershipState(membership: WashMembership): { label: string; tone: Pil
   return { label: membership.remainingUses === 0 ? 'Hết lượt' : 'Hết hạn', tone: 'muted' }
 }
 
-/** A customer's packages. A manager can cancel (refund) one that has not been used yet — the server checks the rest. */
-export function MembershipList({ memberships, canCancel }: { memberships: WashMembership[]; canCancel: boolean }) {
+interface MembershipListProps {
+  memberships: WashMembership[]
+  canPrint: boolean
+  canCancel: boolean
+}
+
+/**
+ * A customer's packages. The counter can reprint a sale receipt (only at the selling branch — the server returns 404 elsewhere);
+ * a manager can cancel (refund) one that has not been used yet — the server checks the rest.
+ */
+export function MembershipList({ memberships, canPrint, canCancel }: MembershipListProps) {
+  const printMembership = usePrintMembership()
   const [cancelling, setCancelling] = useState<WashMembership | null>(null)
   if (memberships.length === 0) return <p className="text-ink-muted">Khách chưa mua gói nào.</p>
   return (
@@ -36,6 +47,7 @@ export function MembershipList({ memberships, canCancel }: { memberships: WashMe
               </div>
               <span className="font-display text-xl font-bold tabular-nums">{membership.remainingUses}/{membership.totalUses}</span>
               <StatusPill label={state.label} tone={state.tone} />
+              {canPrint && <Button variant="ghost" onClick={() => printMembership.mutate(membership.id)}>In lại</Button>}
               {canCancel && unused && <Button variant="ghost" className="text-stop" onClick={() => setCancelling(membership)}>Hủy gói</Button>}
             </li>
           )

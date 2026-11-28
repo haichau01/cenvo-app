@@ -102,7 +102,15 @@
   - Kiểm chứng:
     - `dotnet test` 92/92; `npm test` 58/58; lint và build sạch.
     - Playwright + Edge 1180×820: sai mật khẩu quản lý bị chặn; quản lý duyệt 20%; giảm theo món phải duyệt lại; tách món sang mang đi.
-- **Việc tiếp theo:** commit nhánh `feat/pos-table-discount` (chạy `/cenvo-security` + `/cenvo-review` trước); sau đó in phiếu rửa xe, báo cáo doanh thu rửa xe.
+- POS giảm giá + chuyển bàn đã commit (`fcab949`).
+- **In phiếu rửa xe + báo cáo doanh thu rửa xe (2026-11-28, nhánh `feat/pos-table-discount`):** ✅ chưa commit.
+  - Người dùng chốt: in cả phiếu nhận xe, hóa đơn rửa xe, phiếu bán gói; báo cáo là tab trong `/bao-cao` (Cà phê / Rửa xe / Tổng) với doanh thu, số xe, theo dịch vụ/loại xe, gói, hóa chất, hoa hồng, lãi gộp.
+  - In: `GET /api/carwash/tickets/{id}/receipt` (WashStaff, lọc chi nhánh), `GET /api/carwash/memberships/{id}/receipt` (thu ngân, chỉ chi nhánh đã bán, nơi khác 404). Tên thu ngân qua `ICashierShifts.CashierName`. Một phiếu in theo trạng thái: chưa thu tiền = "Phiếu nhận xe" (giữ để nhận xe), đã thu = "Hóa đơn rửa xe".
+  - Frontend: khung phiếu chung `components/cenvo/Slip.tsx` (hóa đơn cà phê cũng dùng); ô "In phiếu nhận xe" ở tiếp nhận, "In hóa đơn sau khi thu tiền / bán gói" (nhớ theo máy, mặc định bật); nút In trong sheet phiếu; "In lại" gói ở trang khách hàng. `vehicle.ts` chuyển lên `lib/`.
+  - Báo cáo: `GET /api/reports/carwash-sales` (`WashSalesReportService`, gom nhóm trong SQL, cắt ngày VN bằng `AT TIME ZONE`). Phiếu tính theo **giờ thu tiền** (khớp đối soát ca). Doanh thu = tiền rửa + tiền bán gói; lãi gộp = doanh thu − hóa chất − hoa hồng; lượt trừ gói tính theo giá niêm yết, không phải tiền trong kỳ. Giá vốn hóa chất qua contract mới `Inventory/Contracts/ISaleCostQuery` (trả `IQueryable` để ghép SQL). Migration `AddWashSalesIndexes`: chỉ thêm 2 index.
+  - Biểu đồ tổng quát (cột chồng Cà phê robusta / Rửa xe foam, có chú giải + bảng). Validator dataviz: cặp màu tách tốt (ΔE ≥ 14), robusta dưới ngưỡng chroma, bù bằng chú giải/khe/bảng.
+  - Kiểm chứng: `dotnet test` 102/102; `npm test` 64/64, lint, build sạch; Playwright + Edge: in 3 loại phiếu (khổ 80 × 126 mm), báo cáo 3 tab, không lỗi console.
+- **Việc tiếp theo:** commit (chạy `/cenvo-security` + `/cenvo-review` trước — đã chạy, không có mục Cao); sau đó nhắc khách quay lại, Payroll đọc hoa hồng.
 - Còn treo: 2 cảnh báo EF về global filter (Unit ↔ ProductUnit, Branch ↔ UserBranch). Chưa ảnh hưởng hành vi.
 
 > Phần dưới là nhật ký quá trình refactor, giữ lại để tham khảo.

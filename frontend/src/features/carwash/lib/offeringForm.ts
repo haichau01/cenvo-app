@@ -1,5 +1,5 @@
 import type { CommissionType, VehicleType, WashOffering, WashOfferingInput } from '@/lib/api/types'
-import { VEHICLE_TYPES } from './vehicle'
+import { VEHICLE_TYPES } from '@/lib/vehicle'
 
 export interface SupplyRow {
   productId: string

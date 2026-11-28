@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { fillDays, marginPercent, niceTicks, shiftDifference } from './metrics'
+import { columnTotal, combinedChartDays, fillCafeDays, washChartDays } from './chart'
+import { marginPercent, niceTicks, shiftDifference, sumByMethod } from './metrics'
 import { addDays, matchingPreset, PRESETS } from './period'
 
 const presetPeriod = (id: string, today: string) => PRESETS.find((p) => p.id === id)!.period(today)
@@ -39,8 +40,31 @@ describe('metrics', () => {
   })
 
   it('fills days without sales with zeros', () => {
-    const filled = fillDays([{ date: '2026-11-26', orders: 3, revenue: 90_000, discount: 0, cost: 30_000, grossProfit: 60_000 }],
+    const filled = fillCafeDays([{ date: '2026-11-26', orders: 3, revenue: 90_000, discount: 0, cost: 30_000, grossProfit: 60_000 }],
       ['2026-11-25', '2026-11-26'])
     expect(filled.map((d) => d.revenue)).toEqual([0, 90_000])
+  })
+})
+
+describe('revenue chart data', () => {
+  const washDay = { date: '2026-11-26', tickets: 2, washRevenue: 160_000, membershipRevenue: 1_000_000, revenue: 1_160_000,
+    supplyCost: 20_000, commission: 32_000, grossProfit: 1_108_000 }
+  const cafeDay = { date: '2026-11-26', orders: 3, revenue: 90_000, discount: 0, cost: 30_000, grossProfit: 60_000 }
+
+  it('stacks café under car wash and fills missing days with zero columns', () => {
+    const days = combinedChartDays([cafeDay], [washDay], ['2026-11-25', '2026-11-26'])
+    expect(days.map((d) => d.values)).toEqual([[0, 0], [90_000, 1_160_000]])
+    expect(columnTotal(days[1])).toBe(1_250_000)
+    expect(days[1].details[0]).toEqual({ label: 'Tổng doanh thu', value: 1_250_000, kind: 'money' })
+  })
+
+  it('shows car wash revenue including packages sold that day', () => {
+    const [day] = washChartDays([washDay], ['2026-11-26'])
+    expect(day.values).toEqual([1_160_000])
+    expect(day.details.find((d) => d.label === 'Hóa chất + hoa hồng')?.value).toBe(52_000)
+  })
+
+  it('adds payment methods of both modules for display', () => {
+    expect(sumByMethod({ Cash: 100, Transfer: 50 }, { Cash: 20, Card: 5 })).toEqual({ Cash: 120, Transfer: 50, Card: 5 })
   })
 })

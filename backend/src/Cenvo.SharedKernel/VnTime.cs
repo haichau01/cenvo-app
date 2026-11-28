@@ -3,7 +3,10 @@ namespace Cenvo.SharedKernel;
 /// <summary>Store UTC; display and cut days in Vietnam time.</summary>
 public static class VnTime
 {
-    public static readonly TimeZoneInfo Zone = TimeZoneInfo.FindSystemTimeZoneById("Asia/Ho_Chi_Minh");
+    /// <summary>IANA id; also usable inside EF queries (Npgsql translates ConvertTimeBySystemTimeZoneId to AT TIME ZONE).</summary>
+    public const string ZoneId = "Asia/Ho_Chi_Minh";
+
+    public static readonly TimeZoneInfo Zone = TimeZoneInfo.FindSystemTimeZoneById(ZoneId);
 
     public static DateTime ToLocal(DateTime utc) =>
         TimeZoneInfo.ConvertTimeFromUtc(DateTime.SpecifyKind(utc, DateTimeKind.Utc), Zone);

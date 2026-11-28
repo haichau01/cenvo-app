@@ -10,7 +10,7 @@ import type { WashCustomerDetail } from '@/lib/api/types'
 import { formatDate } from '@/lib/format'
 import { useCustomer, useUpdateCustomer } from '../api/customers'
 import { washStatusLabel } from '../lib/status'
-import { vehicleLabel } from '../lib/vehicle'
+import { vehicleLabel } from '@/lib/vehicle'
 import { MembershipList } from './MembershipList'
 
 interface CustomerDetailProps {
@@ -41,7 +41,7 @@ export function CustomerDetail({ customerId, canSell, canEdit, canCancelMembersh
         </ul>
       </Section>
       <Section title="Gói thành viên" action={canSell && <Button variant="secondary" onClick={() => onSell(data)}>Bán gói</Button>}>
-        <MembershipList memberships={data.memberships} canCancel={canCancelMembership} />
+        <MembershipList memberships={data.memberships} canPrint={canSell} canCancel={canCancelMembership} />
       </Section>
       <Section title="Lần rửa gần đây tại chi nhánh">
         {data.recentTickets.length === 0 && <p className="text-ink-muted">Chưa rửa ở chi nhánh này.</p>}

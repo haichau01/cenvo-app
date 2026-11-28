@@ -1,6 +1,6 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import { apiFetch } from '@/lib/api/client'
-import type { ConsumptionDto, SalesSummary, ShiftDto } from '@/lib/api/types'
+import type { ConsumptionDto, SalesSummary, ShiftDto, WashSalesSummary } from '@/lib/api/types'
 import type { Period } from '../lib/period'
 
 const range = (period: Period) => `from=${period.from}&to=${period.to}`
@@ -21,5 +21,11 @@ export const useShifts = (period: Period) => useQuery({
 export const useConsumption = (period: Period) => useQuery({
   queryKey: ['reports', 'consumption', period],
   queryFn: () => apiFetch<ConsumptionDto[]>(`/api/inventory/consumption?${range(period)}`),
+  placeholderData: keepPreviousData,
+})
+
+export const useWashSalesSummary = (period: Period) => useQuery({
+  queryKey: ['reports', 'carwash-sales', period],
+  queryFn: () => apiFetch<WashSalesSummary>(`/api/reports/carwash-sales?${range(period)}`),
   placeholderData: keepPreviousData,
 })

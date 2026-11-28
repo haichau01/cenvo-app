@@ -9,7 +9,7 @@ import { toast } from '@/components/ui/toastStore'
 import type { WashOffering } from '@/lib/api/types'
 import { useSaveOffering } from '../api/setup'
 import { toOfferingForm, toOfferingInput, type OfferingForm } from '../lib/offeringForm'
-import { VEHICLE_TYPES } from '../lib/vehicle'
+import { VEHICLE_TYPES } from '@/lib/vehicle'
 import { SupplyRows } from './SupplyRows'
 
 /** `offering`: null = closed, 'new' = create. */

@@ -30,6 +30,12 @@ public class ShiftService(
             .Select(s => (Guid?)s.Id)
             .FirstOrDefaultAsync(ct);
 
+    public Task<string?> CashierName(Guid shiftId, CancellationToken ct) =>
+        db.Set<Shift>().AsNoTracking()
+            .Where(s => s.Id == shiftId)
+            .Select(s => s.CashierName)
+            .FirstOrDefaultAsync(ct);
+
     public async Task<ShiftSummary> Open(decimal openingCash, string cashierName, CancellationToken ct)
     {
         if (await CurrentShift(ct) != null) throw new BusinessException(CafeErrors.ShiftAlreadyOpen);

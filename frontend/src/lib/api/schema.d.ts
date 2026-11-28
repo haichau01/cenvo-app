@@ -196,6 +196,44 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/reports/carwash-sales": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query: {
+                    from: string;
+                    to: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Cenvo.Modules.CarWash.Application.Reports.WashSalesSummary"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/reports/carwash-commissions": {
         parameters: {
             query?: never;
@@ -2817,6 +2855,43 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/carwash/memberships/{id}/receipt": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Cenvo.Modules.CarWash.Application.Printing.MembershipReceiptDto"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/carwash/memberships/{id}/cancel": {
         parameters: {
             query?: never;
@@ -2980,6 +3055,43 @@ export interface paths {
                     };
                     content: {
                         "application/json": components["schemas"]["Cenvo.Modules.CarWash.Application.Tickets.TicketDto"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/carwash/tickets/{id}/receipt": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Cenvo.Modules.CarWash.Application.Printing.WashTicketReceiptDto"];
                     };
                 };
             };
@@ -4201,6 +4313,23 @@ export interface components {
             customerName?: string | null;
             payments: components["schemas"]["Cenvo.Modules.Cafe.Domain.Calculations.TenderedPayment"][];
         };
+        "Cenvo.Modules.CarWash.Application.Printing.MembershipReceiptDto": {
+            membership: components["schemas"]["Cenvo.Modules.CarWash.Application.Customers.MembershipDto"];
+            customerName: string;
+            customerPhone: string;
+            payments: components["schemas"]["Cenvo.Modules.CarWash.Application.Tickets.TicketPaymentDto"][];
+            /** Format: double */
+            cashReceived: number;
+            /** Format: double */
+            changeAmount: number;
+            store: components["schemas"]["Cenvo.Modules.Organization.Contracts.BranchContact"];
+            cashierName?: string | null;
+        };
+        "Cenvo.Modules.CarWash.Application.Printing.WashTicketReceiptDto": {
+            ticket: components["schemas"]["Cenvo.Modules.CarWash.Application.Tickets.TicketDto"];
+            store: components["schemas"]["Cenvo.Modules.Organization.Contracts.BranchContact"];
+            cashierName?: string | null;
+        };
         "Cenvo.Modules.CarWash.Application.Reports.CommissionReport": {
             /** Format: date */
             from: string;
@@ -4218,6 +4347,83 @@ export interface components {
             ticketCount: number;
             /** Format: double */
             commission: number;
+        };
+        "Cenvo.Modules.CarWash.Application.Reports.WashDailyRevenue": {
+            /** Format: date */
+            date: string;
+            /** Format: int32 */
+            tickets: number;
+            /** Format: double */
+            washRevenue: number;
+            /** Format: double */
+            membershipRevenue: number;
+            /** Format: double */
+            revenue: number;
+            /** Format: double */
+            supplyCost: number;
+            /** Format: double */
+            commission: number;
+            /** Format: double */
+            grossProfit: number;
+        };
+        "Cenvo.Modules.CarWash.Application.Reports.WashSalesSummary": {
+            /** Format: date */
+            from: string;
+            /** Format: date */
+            to: string;
+            /** Format: int32 */
+            tickets: number;
+            /** Format: int32 */
+            cancelled: number;
+            /** Format: double */
+            washRevenue: number;
+            /** Format: int32 */
+            membershipsSold: number;
+            /** Format: double */
+            membershipRevenue: number;
+            /** Format: double */
+            revenue: number;
+            /** Format: int32 */
+            membershipUses: number;
+            /** Format: double */
+            membershipCovered: number;
+            /** Format: double */
+            supplyCost: number;
+            /** Format: double */
+            commission: number;
+            /** Format: double */
+            grossProfit: number;
+            /** Format: double */
+            averageTicket: number;
+            byMethod: {
+                /** Format: double */
+                Cash?: number;
+                /** Format: double */
+                Transfer?: number;
+                /** Format: double */
+                Card?: number;
+            };
+            daily: components["schemas"]["Cenvo.Modules.CarWash.Application.Reports.WashDailyRevenue"][];
+            byService: components["schemas"]["Cenvo.Modules.CarWash.Application.Reports.WashServiceSales"][];
+            byVehicle: components["schemas"]["Cenvo.Modules.CarWash.Application.Reports.WashVehicleSales"][];
+        };
+        "Cenvo.Modules.CarWash.Application.Reports.WashServiceSales": {
+            /** Format: uuid */
+            offeringId: string;
+            name: string;
+            /** Format: int32 */
+            count: number;
+            /** Format: int32 */
+            membershipUses: number;
+            /** Format: double */
+            revenue: number;
+        };
+        "Cenvo.Modules.CarWash.Application.Reports.WashVehicleSales": {
+            vehicleType: components["schemas"]["Cenvo.Modules.CarWash.Domain.VehicleType"];
+            /** Format: int32 */
+            tickets: number;
+            /** Format: double */
+            revenue: number;
         };
         "Cenvo.Modules.CarWash.Application.Setup.OfferingDto": {
             /** Format: uuid */

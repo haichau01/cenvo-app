@@ -44,6 +44,7 @@ export type ShiftDto = Schemas['Cenvo.Modules.Cafe.Application.Shifts.ShiftDto']
 export type ConsumptionDto = Schemas['Cenvo.Modules.Inventory.Application.Stock.ConsumptionDto']
 export type ReceiptDto = Schemas['Cenvo.Modules.Cafe.Application.Orders.ReceiptDto']
 export type ShiftTakings = Schemas['Cenvo.Modules.Cafe.Contracts.ShiftTakings']
+export type BranchContact = Schemas['Cenvo.Modules.Organization.Contracts.BranchContact']
 
 // Car wash
 type Wash = 'Cenvo.Modules.CarWash'
@@ -66,3 +67,9 @@ export type WashMembership = Schemas[`${Wash}.Application.Customers.MembershipDt
 export type VehicleLookup = Schemas[`${Wash}.Application.Customers.VehicleLookupDto`]
 export type SellMembershipInput = Schemas[`${Wash}.Application.Memberships.SellMembershipInput`]
 export type CommissionReport = Schemas[`${Wash}.Application.Reports.CommissionReport`]
+export type WashTicketReceipt = Schemas[`${Wash}.Application.Printing.WashTicketReceiptDto`]
+export type MembershipReceipt = Schemas[`${Wash}.Application.Printing.MembershipReceiptDto`]
+export type WashSalesSummary = Schemas[`${Wash}.Application.Reports.WashSalesSummary`]
+export type WashDailyRevenue = Schemas[`${Wash}.Application.Reports.WashDailyRevenue`]
+export type WashServiceSales = Schemas[`${Wash}.Application.Reports.WashServiceSales`]
+export type WashVehicleSales = Schemas[`${Wash}.Application.Reports.WashVehicleSales`]

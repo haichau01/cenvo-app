@@ -804,6 +804,9 @@ namespace Cenvo.Infrastructure.Persistence.Migrations
                         .IsUnique()
                         .HasDatabaseName("ix_customer_membership_sold_branch_id_code");
 
+                    b.HasIndex("SoldBranchId", "PaidAt")
+                        .HasDatabaseName("ix_customer_membership_sold_branch_id_paid_at");
+
                     b.ToTable("customer_membership", (string)null);
                 });
 
@@ -1302,6 +1305,9 @@ namespace Cenvo.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("BranchId", "CreatedAt")
                         .HasDatabaseName("ix_wash_ticket_branch_id_created_at");
+
+                    b.HasIndex("BranchId", "PaidAt")
+                        .HasDatabaseName("ix_wash_ticket_branch_id_paid_at");
 
                     b.HasIndex("BranchId", "Status")
                         .HasDatabaseName("ix_wash_ticket_branch_id_status");

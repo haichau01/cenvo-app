@@ -8,8 +8,11 @@ import { toast } from '@/components/ui/toastStore'
 import type { PaymentMethod } from '@/lib/api/types'
 import { formatVnd } from '@/lib/format'
 import { previewChange } from '@/lib/payment'
+import { useStoredFlag } from '@/lib/useStoredFlag'
+import { PRINT_AFTER_PAY_KEY, usePrintWashTicket } from '../api/printing'
 import { usePayTicket } from '../api/tickets'
 import { CashInput, MethodPicker } from './PaymentInputs'
+import { PrintToggle } from './PrintToggle'
 
 /** What the dialog needs — works from a queue card or the full ticket. */
 export interface PayableTicket {
@@ -30,6 +33,8 @@ export function WashPayDialog({ ticket, onClose }: { ticket: PayableTicket | nul
 /** Exact cash is preselected: Thu tiền → Xác nhận is two taps. The money goes into the cashier's open shift. */
 function PayForm({ ticket, onPaid }: { ticket: PayableTicket; onPaid: () => void }) {
   const pay = usePayTicket()
+  const printTicket = usePrintWashTicket()
+  const [printAfterPay, setPrintAfterPay] = useStoredFlag(PRINT_AFTER_PAY_KEY, true)
   const [method, setMethod] = useState<PaymentMethod>('Cash')
   const [given, setGiven] = useState(ticket.total)
   const coveredByMembership = ticket.total === 0
@@ -43,6 +48,7 @@ function PayForm({ ticket, onPaid }: { ticket: PayableTicket; onPaid: () => void
         const changeText = paid.changeAmount > 0 ? ` · Tiền thối ${formatVnd(paid.changeAmount)}` : ''
         toast.success(`Đã thu tiền ${paid.code}${changeText}`)
         onPaid()
+        if (printAfterPay) printTicket.mutate(paid.id)
       },
     })
   }
@@ -59,6 +65,7 @@ function PayForm({ ticket, onPaid }: { ticket: PayableTicket; onPaid: () => void
       )}
       {!coveredByMembership && isCash && <CashInput total={ticket.total} given={given} onGiven={setGiven} change={change} />}
       <FormError message={pay.error?.message} />
+      <PrintToggle label="In hóa đơn sau khi thu tiền" checked={printAfterPay} onChange={setPrintAfterPay} />
       <Button size="lg" onClick={handleConfirm} busy={pay.isPending} disabled={isCash && !coveredByMembership && change < 0}>
         Xác nhận thu tiền
       </Button>
