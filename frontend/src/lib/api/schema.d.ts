@@ -2583,6 +2583,329 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/schedule/mine": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query: {
+                    from: string;
+                    to: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Cenvo.Modules.Schedule.Application.Planning.MyShiftDto"][];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/schedule/templates": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Cenvo.Modules.Schedule.Application.Templates.TemplateDto"][];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["Cenvo.Modules.Schedule.Application.Templates.TemplateInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": string;
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/schedule/templates/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["Cenvo.Modules.Schedule.Application.Templates.TemplateInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": string;
+                    };
+                };
+            };
+        };
+        post?: never;
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/schedule/settings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Cenvo.Modules.Schedule.Application.Templates.ScheduleSettingsDto"];
+                    };
+                };
+            };
+        };
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["Cenvo.Modules.Schedule.Application.Templates.ScheduleSettingsDto"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/schedule/week": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query: {
+                    date: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Cenvo.Modules.Schedule.Application.Planning.WeekDto"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/schedule/assignments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["Cenvo.Modules.Schedule.Application.Planning.AssignInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Cenvo.Modules.Schedule.Application.Planning.AssignResult"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/schedule/assignments/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/users": {
         parameters: {
             query?: never;
@@ -5917,6 +6240,110 @@ export interface components {
             roles: string[];
             branchIds: string[];
             isActive: boolean;
+        };
+        "Cenvo.Modules.Schedule.Application.Planning.AssignInput": {
+            /** Format: date */
+            date: string;
+            /** Format: uuid */
+            shiftTemplateId: string;
+            /** Format: uuid */
+            employeeId: string;
+        };
+        "Cenvo.Modules.Schedule.Application.Planning.AssignResult": {
+            /** Format: uuid */
+            id: string;
+            /** Format: double */
+            weeklyHours: number;
+            overLimit: boolean;
+        };
+        "Cenvo.Modules.Schedule.Application.Planning.AssignmentDto": {
+            /** Format: uuid */
+            id: string;
+            /** Format: date */
+            date: string;
+            /** Format: uuid */
+            shiftTemplateId: string;
+            /** Format: uuid */
+            employeeId: string;
+            employeeName: string;
+        };
+        "Cenvo.Modules.Schedule.Application.Planning.MyShiftDto": {
+            /** Format: uuid */
+            id: string;
+            /** Format: date */
+            date: string;
+            shiftName: string;
+            /** Format: time */
+            startTime: string;
+            /** Format: time */
+            endTime: string;
+            /** Format: uuid */
+            branchId: string;
+            branchName: string;
+        };
+        "Cenvo.Modules.Schedule.Application.Planning.ShortfallDto": {
+            /** Format: date */
+            date: string;
+            /** Format: uuid */
+            shiftTemplateId: string;
+            department: components["schemas"]["Cenvo.Modules.Hr.Domain.Department"];
+            /** Format: int32 */
+            required: number;
+            /** Format: int32 */
+            assigned: number;
+        };
+        "Cenvo.Modules.Schedule.Application.Planning.WeekDto": {
+            /** Format: date */
+            weekStart: string;
+            /** Format: int32 */
+            maxWeeklyHours: number;
+            templates: components["schemas"]["Cenvo.Modules.Schedule.Application.Templates.TemplateDto"][];
+            assignments: components["schemas"]["Cenvo.Modules.Schedule.Application.Planning.AssignmentDto"][];
+            staff: components["schemas"]["Cenvo.Modules.Schedule.Application.Planning.WeekStaffDto"][];
+            shortfalls: components["schemas"]["Cenvo.Modules.Schedule.Application.Planning.ShortfallDto"][];
+        };
+        "Cenvo.Modules.Schedule.Application.Planning.WeekStaffDto": {
+            /** Format: uuid */
+            userId: string;
+            fullName: string;
+            department?: components["schemas"]["Cenvo.Modules.Hr.Domain.Department"];
+            /** Format: double */
+            weeklyHours: number;
+            overLimit: boolean;
+        };
+        "Cenvo.Modules.Schedule.Application.Templates.ScheduleSettingsDto": {
+            /** Format: int32 */
+            maxWeeklyHours: number;
+        };
+        "Cenvo.Modules.Schedule.Application.Templates.StaffingNeedDto": {
+            department: components["schemas"]["Cenvo.Modules.Hr.Domain.Department"];
+            /** Format: int32 */
+            minStaff: number;
+        };
+        "Cenvo.Modules.Schedule.Application.Templates.TemplateDto": {
+            /** Format: uuid */
+            id: string;
+            name: string;
+            /** Format: time */
+            startTime: string;
+            /** Format: time */
+            endTime: string;
+            overnight: boolean;
+            /** Format: int32 */
+            sortOrder: number;
+            isActive: boolean;
+            needs: components["schemas"]["Cenvo.Modules.Schedule.Application.Templates.StaffingNeedDto"][];
+        };
+        "Cenvo.Modules.Schedule.Application.Templates.TemplateInput": {
+            name: string;
+            /** Format: time */
+            startTime: string;
+            /** Format: time */
+            endTime: string;
+            /** Format: int32 */
+            sortOrder: number;
+            isActive: boolean;
+            needs: components["schemas"]["Cenvo.Modules.Schedule.Application.Templates.StaffingNeedDto"][];
         };
         /** @enum {string} */
         "Cenvo.SharedKernel.DocumentStatus": "Draft" | "Posted" | "Cancelled";

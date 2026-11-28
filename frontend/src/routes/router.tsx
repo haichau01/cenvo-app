@@ -16,6 +16,7 @@ export const router = createBrowserRouter([
     Component: RequireAuth,
     children: [
       { index: true, lazy: async () => ({ Component: (await import('@/features/home/pages/HomePage')).HomePage }) },
+      { path: '/lich-cua-toi', lazy: async () => ({ Component: (await import('@/features/schedule/pages/MySchedulePage')).MySchedulePage }) },
       { path: '/in/hoa-don/:id', lazy: async () => ({ Component: (await import('@/features/cafe/pages/ReceiptPreviewPage')).ReceiptPreviewPage }) },
       {
         lazy: async () => ({ Component: (await import('./layouts/CoreLayout')).CoreLayout }),
@@ -38,6 +39,7 @@ export const router = createBrowserRouter([
               { path: '/rua-xe/hoa-hong', lazy: async () => ({ Component: (await import('@/features/carwash/pages/CommissionPage')).CommissionPage }) },
               { path: '/rua-xe/nhac-khach', lazy: async () => ({ Component: (await import('@/features/carwash/pages/RemindersPage')).RemindersPage }) },
               { path: '/thuong-phat', lazy: async () => ({ Component: (await import('@/features/hr/pages/AdjustmentsPage')).AdjustmentsPage }) },
+              { path: '/lich-truc', lazy: async () => ({ Component: (await import('@/features/schedule/pages/SchedulePage')).SchedulePage }) },
             ],
           },
           {

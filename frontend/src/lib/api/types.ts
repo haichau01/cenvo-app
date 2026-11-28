@@ -95,3 +95,11 @@ export type PayAdjustment = Schemas[`${Hr}.Application.Adjustments.AdjustmentDto
 export type AdjustmentInput = Schemas[`${Hr}.Application.Adjustments.AdjustmentInput`]
 export type StaffMember = Schemas['Cenvo.Modules.Organization.Contracts.StaffMember']
 export type Branch = Schemas['Cenvo.Modules.Organization.Application.Branches.BranchDto']
+
+type Schedule = 'Cenvo.Modules.Schedule.Application'
+export type ShiftTemplate = Schemas[`${Schedule}.Templates.TemplateDto`]
+export type ShiftTemplateInput = Schemas[`${Schedule}.Templates.TemplateInput`]
+export type ScheduleSettings = Schemas[`${Schedule}.Templates.ScheduleSettingsDto`]
+export type ScheduleWeek = Schemas[`${Schedule}.Planning.WeekDto`]
+export type AssignResult = Schemas[`${Schedule}.Planning.AssignResult`]
+export type MyShift = Schemas[`${Schedule}.Planning.MyShiftDto`]

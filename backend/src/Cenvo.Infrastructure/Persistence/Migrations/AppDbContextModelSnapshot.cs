@@ -2802,6 +2802,213 @@ namespace Cenvo.Infrastructure.Persistence.Migrations
                     b.ToTable("user_role", (string)null);
                 });
 
+            modelBuilder.Entity("Cenvo.Modules.Schedule.Domain.ScheduleSettings", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<Guid>("BranchId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("branch_id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("created_by");
+
+                    b.Property<int>("MaxWeeklyHours")
+                        .HasColumnType("integer")
+                        .HasColumnName("max_weekly_hours");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("updated_by");
+
+                    b.HasKey("Id")
+                        .HasName("pk_schedule_settings");
+
+                    b.HasIndex("BranchId")
+                        .IsUnique()
+                        .HasDatabaseName("ix_schedule_settings_branch_id");
+
+                    b.ToTable("schedule_settings", (string)null);
+                });
+
+            modelBuilder.Entity("Cenvo.Modules.Schedule.Domain.ShiftAssignment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<Guid>("BranchId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("branch_id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("created_by");
+
+                    b.Property<DateOnly>("Date")
+                        .HasColumnType("date")
+                        .HasColumnName("date");
+
+                    b.Property<Guid>("EmployeeId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("employee_id");
+
+                    b.Property<string>("EmployeeName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("employee_name");
+
+                    b.Property<TimeOnly>("EndTime")
+                        .HasColumnType("time without time zone")
+                        .HasColumnName("end_time");
+
+                    b.Property<DateTime>("EndsAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("ends_at");
+
+                    b.Property<int>("Minutes")
+                        .HasColumnType("integer")
+                        .HasColumnName("minutes");
+
+                    b.Property<string>("ShiftName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("shift_name");
+
+                    b.Property<Guid>("ShiftTemplateId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("shift_template_id");
+
+                    b.Property<TimeOnly>("StartTime")
+                        .HasColumnType("time without time zone")
+                        .HasColumnName("start_time");
+
+                    b.Property<DateTime>("StartsAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("starts_at");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("updated_by");
+
+                    b.HasKey("Id")
+                        .HasName("pk_shift_assignment");
+
+                    b.HasIndex("BranchId", "Date")
+                        .HasDatabaseName("ix_shift_assignment_branch_id_date");
+
+                    b.HasIndex("EmployeeId", "StartsAt")
+                        .HasDatabaseName("ix_shift_assignment_employee_id_starts_at");
+
+                    b.HasIndex("EmployeeId", "Date", "ShiftTemplateId")
+                        .IsUnique()
+                        .HasDatabaseName("ix_shift_assignment_employee_id_date_shift_template_id");
+
+                    b.ToTable("shift_assignment", (string)null);
+                });
+
+            modelBuilder.Entity("Cenvo.Modules.Schedule.Domain.ShiftRequirement", b =>
+                {
+                    b.Property<Guid>("ShiftTemplateId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("shift_template_id");
+
+                    b.Property<int>("Department")
+                        .HasColumnType("integer")
+                        .HasColumnName("department");
+
+                    b.Property<int>("MinStaff")
+                        .HasColumnType("integer")
+                        .HasColumnName("min_staff");
+
+                    b.HasKey("ShiftTemplateId", "Department")
+                        .HasName("pk_shift_requirement");
+
+                    b.ToTable("shift_requirement", (string)null);
+                });
+
+            modelBuilder.Entity("Cenvo.Modules.Schedule.Domain.ShiftTemplate", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<Guid>("BranchId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("branch_id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("created_by");
+
+                    b.Property<TimeOnly>("EndTime")
+                        .HasColumnType("time without time zone")
+                        .HasColumnName("end_time");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_active");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_deleted");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("name");
+
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("integer")
+                        .HasColumnName("sort_order");
+
+                    b.Property<TimeOnly>("StartTime")
+                        .HasColumnType("time without time zone")
+                        .HasColumnName("start_time");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("updated_by");
+
+                    b.HasKey("Id")
+                        .HasName("pk_shift_template");
+
+                    b.HasIndex("BranchId", "SortOrder")
+                        .HasDatabaseName("ix_shift_template_branch_id_sort_order");
+
+                    b.ToTable("shift_template", (string)null);
+                });
+
             modelBuilder.Entity("Cenvo.Modules.Cafe.Domain.CafeItem", b =>
                 {
                     b.HasOne("Cenvo.Modules.Catalog.Domain.Product", null)
@@ -3216,6 +3423,16 @@ namespace Cenvo.Infrastructure.Persistence.Migrations
                         .HasConstraintName("fk_user_role_app_user_user_id");
                 });
 
+            modelBuilder.Entity("Cenvo.Modules.Schedule.Domain.ShiftRequirement", b =>
+                {
+                    b.HasOne("Cenvo.Modules.Schedule.Domain.ShiftTemplate", null)
+                        .WithMany("Requirements")
+                        .HasForeignKey("ShiftTemplateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_shift_requirement_shift_template_shift_template_id");
+                });
+
             modelBuilder.Entity("Cenvo.Modules.Cafe.Domain.CafeOrder", b =>
                 {
                     b.Navigation("Lines");
@@ -3273,6 +3490,11 @@ namespace Cenvo.Infrastructure.Persistence.Migrations
                     b.Navigation("Branches");
 
                     b.Navigation("Roles");
+                });
+
+            modelBuilder.Entity("Cenvo.Modules.Schedule.Domain.ShiftTemplate", b =>
+                {
+                    b.Navigation("Requirements");
                 });
 #pragma warning restore 612, 618
         }
