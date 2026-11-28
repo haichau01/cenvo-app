@@ -9,8 +9,9 @@ import { toast } from '@/components/ui/toastStore'
 import type { WashCustomerDetail } from '@/lib/api/types'
 import { formatDate } from '@/lib/format'
 import { useCustomer, useUpdateCustomer } from '../api/customers'
+import { useSetAcceptsReminders } from '../api/reminders'
 import { washStatusLabel } from '../lib/status'
-import { vehicleLabel } from '../lib/vehicle'
+import { vehicleLabel } from '@/lib/vehicle'
 import { MembershipList } from './MembershipList'
 
 interface CustomerDetailProps {
@@ -41,7 +42,7 @@ export function CustomerDetail({ customerId, canSell, canEdit, canCancelMembersh
         </ul>
       </Section>
       <Section title="Gói thành viên" action={canSell && <Button variant="secondary" onClick={() => onSell(data)}>Bán gói</Button>}>
-        <MembershipList memberships={data.memberships} canCancel={canCancelMembership} />
+        <MembershipList memberships={data.memberships} canPrint={canSell} canCancel={canCancelMembership} />
       </Section>
       <Section title="Lần rửa gần đây tại chi nhánh">
         {data.recentTickets.length === 0 && <p className="text-ink-muted">Chưa rửa ở chi nhánh này.</p>}
@@ -79,8 +80,25 @@ function CustomerInfo({ customer, canEdit }: { customer: WashCustomerDetail; can
         <TextField label="Số điện thoại" inputMode="tel" value={phone} onChange={(event) => setPhone(event.target.value)} maxLength={15} />
       </div>
       <TextField label="Ghi chú" value={note} onChange={(event) => setNote(event.target.value)} maxLength={300} />
+      <ReminderToggle customer={customer} canEdit={canEdit} />
       <FormError message={update.error?.message} />
       {canEdit && changed && <Button className="self-start" onClick={handleSave} busy={update.isPending}>Lưu thông tin</Button>}
+    </div>
+  )
+}
+
+/** On by default; turned off at the counter when the customer asks not to be messaged. */
+function ReminderToggle({ customer, canEdit }: { customer: WashCustomerDetail; canEdit: boolean }) {
+  const toggle = useSetAcceptsReminders()
+  return (
+    <div className="flex flex-col gap-1">
+      <label className="flex min-h-12 items-center gap-3 self-start">
+        <input type="checkbox" checked={customer.acceptsReminders} disabled={!canEdit || toggle.isPending} className="size-5 accent-foam"
+          onChange={(event) => toggle.mutate({ customerId: customer.id, accepts: event.target.checked })} />
+        <span>Nhận tin nhắc rửa xe và gói thành viên</span>
+      </label>
+      {customer.lastWashAt && <p className="text-caption text-ink-muted">Rửa lần cuối trong chuỗi: {formatDate(customer.lastWashAt)}</p>}
+      <FormError message={toggle.error?.message} />
     </div>
   )
 }

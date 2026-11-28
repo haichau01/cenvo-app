@@ -9,7 +9,7 @@ import { useOfferings, usePackages } from '../api/setup'
 import { OfferingDialog } from '../components/OfferingDialog'
 import { PackageDialog } from '../components/PackageDialog'
 import { priceFor } from '../lib/intake'
-import { vehicleLabel, VEHICLE_TYPES } from '../lib/vehicle'
+import { vehicleLabel, VEHICLE_TYPES } from '@/lib/vehicle'
 
 const th = 'px-3 py-2 text-left text-caption font-medium text-ink-muted'
 const td = 'px-3 py-2.5'

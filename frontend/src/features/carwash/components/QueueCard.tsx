@@ -6,7 +6,7 @@ import type { QueueTicket } from '@/lib/api/types'
 import { formatDuration } from '@/lib/format'
 import { cardClock } from '../lib/queue'
 import { cardAction, type CardAction, type WashColumn } from '../lib/status'
-import { vehicleLabel } from '../lib/vehicle'
+import { vehicleLabel } from '@/lib/vehicle'
 
 interface QueueCardProps {
   ticket: QueueTicket

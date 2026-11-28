@@ -1,5 +1,5 @@
 import { Money } from '@/components/cenvo/Money'
-import type { DailyRevenue, SalesSummary, TopItem } from '@/lib/api/types'
+import type { DailyRevenue, TopItem } from '@/lib/api/types'
 import { formatQuantity } from '@/lib/format'
 import { share } from '../lib/metrics'
 import { ReportTable, ShareBar, th, thNum, tdNum } from './ReportTable'
@@ -28,8 +28,9 @@ export function DailyTable({ days }: { days: DailyRevenue[] }) {
   )
 }
 
-export function PaymentTable({ summary }: { summary: SalesSummary }) {
-  const methods = Object.entries(summary.byMethod) as [string, number][]
+/** Money by payment method; `byMethod` comes from the server (or is the sum of two modules on the whole-shop tab). */
+export function PaymentTable({ byMethod }: { byMethod: Partial<Record<string, number>> }) {
+  const methods = Object.entries(byMethod) as [string, number][]
   const total = methods.reduce((sum, [, amount]) => sum + amount, 0)
   return (
     <ReportTable head={<><th className={th}>Hình thức</th><th className={thNum}>Số tiền</th><th className={thNum}>Tỷ trọng</th></>}>

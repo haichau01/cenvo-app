@@ -8,10 +8,13 @@ import { TextField } from '@/components/ui/TextField'
 import { toast } from '@/components/ui/toastStore'
 import type { PaymentMethod, WashPackage } from '@/lib/api/types'
 import { previewChange } from '@/lib/payment'
+import { useStoredFlag } from '@/lib/useStoredFlag'
 import { useSellMembership } from '../api/customers'
+import { PRINT_AFTER_PAY_KEY, usePrintMembership } from '../api/printing'
 import { usePackages } from '../api/setup'
-import { vehicleLabel } from '../lib/vehicle'
+import { vehicleLabel } from '@/lib/vehicle'
 import { CashInput, MethodPicker } from './PaymentInputs'
+import { PrintToggle } from './PrintToggle'
 
 /** Who the package is sold to: a known customer, or a new one typed at the counter. */
 export interface MembershipBuyer {
@@ -31,6 +34,8 @@ export function SellMembershipDialog({ buyer, onClose }: { buyer: MembershipBuye
 function SellForm({ buyer, onSold }: { buyer: MembershipBuyer; onSold: () => void }) {
   const packages = usePackages().data ?? []
   const sell = useSellMembership()
+  const printMembership = usePrintMembership()
+  const [printAfterPay, setPrintAfterPay] = useStoredFlag(PRINT_AFTER_PAY_KEY, true)
   const [phone, setPhone] = useState(buyer.phone)
   const [name, setName] = useState(buyer.name)
   const [packageId, setPackageId] = useState('')
@@ -46,6 +51,7 @@ function SellForm({ buyer, onSold }: { buyer: MembershipBuyer; onSold: () => voi
       onSuccess: (membership) => {
         toast.success(`Đã bán gói ${membership.code} · ${membership.totalUses} lượt`)
         onSold()
+        if (printAfterPay) printMembership.mutate(membership.id)
       },
     })
   }
@@ -66,6 +72,7 @@ function SellForm({ buyer, onSold }: { buyer: MembershipBuyer; onSold: () => voi
         </>
       )}
       <FormError message={sell.error?.message} />
+      <PrintToggle label="In hóa đơn sau khi bán gói" checked={printAfterPay} onChange={setPrintAfterPay} />
       <Button size="lg" onClick={handleConfirm} busy={sell.isPending} disabled={!chosen || !phone.trim() || short}>
         Thu tiền và bán gói
       </Button>

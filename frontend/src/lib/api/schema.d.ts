@@ -196,6 +196,44 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/reports/carwash-sales": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query: {
+                    from: string;
+                    to: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Cenvo.Modules.CarWash.Application.Reports.WashSalesSummary"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/reports/carwash-commissions": {
         parameters: {
             query?: never;
@@ -2567,7 +2605,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["Cenvo.Modules.Organization.Application.Users.UserDto"][];
+                        "application/json": components["schemas"]["Cenvo.Modules.Organization.Contracts.UserAccount"][];
                     };
                 };
             };
@@ -2582,7 +2620,7 @@ export interface paths {
             };
             requestBody: {
                 content: {
-                    "application/json": components["schemas"]["Cenvo.Modules.Organization.Application.Users.UserInput"];
+                    "application/json": components["schemas"]["Cenvo.Modules.Organization.Contracts.UserAccountInput"];
                 };
             };
             responses: {
@@ -2622,7 +2660,7 @@ export interface paths {
             };
             requestBody: {
                 content: {
-                    "application/json": components["schemas"]["Cenvo.Modules.Organization.Application.Users.UserInput"];
+                    "application/json": components["schemas"]["Cenvo.Modules.Organization.Contracts.UserAccountInput"];
                 };
             };
             responses: {
@@ -2638,6 +2676,497 @@ export interface paths {
             };
         };
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/hr/employees": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Cenvo.Modules.Hr.Application.Employees.EmployeeListItemDto"][];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["Cenvo.Modules.Hr.Application.Employees.EmployeeInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": string;
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/hr/employees/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Cenvo.Modules.Hr.Application.Employees.EmployeeDetailDto"];
+                    };
+                };
+            };
+        };
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["Cenvo.Modules.Hr.Application.Employees.EmployeeInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": string;
+                    };
+                };
+            };
+        };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/hr/employees/{id}/leave": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["Cenvo.Modules.Hr.Application.Employees.LeaveInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/hr/employees/{id}/rehire": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/hr/employees/{id}/contracts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["Cenvo.Modules.Hr.Application.Employees.ContractInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": string;
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/hr/employees/{id}/contracts/{contractId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                    contractId: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["Cenvo.Modules.Hr.Application.Employees.ContractInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": string;
+                    };
+                };
+            };
+        };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/hr/employees/{id}/salary-rates": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["Cenvo.Modules.Hr.Application.Employees.SalaryRateInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": string;
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/hr/employees/{id}/salary-rates/{rateId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                    rateId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": string;
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/hr/adjustments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query: {
+                    from: string;
+                    to: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Cenvo.Modules.Hr.Application.Adjustments.AdjustmentDto"][];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["Cenvo.Modules.Hr.Application.Adjustments.AdjustmentInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": string;
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/hr/adjustments/staff": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Cenvo.Modules.Organization.Contracts.StaffMember"][];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/hr/adjustments/{id}/cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["Cenvo.Modules.Hr.Application.Adjustments.CancelAdjustmentInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
         delete?: never;
         options?: never;
         head?: never;
@@ -2741,6 +3270,45 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/carwash/customers/{id}/reminders": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["Cenvo.Modules.CarWash.Application.Reminders.SetAcceptsRemindersInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/carwash/vehicles/lookup": {
         parameters: {
             query?: never;
@@ -2817,6 +3385,43 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/carwash/memberships/{id}/receipt": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Cenvo.Modules.CarWash.Application.Printing.MembershipReceiptDto"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/carwash/memberships/{id}/cancel": {
         parameters: {
             query?: never;
@@ -2848,6 +3453,174 @@ export interface paths {
                     };
                     content: {
                         "application/json": components["schemas"]["Cenvo.Modules.CarWash.Application.Customers.MembershipDto"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/carwash/reminders/settings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Cenvo.Modules.CarWash.Application.Reminders.ReminderSettingsDto"];
+                    };
+                };
+            };
+        };
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["Cenvo.Modules.CarWash.Application.Reminders.ReminderSettingsInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/carwash/reminders/due": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Cenvo.Modules.CarWash.Application.Reminders.DueReminderDto"][];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/carwash/reminders/history": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query: {
+                    from: string;
+                    to: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Cenvo.Modules.CarWash.Application.Reminders.ReminderLogDto"][];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/carwash/reminders/send": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["Cenvo.Modules.CarWash.Application.Reminders.SendRemindersInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Cenvo.Modules.CarWash.Application.Reminders.SendRemindersResult"];
                     };
                 };
             };
@@ -2980,6 +3753,43 @@ export interface paths {
                     };
                     content: {
                         "application/json": components["schemas"]["Cenvo.Modules.CarWash.Application.Tickets.TicketDto"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/carwash/tickets/{id}/receipt": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Cenvo.Modules.CarWash.Application.Printing.WashTicketReceiptDto"];
                     };
                 };
             };
@@ -4131,6 +4941,9 @@ export interface components {
             name: string;
             phone: string;
             note?: string | null;
+            acceptsReminders: boolean;
+            /** Format: date-time */
+            lastWashAt?: string | null;
             vehicles: components["schemas"]["Cenvo.Modules.CarWash.Application.Customers.VehicleDto"][];
             memberships: components["schemas"]["Cenvo.Modules.CarWash.Application.Customers.MembershipDto"][];
             recentTickets: components["schemas"]["Cenvo.Modules.CarWash.Application.Tickets.TicketHistoryDto"][];
@@ -4201,6 +5014,108 @@ export interface components {
             customerName?: string | null;
             payments: components["schemas"]["Cenvo.Modules.Cafe.Domain.Calculations.TenderedPayment"][];
         };
+        "Cenvo.Modules.CarWash.Application.Printing.MembershipReceiptDto": {
+            membership: components["schemas"]["Cenvo.Modules.CarWash.Application.Customers.MembershipDto"];
+            customerName: string;
+            customerPhone: string;
+            payments: components["schemas"]["Cenvo.Modules.CarWash.Application.Tickets.TicketPaymentDto"][];
+            /** Format: double */
+            cashReceived: number;
+            /** Format: double */
+            changeAmount: number;
+            store: components["schemas"]["Cenvo.Modules.Organization.Contracts.BranchContact"];
+            cashierName?: string | null;
+        };
+        "Cenvo.Modules.CarWash.Application.Printing.WashTicketReceiptDto": {
+            ticket: components["schemas"]["Cenvo.Modules.CarWash.Application.Tickets.TicketDto"];
+            store: components["schemas"]["Cenvo.Modules.Organization.Contracts.BranchContact"];
+            cashierName?: string | null;
+        };
+        "Cenvo.Modules.CarWash.Application.Reminders.DueReminderDto": {
+            reason: components["schemas"]["Cenvo.Modules.CarWash.Application.Reminders.DueReminderRow"];
+            message: string;
+        };
+        "Cenvo.Modules.CarWash.Application.Reminders.DueReminderRow": {
+            kind: components["schemas"]["Cenvo.Modules.CarWash.Domain.ReminderKind"];
+            /** Format: uuid */
+            refId: string;
+            /** Format: uuid */
+            customerId: string;
+            customerName: string;
+            phone: string;
+            plate?: string | null;
+            /** Format: date-time */
+            lastWashAt?: string | null;
+            packageName?: string | null;
+            /** Format: int32 */
+            remainingUses?: number | null;
+            /** Format: date-time */
+            expiresAt?: string | null;
+            lastError?: string | null;
+        };
+        "Cenvo.Modules.CarWash.Application.Reminders.ReminderFailureDto": {
+            /** Format: uuid */
+            refId: string;
+            customerName: string;
+            error: string;
+        };
+        "Cenvo.Modules.CarWash.Application.Reminders.ReminderLogDto": {
+            /** Format: uuid */
+            id: string;
+            kind: components["schemas"]["Cenvo.Modules.CarWash.Domain.ReminderKind"];
+            /** Format: uuid */
+            customerId: string;
+            customerName: string;
+            phone: string;
+            message: string;
+            status: components["schemas"]["Cenvo.Modules.CarWash.Domain.ReminderStatus"];
+            /** Format: int32 */
+            attempts: number;
+            /** Format: date-time */
+            attemptedAt: string;
+            /** Format: date-time */
+            sentAt: string | null;
+            lastError: string | null;
+        };
+        "Cenvo.Modules.CarWash.Application.Reminders.ReminderSettingsDto": {
+            /** Format: int32 */
+            returnAfterDays: number;
+            /** Format: int32 */
+            expiringWithinDays: number;
+            /** Format: int32 */
+            lowUsesThreshold: number;
+            returnTemplate: string;
+            expiringTemplate: string;
+            lowUsesTemplate: string;
+            placeholders: string[];
+            /** Format: int32 */
+            maxTemplateLength: number;
+        };
+        "Cenvo.Modules.CarWash.Application.Reminders.ReminderSettingsInput": {
+            /** Format: int32 */
+            returnAfterDays: number;
+            /** Format: int32 */
+            expiringWithinDays: number;
+            /** Format: int32 */
+            lowUsesThreshold: number;
+            returnTemplate: string;
+            expiringTemplate: string;
+            lowUsesTemplate: string;
+        };
+        "Cenvo.Modules.CarWash.Application.Reminders.SendRemindersInput": {
+            kind: components["schemas"]["Cenvo.Modules.CarWash.Domain.ReminderKind"];
+            refIds: string[];
+        };
+        "Cenvo.Modules.CarWash.Application.Reminders.SendRemindersResult": {
+            /** Format: int32 */
+            sent: number;
+            /** Format: int32 */
+            skipped: number;
+            failures: components["schemas"]["Cenvo.Modules.CarWash.Application.Reminders.ReminderFailureDto"][];
+        };
+        "Cenvo.Modules.CarWash.Application.Reminders.SetAcceptsRemindersInput": {
+            accepts: boolean;
+        };
         "Cenvo.Modules.CarWash.Application.Reports.CommissionReport": {
             /** Format: date */
             from: string;
@@ -4218,6 +5133,83 @@ export interface components {
             ticketCount: number;
             /** Format: double */
             commission: number;
+        };
+        "Cenvo.Modules.CarWash.Application.Reports.WashDailyRevenue": {
+            /** Format: date */
+            date: string;
+            /** Format: int32 */
+            tickets: number;
+            /** Format: double */
+            washRevenue: number;
+            /** Format: double */
+            membershipRevenue: number;
+            /** Format: double */
+            revenue: number;
+            /** Format: double */
+            supplyCost: number;
+            /** Format: double */
+            commission: number;
+            /** Format: double */
+            grossProfit: number;
+        };
+        "Cenvo.Modules.CarWash.Application.Reports.WashSalesSummary": {
+            /** Format: date */
+            from: string;
+            /** Format: date */
+            to: string;
+            /** Format: int32 */
+            tickets: number;
+            /** Format: int32 */
+            cancelled: number;
+            /** Format: double */
+            washRevenue: number;
+            /** Format: int32 */
+            membershipsSold: number;
+            /** Format: double */
+            membershipRevenue: number;
+            /** Format: double */
+            revenue: number;
+            /** Format: int32 */
+            membershipUses: number;
+            /** Format: double */
+            membershipCovered: number;
+            /** Format: double */
+            supplyCost: number;
+            /** Format: double */
+            commission: number;
+            /** Format: double */
+            grossProfit: number;
+            /** Format: double */
+            averageTicket: number;
+            byMethod: {
+                /** Format: double */
+                Cash?: number;
+                /** Format: double */
+                Transfer?: number;
+                /** Format: double */
+                Card?: number;
+            };
+            daily: components["schemas"]["Cenvo.Modules.CarWash.Application.Reports.WashDailyRevenue"][];
+            byService: components["schemas"]["Cenvo.Modules.CarWash.Application.Reports.WashServiceSales"][];
+            byVehicle: components["schemas"]["Cenvo.Modules.CarWash.Application.Reports.WashVehicleSales"][];
+        };
+        "Cenvo.Modules.CarWash.Application.Reports.WashServiceSales": {
+            /** Format: uuid */
+            offeringId: string;
+            name: string;
+            /** Format: int32 */
+            count: number;
+            /** Format: int32 */
+            membershipUses: number;
+            /** Format: double */
+            revenue: number;
+        };
+        "Cenvo.Modules.CarWash.Application.Reports.WashVehicleSales": {
+            vehicleType: components["schemas"]["Cenvo.Modules.CarWash.Domain.VehicleType"];
+            /** Format: int32 */
+            tickets: number;
+            /** Format: double */
+            revenue: number;
         };
         "Cenvo.Modules.CarWash.Application.Setup.OfferingDto": {
             /** Format: uuid */
@@ -4464,6 +5456,10 @@ export interface components {
         /** @enum {string} */
         "Cenvo.Modules.CarWash.Domain.MembershipStatus": "Active" | "Cancelled";
         /** @enum {string} */
+        "Cenvo.Modules.CarWash.Domain.ReminderKind": "ReturnVisit" | "MembershipExpiring" | "MembershipLowUses";
+        /** @enum {string} */
+        "Cenvo.Modules.CarWash.Domain.ReminderStatus": "Pending" | "Sent" | "Failed";
+        /** @enum {string} */
         "Cenvo.Modules.CarWash.Domain.VehicleType": "Sedan" | "SevenSeater" | "Pickup" | "Suv";
         /** @enum {string} */
         "Cenvo.Modules.CarWash.Domain.WashStatus": "Waiting" | "Washing" | "Done" | "Delivered" | "Cancelled";
@@ -4541,6 +5537,149 @@ export interface components {
         };
         /** @enum {string} */
         "Cenvo.Modules.Catalog.Domain.ProductKind": "Ingredient" | "FinishedGood" | "Merchandise" | "Supply";
+        "Cenvo.Modules.Hr.Application.Adjustments.AdjustmentDto": {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            employeeId: string;
+            employeeName: string;
+            kind: components["schemas"]["Cenvo.Modules.Hr.Domain.AdjustmentKind"];
+            /** Format: double */
+            amount: number;
+            /** Format: date */
+            date: string;
+            reason: string;
+            recordedByName: string;
+            /** Format: uuid */
+            recordedBy: string | null;
+            status: components["schemas"]["Cenvo.Modules.Hr.Domain.AdjustmentStatus"];
+            cancelReason: string | null;
+            canCancel: boolean;
+        };
+        "Cenvo.Modules.Hr.Application.Adjustments.AdjustmentInput": {
+            /** Format: uuid */
+            employeeId: string;
+            kind: components["schemas"]["Cenvo.Modules.Hr.Domain.AdjustmentKind"];
+            /** Format: double */
+            amount: number;
+            /** Format: date */
+            date: string;
+            reason: string;
+        };
+        "Cenvo.Modules.Hr.Application.Adjustments.CancelAdjustmentInput": {
+            reason: string;
+        };
+        "Cenvo.Modules.Hr.Application.Employees.ContractDto": {
+            /** Format: uuid */
+            id: string;
+            type: components["schemas"]["Cenvo.Modules.Hr.Domain.ContractType"];
+            /** Format: date */
+            startDate: string;
+            /** Format: date */
+            endDate?: string | null;
+            note?: string | null;
+        };
+        "Cenvo.Modules.Hr.Application.Employees.ContractInput": {
+            type: components["schemas"]["Cenvo.Modules.Hr.Domain.ContractType"];
+            /** Format: date */
+            startDate: string;
+            /** Format: date */
+            endDate?: string | null;
+            note?: string | null;
+        };
+        "Cenvo.Modules.Hr.Application.Employees.EmployeeDetailDto": {
+            account: components["schemas"]["Cenvo.Modules.Organization.Contracts.UserAccount"];
+            profile?: components["schemas"]["Cenvo.Modules.Hr.Application.Employees.EmployeeProfileDto"];
+            contracts: components["schemas"]["Cenvo.Modules.Hr.Application.Employees.ContractDto"][];
+            salaryRates: components["schemas"]["Cenvo.Modules.Hr.Application.Employees.SalaryRateDto"][];
+            currentRate?: components["schemas"]["Cenvo.Modules.Hr.Application.Employees.SalaryRateDto"];
+        };
+        "Cenvo.Modules.Hr.Application.Employees.EmployeeInput": {
+            userName: string;
+            fullName: string;
+            password?: string | null;
+            roles: string[];
+            branchIds: string[];
+            department: components["schemas"]["Cenvo.Modules.Hr.Domain.Department"];
+            position: string;
+            /** Format: date */
+            hireDate: string;
+            nationalId?: string | null;
+            phone?: string | null;
+            /** Format: date */
+            birthDate?: string | null;
+            address?: string | null;
+            note?: string | null;
+        };
+        "Cenvo.Modules.Hr.Application.Employees.EmployeeListItemDto": {
+            /** Format: uuid */
+            id: string;
+            userName: string;
+            fullName: string;
+            isActive: boolean;
+            roles: string[];
+            branchIds: string[];
+            hasProfile: boolean;
+            department?: components["schemas"]["Cenvo.Modules.Hr.Domain.Department"];
+            position?: string | null;
+            /** Format: date */
+            hireDate?: string | null;
+            /** Format: date */
+            leaveDate?: string | null;
+            contractType?: components["schemas"]["Cenvo.Modules.Hr.Domain.ContractType"];
+            /** Format: date */
+            contractEnd?: string | null;
+            contractEndsSoon: boolean;
+            /** Format: double */
+            monthlySalary?: number | null;
+        };
+        "Cenvo.Modules.Hr.Application.Employees.EmployeeProfileDto": {
+            department: components["schemas"]["Cenvo.Modules.Hr.Domain.Department"];
+            position: string;
+            /** Format: date */
+            hireDate: string;
+            /** Format: date */
+            leaveDate: string | null;
+            nationalId: string | null;
+            phone: string | null;
+            /** Format: date */
+            birthDate: string | null;
+            address: string | null;
+            note: string | null;
+        };
+        "Cenvo.Modules.Hr.Application.Employees.LeaveInput": {
+            /** Format: date */
+            leaveDate: string;
+        };
+        "Cenvo.Modules.Hr.Application.Employees.SalaryRateDto": {
+            /** Format: uuid */
+            id: string;
+            /** Format: date */
+            effectiveFrom: string;
+            /** Format: double */
+            monthlySalary: number;
+            /** Format: double */
+            allowance: number;
+            reason: string;
+            canRemove: boolean;
+        };
+        "Cenvo.Modules.Hr.Application.Employees.SalaryRateInput": {
+            /** Format: date */
+            effectiveFrom: string;
+            /** Format: double */
+            monthlySalary: number;
+            /** Format: double */
+            allowance: number;
+            reason: string;
+        };
+        /** @enum {string} */
+        "Cenvo.Modules.Hr.Domain.AdjustmentKind": "Advance" | "Bonus" | "Penalty";
+        /** @enum {string} */
+        "Cenvo.Modules.Hr.Domain.AdjustmentStatus": "Active" | "Cancelled";
+        /** @enum {string} */
+        "Cenvo.Modules.Hr.Domain.ContractType": "Seasonal" | "PartTime" | "FullTime";
+        /** @enum {string} */
+        "Cenvo.Modules.Hr.Domain.Department": "Cafe" | "CarWash" | "General";
         "Cenvo.Modules.Inventory.Application.Documents.StockDocumentDto": {
             /** Format: uuid */
             id: string;
@@ -4752,7 +5891,17 @@ export interface components {
             phone?: string | null;
             allowNegativeStock: boolean;
         };
-        "Cenvo.Modules.Organization.Application.Users.UserDto": {
+        "Cenvo.Modules.Organization.Contracts.BranchContact": {
+            name: string;
+            address?: string | null;
+            phone?: string | null;
+        };
+        "Cenvo.Modules.Organization.Contracts.StaffMember": {
+            /** Format: uuid */
+            userId: string;
+            fullName: string;
+        };
+        "Cenvo.Modules.Organization.Contracts.UserAccount": {
             /** Format: uuid */
             id: string;
             userName: string;
@@ -4761,18 +5910,13 @@ export interface components {
             roles: string[];
             branchIds: string[];
         };
-        "Cenvo.Modules.Organization.Application.Users.UserInput": {
+        "Cenvo.Modules.Organization.Contracts.UserAccountInput": {
             userName: string;
             fullName: string;
             password?: string | null;
             roles: string[];
             branchIds: string[];
             isActive: boolean;
-        };
-        "Cenvo.Modules.Organization.Contracts.BranchContact": {
-            name: string;
-            address?: string | null;
-            phone?: string | null;
         };
         /** @enum {string} */
         "Cenvo.SharedKernel.DocumentStatus": "Draft" | "Posted" | "Cancelled";

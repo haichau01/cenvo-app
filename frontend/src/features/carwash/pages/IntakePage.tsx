@@ -6,17 +6,20 @@ import { TextField } from '@/components/ui/TextField'
 import { toast } from '@/components/ui/toastStore'
 import { isPlausiblePlate, normalizePlate } from '@/lib/plate'
 import { useDebounced } from '@/lib/useDebounced'
+import { useStoredFlag } from '@/lib/useStoredFlag'
 import { usePlateLookup } from '../api/customers'
+import { PRINT_INTAKE_KEY, usePrintWashTicket } from '../api/printing'
 import { useOfferings, useWashers } from '../api/setup'
 import { useCreateTicket } from '../api/tickets'
 import { LookupSummary } from '../components/LookupSummary'
 import { PlateField } from '../components/PlateField'
+import { PrintToggle } from '../components/PrintToggle'
 import { RequireBranch } from '../components/RequireBranch'
 import { ServicePicker } from '../components/ServicePicker'
 import { WasherChips } from '../components/WasherChips'
 import { useIntakeForm, type IntakeDraft } from '../hooks/useIntakeForm'
 import { previewTotal } from '../lib/intake'
-import { VEHICLE_TYPES } from '../lib/vehicle'
+import { VEHICLE_TYPES } from '@/lib/vehicle'
 
 export function IntakePage() {
   return <RequireBranch from="/rua-xe/tiep-nhan"><IntakeScreen /></RequireBranch>
@@ -32,6 +35,8 @@ function IntakeScreen() {
   const offerings = useOfferings().data ?? []
   const washers = useWashers().data ?? []
   const create = useCreateTicket()
+  const printTicket = usePrintWashTicket()
+  const [printIntake, setPrintIntake] = useStoredFlag(PRINT_INTAKE_KEY, true)
   form.prefill(lookup.data)
   const memberships = ownerStillMatches(lookup.data?.customer?.phone, draft.phone) ? lookup.data!.memberships : []
 
@@ -39,6 +44,7 @@ function IntakeScreen() {
     create.mutate(toInput(draft), {
       onSuccess: (ticket) => {
         toast.success(`Đã tạo phiếu ${ticket.code}`)
+        if (printIntake) printTicket.mutate(ticket.id)
         navigate(`/rua-xe?phieu=${ticket.id}`) // open the ticket to take condition photos
       },
     })
@@ -74,6 +80,7 @@ function IntakeScreen() {
             <Money value={previewTotal(draft.services, offerings, draft.vehicleType)} className="amount text-amount" />
           </div>
           <FormError message={create.error?.message} />
+          <PrintToggle label="In phiếu nhận xe cho khách" checked={printIntake} onChange={setPrintIntake} />
           <Button size="lg" onClick={handleCreate} busy={create.isPending}
             disabled={!isPlausiblePlate(draft.plate) || draft.services.length === 0}>
             Tạo phiếu rửa

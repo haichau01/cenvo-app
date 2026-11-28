@@ -44,6 +44,7 @@ public class CustomerQueryService(AppDbContext db)
         var tickets = await RecentTickets(db.Set<WashTicket>().Where(t => t.CustomerId == id), ct);
         return new CustomerDetailDto(
             Id: customer.Id, Name: customer.Name, Phone: customer.Phone, Note: customer.Note,
+            AcceptsReminders: customer.AcceptsReminders, LastWashAt: customer.LastWashAt,
             Vehicles: vehicles, Memberships: memberships, RecentTickets: tickets);
     }
 

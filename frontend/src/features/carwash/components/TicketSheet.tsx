@@ -6,9 +6,10 @@ import { Button } from '@/components/ui/Button'
 import { Dialog } from '@/components/ui/Dialog'
 import type { WashTicket } from '@/lib/api/types'
 import { formatTime } from '@/lib/format'
+import { usePrintWashTicket } from '../api/printing'
 import { useMoveTicket, useTicket } from '../api/tickets'
 import { washStatusLabel } from '../lib/status'
-import { vehicleLabel } from '../lib/vehicle'
+import { vehicleLabel } from '@/lib/vehicle'
 import { PhotoStrip } from './PhotoStrip'
 import { StaffPicker } from './StaffPicker'
 import { TicketServices } from './TicketServices'
@@ -90,11 +91,15 @@ interface SheetActionsProps {
 
 function SheetActions({ ticket, canTakePayment, onPay, onCancel }: SheetActionsProps) {
   const move = useMoveTicket()
+  const printTicket = usePrintWashTicket()
   if (ticket.status === 'Cancelled') return null
   const canPay = canTakePayment && !ticket.isPaid
   return (
     <div className="flex w-full flex-wrap gap-3">
       <Button variant="ghost" className="text-stop" onClick={() => onCancel(ticket)}>Hủy phiếu</Button>
+      <Button variant="secondary" busy={printTicket.isPending} onClick={() => printTicket.mutate(ticket.id)}>
+        {ticket.isPaid ? 'In hóa đơn' : 'In phiếu nhận xe'}
+      </Button>
       {ticket.status === 'Washing' && (
         <Button variant="secondary" busy={move.isPending} onClick={() => move.mutate({ id: ticket.id, step: 'return' })}>
           Đưa lại hàng chờ

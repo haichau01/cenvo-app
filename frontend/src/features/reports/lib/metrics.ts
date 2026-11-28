@@ -1,5 +1,3 @@
-import type { DailyRevenue } from '@/lib/api/types'
-
 /** Gross margin in whole percent; null when there is no revenue (a 0% would be misleading). */
 export function marginPercent(grossProfit: number, revenue: number): number | null {
   return revenue > 0 ? Math.round((grossProfit / revenue) * 100) : null
@@ -30,8 +28,11 @@ export function niceTicks(max: number, targetCount = 4): number[] {
   return ticks
 }
 
-/** Every day of the period, with zeros for days without sales — a bar chart must not skip dates. */
-export function fillDays(daily: DailyRevenue[], days: string[]): DailyRevenue[] {
-  const byDate = new Map(daily.map((day) => [day.date, day]))
-  return days.map((date) => byDate.get(date) ?? { date, orders: 0, revenue: 0, discount: 0, cost: 0, grossProfit: 0 })
+
+type ByMethod = Partial<Record<string, number>>
+
+/** Payment methods of two modules added up, for the whole-shop tab (display only — nothing is saved). */
+export function sumByMethod(a: ByMethod, b: ByMethod): Record<string, number> {
+  const methods = new Set([...Object.keys(a), ...Object.keys(b)])
+  return Object.fromEntries([...methods].map((method) => [method, (a[method] ?? 0) + (b[method] ?? 0)]))
 }

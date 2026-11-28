@@ -25,3 +25,6 @@ export const canManageStock = (user: UserIdentity) => hasAnyRole(user, [Role.Adm
 
 /** Policies.WashStaff — car wash intake, queue, photos. */
 export const canWash = (user: UserIdentity) => hasAnyRole(user, [Role.Admin, Role.BranchManager, Role.Cashier, Role.Washer])
+
+/** Policies.Admin — the owner: staff records, national ID and pay. */
+export const isOwner = (user: UserIdentity) => hasAnyRole(user, [Role.Admin])

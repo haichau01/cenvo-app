@@ -625,6 +625,10 @@ namespace Cenvo.Infrastructure.Persistence.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
+                    b.Property<bool>("AcceptsReminders")
+                        .HasColumnType("boolean")
+                        .HasColumnName("accepts_reminders");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
@@ -636,6 +640,18 @@ namespace Cenvo.Infrastructure.Persistence.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean")
                         .HasColumnName("is_deleted");
+
+                    b.Property<Guid?>("LastTicketId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("last_ticket_id");
+
+                    b.Property<DateTime?>("LastWashAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("last_wash_at");
+
+                    b.Property<Guid?>("LastWashBranchId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("last_wash_branch_id");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -672,6 +688,9 @@ namespace Cenvo.Infrastructure.Persistence.Migrations
                         .IsUnique()
                         .HasDatabaseName("ix_customer_phone")
                         .HasFilter("is_deleted = false");
+
+                    b.HasIndex("LastWashBranchId", "LastWashAt")
+                        .HasDatabaseName("ix_customer_last_wash_branch_id_last_wash_at");
 
                     b.ToTable("customer", (string)null);
                 });
@@ -804,7 +823,112 @@ namespace Cenvo.Infrastructure.Persistence.Migrations
                         .IsUnique()
                         .HasDatabaseName("ix_customer_membership_sold_branch_id_code");
 
+                    b.HasIndex("SoldBranchId", "PaidAt")
+                        .HasDatabaseName("ix_customer_membership_sold_branch_id_paid_at");
+
                     b.ToTable("customer_membership", (string)null);
+                });
+
+            modelBuilder.Entity("Cenvo.Modules.CarWash.Domain.CustomerReminder", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("AttemptedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("attempted_at");
+
+                    b.Property<Guid?>("AttemptedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("attempted_by");
+
+                    b.Property<int>("Attempts")
+                        .HasColumnType("integer")
+                        .HasColumnName("attempts");
+
+                    b.Property<Guid>("BranchId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("branch_id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("created_by");
+
+                    b.Property<Guid>("CustomerId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("customer_id");
+
+                    b.Property<int>("Kind")
+                        .HasColumnType("integer")
+                        .HasColumnName("kind");
+
+                    b.Property<string>("LastError")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("last_error");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasMaxLength(640)
+                        .HasColumnType("character varying(640)")
+                        .HasColumnName("message");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasColumnName("phone");
+
+                    b.Property<string>("ProviderMessageId")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("provider_message_id");
+
+                    b.Property<Guid>("RefId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("ref_id");
+
+                    b.Property<DateTime?>("SentAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("sent_at");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer")
+                        .HasColumnName("status");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("updated_by");
+
+                    b.Property<uint>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.HasKey("Id")
+                        .HasName("pk_customer_reminder");
+
+                    b.HasIndex("CustomerId")
+                        .HasDatabaseName("ix_customer_reminder_customer_id");
+
+                    b.HasIndex("BranchId", "AttemptedAt")
+                        .HasDatabaseName("ix_customer_reminder_branch_id_attempted_at");
+
+                    b.HasIndex("Kind", "RefId")
+                        .IsUnique()
+                        .HasDatabaseName("ix_customer_reminder_kind_ref_id");
+
+                    b.ToTable("customer_reminder", (string)null);
                 });
 
             modelBuilder.Entity("Cenvo.Modules.CarWash.Domain.MembershipPackage", b =>
@@ -915,6 +1039,72 @@ namespace Cenvo.Infrastructure.Persistence.Migrations
                         .HasDatabaseName("ix_membership_payment_membership_id");
 
                     b.ToTable("membership_payment", (string)null);
+                });
+
+            modelBuilder.Entity("Cenvo.Modules.CarWash.Domain.ReminderSettings", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<Guid>("BranchId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("branch_id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("created_by");
+
+                    b.Property<string>("ExpiringTemplate")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("expiring_template");
+
+                    b.Property<int>("ExpiringWithinDays")
+                        .HasColumnType("integer")
+                        .HasColumnName("expiring_within_days");
+
+                    b.Property<string>("LowUsesTemplate")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("low_uses_template");
+
+                    b.Property<int>("LowUsesThreshold")
+                        .HasColumnType("integer")
+                        .HasColumnName("low_uses_threshold");
+
+                    b.Property<int>("ReturnAfterDays")
+                        .HasColumnType("integer")
+                        .HasColumnName("return_after_days");
+
+                    b.Property<string>("ReturnTemplate")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("return_template");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("updated_by");
+
+                    b.HasKey("Id")
+                        .HasName("pk_reminder_settings");
+
+                    b.HasIndex("BranchId")
+                        .IsUnique()
+                        .HasDatabaseName("ix_reminder_settings_branch_id");
+
+                    b.ToTable("reminder_settings", (string)null);
                 });
 
             modelBuilder.Entity("Cenvo.Modules.CarWash.Domain.Vehicle", b =>
@@ -1302,6 +1492,9 @@ namespace Cenvo.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("BranchId", "CreatedAt")
                         .HasDatabaseName("ix_wash_ticket_branch_id_created_at");
+
+                    b.HasIndex("BranchId", "PaidAt")
+                        .HasDatabaseName("ix_wash_ticket_branch_id_paid_at");
 
                     b.HasIndex("BranchId", "Status")
                         .HasDatabaseName("ix_wash_ticket_branch_id_status");
@@ -1702,6 +1895,274 @@ namespace Cenvo.Infrastructure.Persistence.Migrations
                         .HasDatabaseName("ix_unit_name");
 
                     b.ToTable("unit", (string)null);
+                });
+
+            modelBuilder.Entity("Cenvo.Modules.Hr.Domain.Employee", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Address")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("address");
+
+                    b.Property<DateOnly?>("BirthDate")
+                        .HasColumnType("date")
+                        .HasColumnName("birth_date");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("created_by");
+
+                    b.Property<int>("Department")
+                        .HasColumnType("integer")
+                        .HasColumnName("department");
+
+                    b.Property<DateOnly>("HireDate")
+                        .HasColumnType("date")
+                        .HasColumnName("hire_date");
+
+                    b.Property<DateOnly?>("LeaveDate")
+                        .HasColumnType("date")
+                        .HasColumnName("leave_date");
+
+                    b.Property<string>("NationalId")
+                        .HasMaxLength(59)
+                        .HasColumnType("character varying(59)")
+                        .HasColumnName("national_id");
+
+                    b.Property<string>("Note")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("note");
+
+                    b.Property<string>("Phone")
+                        .HasMaxLength(63)
+                        .HasColumnType("character varying(63)")
+                        .HasColumnName("phone");
+
+                    b.Property<string>("Position")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("position");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("updated_by");
+
+                    b.HasKey("Id")
+                        .HasName("pk_employee");
+
+                    b.ToTable("employee", (string)null);
+                });
+
+            modelBuilder.Entity("Cenvo.Modules.Hr.Domain.EmploymentContract", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("created_by");
+
+                    b.Property<Guid>("EmployeeId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("employee_id");
+
+                    b.Property<DateOnly?>("EndDate")
+                        .HasColumnType("date")
+                        .HasColumnName("end_date");
+
+                    b.Property<string>("Note")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("note");
+
+                    b.Property<DateOnly>("StartDate")
+                        .HasColumnType("date")
+                        .HasColumnName("start_date");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("integer")
+                        .HasColumnName("type");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("updated_by");
+
+                    b.HasKey("Id")
+                        .HasName("pk_employment_contract");
+
+                    b.HasIndex("EmployeeId", "StartDate")
+                        .HasDatabaseName("ix_employment_contract_employee_id_start_date");
+
+                    b.ToTable("employment_contract", (string)null);
+                });
+
+            modelBuilder.Entity("Cenvo.Modules.Hr.Domain.PayAdjustment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<decimal>("Amount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)")
+                        .HasColumnName("amount");
+
+                    b.Property<Guid>("BranchId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("branch_id");
+
+                    b.Property<string>("CancelReason")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("cancel_reason");
+
+                    b.Property<DateTime?>("CancelledAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("cancelled_at");
+
+                    b.Property<Guid?>("CancelledBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("cancelled_by");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("created_by");
+
+                    b.Property<DateOnly>("Date")
+                        .HasColumnType("date")
+                        .HasColumnName("date");
+
+                    b.Property<Guid>("EmployeeId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("employee_id");
+
+                    b.Property<int>("Kind")
+                        .HasColumnType("integer")
+                        .HasColumnName("kind");
+
+                    b.Property<string>("Reason")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("reason");
+
+                    b.Property<string>("RecordedByName")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("recorded_by_name");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer")
+                        .HasColumnName("status");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("updated_by");
+
+                    b.Property<uint>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.HasKey("Id")
+                        .HasName("pk_pay_adjustment");
+
+                    b.HasIndex("BranchId", "Date")
+                        .HasDatabaseName("ix_pay_adjustment_branch_id_date");
+
+                    b.HasIndex("EmployeeId", "Date")
+                        .HasDatabaseName("ix_pay_adjustment_employee_id_date");
+
+                    b.ToTable("pay_adjustment", (string)null);
+                });
+
+            modelBuilder.Entity("Cenvo.Modules.Hr.Domain.SalaryRate", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<decimal>("Allowance")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)")
+                        .HasColumnName("allowance");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("created_by");
+
+                    b.Property<DateOnly>("EffectiveFrom")
+                        .HasColumnType("date")
+                        .HasColumnName("effective_from");
+
+                    b.Property<Guid>("EmployeeId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("employee_id");
+
+                    b.Property<decimal>("MonthlySalary")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)")
+                        .HasColumnName("monthly_salary");
+
+                    b.Property<string>("Reason")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("reason");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("updated_by");
+
+                    b.HasKey("Id")
+                        .HasName("pk_salary_rate");
+
+                    b.HasIndex("EmployeeId", "EffectiveFrom")
+                        .IsUnique()
+                        .HasDatabaseName("ix_salary_rate_employee_id_effective_from");
+
+                    b.ToTable("salary_rate", (string)null);
                 });
 
             modelBuilder.Entity("Cenvo.Modules.Inventory.Domain.StockBalance", b =>
@@ -2461,6 +2922,16 @@ namespace Cenvo.Infrastructure.Persistence.Migrations
                         .HasConstraintName("fk_customer_membership_shift_shift_id");
                 });
 
+            modelBuilder.Entity("Cenvo.Modules.CarWash.Domain.CustomerReminder", b =>
+                {
+                    b.HasOne("Cenvo.Modules.CarWash.Domain.Customer", null)
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_customer_reminder_customer_customer_id");
+                });
+
             modelBuilder.Entity("Cenvo.Modules.CarWash.Domain.MembershipPackage", b =>
                 {
                     b.HasOne("Cenvo.Modules.CarWash.Domain.WashOffering", null)
@@ -2630,6 +3101,26 @@ namespace Cenvo.Infrastructure.Persistence.Migrations
                     b.Navigation("Unit");
                 });
 
+            modelBuilder.Entity("Cenvo.Modules.Hr.Domain.EmploymentContract", b =>
+                {
+                    b.HasOne("Cenvo.Modules.Hr.Domain.Employee", null)
+                        .WithMany("Contracts")
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_employment_contract_employee_employee_id");
+                });
+
+            modelBuilder.Entity("Cenvo.Modules.Hr.Domain.SalaryRate", b =>
+                {
+                    b.HasOne("Cenvo.Modules.Hr.Domain.Employee", null)
+                        .WithMany("SalaryRates")
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_salary_rate_employee_employee_id");
+                });
+
             modelBuilder.Entity("Cenvo.Modules.Inventory.Domain.StockBalance", b =>
                 {
                     b.HasOne("Cenvo.Modules.Catalog.Domain.Product", null)
@@ -2763,6 +3254,13 @@ namespace Cenvo.Infrastructure.Persistence.Migrations
             modelBuilder.Entity("Cenvo.Modules.Catalog.Domain.Product", b =>
                 {
                     b.Navigation("Units");
+                });
+
+            modelBuilder.Entity("Cenvo.Modules.Hr.Domain.Employee", b =>
+                {
+                    b.Navigation("Contracts");
+
+                    b.Navigation("SalaryRates");
                 });
 
             modelBuilder.Entity("Cenvo.Modules.Inventory.Domain.StockDocument", b =>

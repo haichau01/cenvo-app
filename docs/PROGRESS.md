@@ -102,7 +102,59 @@
   - Kiểm chứng:
     - `dotnet test` 92/92; `npm test` 58/58; lint và build sạch.
     - Playwright + Edge 1180×820: sai mật khẩu quản lý bị chặn; quản lý duyệt 20%; giảm theo món phải duyệt lại; tách món sang mang đi.
-- **Việc tiếp theo:** commit nhánh `feat/pos-table-discount` (chạy `/cenvo-security` + `/cenvo-review` trước); sau đó in phiếu rửa xe, báo cáo doanh thu rửa xe.
+- POS giảm giá + chuyển bàn đã commit (`fcab949`).
+- **In phiếu rửa xe + báo cáo doanh thu rửa xe (2026-11-28, nhánh `feat/pos-table-discount`):** ✅ chưa commit.
+  - Người dùng chốt: in cả phiếu nhận xe, hóa đơn rửa xe, phiếu bán gói; báo cáo là tab trong `/bao-cao` (Cà phê / Rửa xe / Tổng) với doanh thu, số xe, theo dịch vụ/loại xe, gói, hóa chất, hoa hồng, lãi gộp.
+  - In: `GET /api/carwash/tickets/{id}/receipt` (WashStaff, lọc chi nhánh), `GET /api/carwash/memberships/{id}/receipt` (thu ngân, chỉ chi nhánh đã bán, nơi khác 404). Tên thu ngân qua `ICashierShifts.CashierName`. Một phiếu in theo trạng thái: chưa thu tiền = "Phiếu nhận xe" (giữ để nhận xe), đã thu = "Hóa đơn rửa xe".
+  - Frontend: khung phiếu chung `components/cenvo/Slip.tsx` (hóa đơn cà phê cũng dùng); ô "In phiếu nhận xe" ở tiếp nhận, "In hóa đơn sau khi thu tiền / bán gói" (nhớ theo máy, mặc định bật); nút In trong sheet phiếu; "In lại" gói ở trang khách hàng. `vehicle.ts` chuyển lên `lib/`.
+  - Báo cáo: `GET /api/reports/carwash-sales` (`WashSalesReportService`, gom nhóm trong SQL, cắt ngày VN bằng `AT TIME ZONE`). Phiếu tính theo **giờ thu tiền** (khớp đối soát ca). Doanh thu = tiền rửa + tiền bán gói; lãi gộp = doanh thu − hóa chất − hoa hồng; lượt trừ gói tính theo giá niêm yết, không phải tiền trong kỳ. Giá vốn hóa chất qua contract mới `Inventory/Contracts/ISaleCostQuery` (trả `IQueryable` để ghép SQL). Migration `AddWashSalesIndexes`: chỉ thêm 2 index.
+  - Biểu đồ tổng quát (cột chồng Cà phê robusta / Rửa xe foam, có chú giải + bảng). Validator dataviz: cặp màu tách tốt (ΔE ≥ 14), robusta dưới ngưỡng chroma, bù bằng chú giải/khe/bảng.
+  - Kiểm chứng: `dotnet test` 102/102; `npm test` 64/64, lint, build sạch; Playwright + Edge: in 3 loại phiếu (khổ 80 × 126 mm), báo cáo 3 tab, không lỗi console.
+- In phiếu rửa xe + báo cáo đã commit (`96a6d84`).
+- **Nhắc khách quay lại (2026-11-28, nhánh `feat/carwash-print-report`):** ✅ đã commit (`e9eb981`).
+  - Người dùng chốt: đến hạn theo **số ngày cố định** mỗi chi nhánh; nhắc thêm **gói sắp hết hạn** và **gói sắp hết lượt**; **quản lý bấm gửi** (không job tự động); khách **mặc định nhận tin, tắt được**; gửi qua Zalo OA/SMS nhưng **chưa có tài khoản** → làm khung, bộ gửi giả lập chỉ ghi log.
+  - Backend:
+    - `Customer` thêm `AcceptsReminders`, `LastWashAt/LastWashBranchId/LastTicketId` (lần rửa cuối **toàn chuỗi**). `CustomerLastWashHandler` cập nhật khi "Rửa xong", tính lại khi hủy phiếu đã rửa. `WashTicketCompleted/Cancelled` mang thêm `CustomerId`.
+    - `ReminderSettings` (theo chi nhánh: số ngày, ngưỡng lượt, 3 mẫu tin có chỗ điền `{ten}` `{bienso}` `{chinhanh}`…), `ReminderTemplate` (hàm thuần).
+    - `CustomerReminder` = nhật ký gửi; unique `(Kind, RefId)`. Lý do là phiếu rửa cuối hoặc gói, nên mỗi lý do chỉ gửi 1 lần. Gửi lỗi thì gửi lại được. Có `Pending` giữ chỗ và hết hạn sau 10 phút; `Version` chống 2 máy gửi trùng.
+    - Mỗi loại nhắc là một `IReminderStrategy` (ReturnVisit / MembershipExpiring / MembershipLowUses). Gói nhắc ở chi nhánh đã bán; nhắc quay lại ở chi nhánh rửa cuối.
+    - `IReminderSender` (Contracts) ← Api `LogReminderSender` (che SĐT trong log). Có tài khoản thật thì chỉ thay đăng ký ở `Program.cs`.
+    - API `/api/carwash/reminders/{settings,due,history,send}` (quản lý, tối đa 100 tin/lần, lọc lại "đến hạn" ở server trước khi gửi), `PUT /customers/{id}/reminders` (thu ngân).
+    - Migration `AddCustomerReminders`: khách cũ mặc định nhận tin, backfill lần rửa cuối từ `wash_ticket`. `PlateNumber.Format` để tin có biển số dạng 51A-123.45.
+  - Frontend: `/rua-xe/nhac-khach` (menu "Quản lý rửa xe"): 3 tab đến hạn + "Đã gửi", chọn rồi xác nhận gửi (xem trước tin), "Ngừng nhắc", dialog cài đặt; ô "Nhận tin nhắc" ở trang khách hàng.
+  - Kiểm chứng: `dotnet test` 123/123; `npm test` 67/67, lint, build sạch; Playwright + Edge 1440×900 (dữ liệu "đến hạn" giả lập bằng route mock, không ghi DB dev).
+- **Nhân sự (2026-11-28, GĐ4 bước 1):** ✅ chưa commit.
+  - Người dùng chốt:
+    - Làm theo đúng PLAN (Nhân sự → Lịch trực → Chấm công → Lương), không làm bảng lương với công nhập tay.
+    - Chỉ lương tháng; kỳ lương = tháng dương lịch; trừ ngày nghỉ theo số ngày thực của tháng.
+    - Mỗi nhân viên = một tài khoản đăng nhập.
+    - CCCD và lương: **chỉ chủ quán (Admin)**. Quản lý chi nhánh không vào màn Nhân sự, nhưng ghi được tạm ứng/thưởng/phạt cho nhân viên chi nhánh mình và chỉ hủy khoản mình ghi.
+    - Đổi lương = dòng mới có ngày hiệu lực + lý do, giữ lịch sử.
+    - Hoa hồng của phiếu bị hủy sau khi chốt lương: trừ vào kỳ sau (dòng điều chỉnh âm).
+  - Backend:
+    - Module mới `Cenvo.Modules.Hr` (→ Organization).
+      - `Employee`: `Id` = `AppUser.Id`. Gồm bộ phận, chức vụ, ngày vào/nghỉ, CCCD 12 số, SĐT, ngày sinh, địa chỉ.
+      - `EmploymentContract`.
+      - `SalaryRate`: áp dụng từ ngày 1 của tháng, chỉ thêm. Chỉ xóa được mức chưa tới ngày áp dụng.
+      - `PayAdjustment`: `IBranchScoped`, chỉ hủy có lý do, `Version`.
+      - Hàm thuần: `SalaryHistory.EffectiveOn`, `ContractAlerts` (báo trước 30 ngày), `PersonalData`.
+    - Organization thêm contract `IUserAccounts`: `Stage` ghi tài khoản vào change tracker, không tự lưu, nên tài khoản và hồ sơ lưu chung một transaction.
+    - `UserService` kiểm tra tên đăng nhập (định dạng, trùng), họ tên, mật khẩu ≥ 6 ký tự và chi nhánh có tồn tại. Trước đây trùng tên đăng nhập thì trả 500.
+    - `IStaffDirectory.InBranch` nhận `role` null = mọi vai trò.
+    - Cho nghỉ việc thì khóa tài khoản, đi làm lại thì mở. Không tự cho mình nghỉ và không tự bỏ quyền Admin được.
+    - API: `/api/hr/employees/*` (Admin), `/api/hr/adjustments/*` (Managers). Migration `AddHr`: chỉ tạo bảng mới.
+    - CCCD và SĐT **mã hóa trong DB** (AES-256-GCM, `Infrastructure/Security/PersonalDataCipher`, EF value converter `IsEncrypted`):
+      - Lưu dạng `v1:` + base64, nên không tìm hay sắp xếp theo hai cột này được.
+      - Khóa `PersonalData:Key` (32 byte base64). Dev dùng khóa trong `appsettings.Development.json`; môi trường khác đặt biến `PersonalData__Key`. Thiếu khóa thì app không khởi động.
+  - Frontend `features/hr`:
+    - `/nhan-su`: danh sách, tìm không dấu, trạng thái Sắp hết hợp đồng / Chưa có hồ sơ / Đã nghỉ.
+    - `/nhan-su/moi` và `/nhan-su/:id`: tài khoản + hồ sơ, hợp đồng, lịch sử lương, cho nghỉ/đi làm lại. Chỉ chủ quán vào được.
+    - `/thuong-phat` (quản lý): theo tháng, tổng theo loại, ghi khoản, hủy có lý do.
+    - Menu "Nhân sự" ẩn từng mục theo vai trò.
+  - Kiểm chứng:
+    - `dotnet test` 142/142; `npm test` 72/72, lint, build sạch.
+    - Playwright + Edge 1440×900, không lỗi console. Dữ liệu HR mock vì DB dev chưa chạy `AddHr`: API :5001 chạy với `Database__Migrate=false`.
+- **Việc tiếp theo:** Lịch trực (GĐ4 bước 2), rồi Chấm công, rồi Lương (đọc hoa hồng). Khi có tài khoản Zalo OA/SMS: cài `IReminderSender` thật.
 - Còn treo: 2 cảnh báo EF về global filter (Unit ↔ ProductUnit, Branch ↔ UserBranch). Chưa ảnh hưởng hành vi.
 
 > Phần dưới là nhật ký quá trình refactor, giữ lại để tham khảo.

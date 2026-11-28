@@ -33,6 +33,17 @@ public class CarWashModel : IModuleModel
         {
             e.HasIndex(x => x.Phone).IsUnique().HasFilter("is_deleted = false");
             e.HasIndex(x => x.Name);
+            e.HasIndex(x => new { x.LastWashBranchId, x.LastWashAt }); // return reminders
+        });
+        mb.Entity<ReminderSettings>().HasIndex(x => x.BranchId).IsUnique();
+        mb.Entity<CustomerReminder>(e =>
+        {
+            e.HasIndex(x => new { x.Kind, x.RefId }).IsUnique(); // one reminder per reason, ever
+            e.HasIndex(x => new { x.BranchId, x.AttemptedAt });
+            e.Property(x => x.Phone).HasMaxLength(20);
+            e.Property(x => x.Message).HasMaxLength(ReminderTemplate.MaxMessageLength);
+            e.Property(x => x.LastError).HasMaxLength(CustomerReminder.MaxErrorLength);
+            e.HasOne<Customer>().WithMany().HasForeignKey(x => x.CustomerId).OnDelete(DeleteBehavior.Restrict);
         });
         mb.Entity<Vehicle>(e =>
         {
@@ -44,6 +55,7 @@ public class CarWashModel : IModuleModel
         {
             e.HasIndex(x => new { x.SoldBranchId, x.Code }).IsUnique();
             e.HasIndex(x => new { x.CustomerId, x.Status });
+            e.HasIndex(x => new { x.SoldBranchId, x.PaidAt }); // sales report
             e.HasIndex(x => x.ShiftId);
             e.HasOne<Customer>().WithMany().HasForeignKey(x => x.CustomerId).OnDelete(DeleteBehavior.Restrict);
             e.HasOne<MembershipPackage>().WithMany().HasForeignKey(x => x.PackageId).OnDelete(DeleteBehavior.Restrict);
@@ -60,6 +72,7 @@ public class CarWashModel : IModuleModel
             e.HasIndex(x => new { x.BranchId, x.Status });
             e.HasIndex(x => new { x.BranchId, x.CreatedAt });
             e.HasIndex(x => new { x.BranchId, x.CompletedAt });
+            e.HasIndex(x => new { x.BranchId, x.PaidAt }); // sales report
             e.HasIndex(x => new { x.BranchId, x.VehicleId });
             e.HasIndex(x => x.ShiftId);
             e.Ignore(x => x.IsPaid);

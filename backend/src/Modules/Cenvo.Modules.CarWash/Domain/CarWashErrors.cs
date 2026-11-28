@@ -49,6 +49,20 @@ public static class CarWashErrors
     public const string TooManyPhotos = "Mỗi phiếu tối đa 8 ảnh — xóa bớt ảnh cũ trước.";
     public const string PhotoLocked = "Phiếu đã rửa xong hoặc đã hủy — không xóa ảnh hiện trạng được nữa.";
 
+    public const string InvalidReminderDays = "Số ngày nhắc phải từ 1 đến 365.";
+    public const string InvalidLowUsesThreshold = "Ngưỡng \"sắp hết lượt\" phải từ 0 đến 10 lượt.";
+    public const string ReminderTemplateRequired = "Nhập nội dung tin nhắc.";
+    public const string ReminderTemplateTooLong = "Tin nhắc tối đa 320 ký tự — rút gọn nội dung.";
+    public const string ReminderAlreadySent = "Tin nhắc này đã gửi hoặc đang gửi — không gửi lại.";
+    public const string ReminderSendFailed = "Nhà cung cấp không gửi được tin.";
+    public const string ReminderSendingElsewhere = "Máy khác vừa gửi một số tin này. Tải lại danh sách rồi gửi lại.";
+    public const string ReminderNothingSelected = "Chọn ít nhất một khách để gửi tin nhắc.";
+    public const string ReminderTooMany = "Mỗi lần gửi tối đa 100 tin — chia thành nhiều lần.";
+
+    public static string UnknownPlaceholders(IEnumerable<string> keys) =>
+        $"Mẫu tin có chỗ điền không hợp lệ: {string.Join(", ", keys.Select(k => $"{{{k}}}"))}. " +
+        "Chỉ dùng {ten}, {bienso}, {chinhanh}, {sdtchinhanh}, {songay}, {goi}, {conlai}, {hethan}.";
+
     public static string VehicleHasOpenTicket(string code) => $"Xe này đang có phiếu {code} chưa giao — mở phiếu đó thay vì tạo phiếu mới.";
 
     public static string NoPriceForVehicle(string service) => $"Dịch vụ “{service}” chưa có giá cho loại xe này — quản lý cần đặt giá trước.";

@@ -3,6 +3,7 @@ import type { QueueTicket, WashMembership, WashOffering } from '@/lib/api/types'
 import { membershipFor, previewTotal, priceFor } from './intake'
 import { cardClock, estimatedWait } from './queue'
 import { groupByStatus } from './status'
+import { washSlipTitle, washSlipTotalLabel } from './slip'
 
 const now = Date.parse('2026-11-28T03:00:00Z')
 const minutesAgo = (minutes: number) => new Date(now - minutes * 60_000).toISOString()
@@ -101,5 +102,22 @@ describe('service form', async () => {
     const input = toOfferingInput({ ...form, supplies: [{ productId: '', unitId: null, quantity: 5 }] })
     expect(input.prices).toEqual([{ vehicleType: 'Sedan', price: 100000 }])
     expect(input.supplies).toEqual([])
+  })
+})
+
+describe('washSlipTitle', () => {
+  it('prints an unpaid ticket as the intake slip, never as a receipt', () => {
+    expect(washSlipTitle({ status: 'Waiting', isPaid: false })).toBe('Phiếu nhận xe')
+    expect(washSlipTitle({ status: 'Done', isPaid: false })).toBe('Phiếu nhận xe')
+    expect(washSlipTotalLabel({ status: 'Waiting', isPaid: false })).toBe('Cần thanh toán')
+  })
+
+  it('prints a paid ticket as the receipt, even before the wash', () => {
+    expect(washSlipTitle({ status: 'Waiting', isPaid: true })).toBe('Hóa đơn rửa xe')
+    expect(washSlipTotalLabel({ status: 'Delivered', isPaid: true })).toBe('Khách đã trả')
+  })
+
+  it('marks a cancelled ticket whatever its payment', () => {
+    expect(washSlipTitle({ status: 'Cancelled', isPaid: true })).toBe('Phiếu rửa đã hủy')
   })
 })

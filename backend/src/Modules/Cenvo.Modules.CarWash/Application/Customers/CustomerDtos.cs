@@ -45,7 +45,7 @@ public record MembershipDto
 }
 
 public record CustomerDetailDto(
-    Guid Id, string Name, string Phone, string? Note,
+    Guid Id, string Name, string Phone, string? Note, bool AcceptsReminders, DateTime? LastWashAt,
     List<VehicleDto> Vehicles, List<MembershipDto> Memberships, List<TicketHistoryDto> RecentTickets);
 
 /// <summary>What intake needs after typing a plate: the car, its owner, usable memberships, recent visits, a ticket still open.</summary>

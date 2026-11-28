@@ -1,5 +1,6 @@
 using Cenvo.Modules.Organization.Application.Branches;
 using Cenvo.Modules.Organization.Application.Users;
+using Cenvo.Modules.Organization.Contracts;
 
 namespace Cenvo.Api.Endpoints;
 
@@ -14,7 +15,7 @@ public static class OrganizationEndpoints
 
         var users = app.MapGroup("/api/users").WithTags("Người dùng").RequireAuthorization(Policies.Admin);
         users.MapGet("/", (UserService svc, CancellationToken ct) => svc.List(ct));
-        users.MapPost("/", (UserInput i, UserService svc, CancellationToken ct) => svc.Save(null, i, ct));
-        users.MapPut("/{id:guid}", (Guid id, UserInput i, UserService svc, CancellationToken ct) => svc.Save(id, i, ct));
+        users.MapPost("/", (UserAccountInput i, UserService svc, CancellationToken ct) => svc.Save(null, i, ct));
+        users.MapPut("/{id:guid}", (Guid id, UserAccountInput i, UserService svc, CancellationToken ct) => svc.Save(id, i, ct));
     }
 }

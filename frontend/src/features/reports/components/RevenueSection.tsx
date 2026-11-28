@@ -1,16 +1,19 @@
-import { useState } from 'react'
+import { useState, type ReactNode } from 'react'
 import { Button } from '@/components/ui/Button'
-import type { SalesSummary } from '@/lib/api/types'
-import { fillDays } from '../lib/metrics'
-import { daysOf, type Period } from '../lib/period'
+import type { ChartDay, ChartSeries } from '../lib/chart'
 import { Panel } from './ReportTable'
 import { RevenueChart } from './RevenueChart'
-import { DailyTable } from './SalesTables'
+
+interface RevenueSectionProps {
+  days: ChartDay[]
+  series: ChartSeries[]
+  /** Exact-number table of the same days — the accessible alternative to the chart. */
+  table: ReactNode
+}
 
 /** Chart for a range of days; a single day has nothing to compare, so the tiles above already say it all. */
-export function RevenueSection({ summary, period }: { summary: SalesSummary; period: Period }) {
+export function RevenueSection({ days, series, table }: RevenueSectionProps) {
   const [asTable, setAsTable] = useState(false)
-  const days = fillDays(summary.daily, daysOf(period))
   if (days.length < 2) return null
 
   return (
@@ -18,7 +21,7 @@ export function RevenueSection({ summary, period }: { summary: SalesSummary; per
       actions={<Button variant="secondary" onClick={() => setAsTable(!asTable)} aria-pressed={asTable}>
         {asTable ? 'Xem biểu đồ' : 'Xem dạng bảng'}
       </Button>}>
-      {asTable ? <DailyTable days={days} /> : <RevenueChart days={days} />}
+      {asTable ? table : <RevenueChart days={days} series={series} />}
     </Panel>
   )
 }
