@@ -5,6 +5,7 @@ using Cenvo.Api.Hubs;
 using Cenvo.Api.Seed;
 using Cenvo.Infrastructure;
 using Cenvo.Infrastructure.Persistence;
+using Cenvo.Api.Messaging;
 using Cenvo.Api.Storage;
 using Cenvo.Modules.Cafe.Contracts;
 using Cenvo.Modules.CarWash.Contracts;
@@ -34,6 +35,8 @@ builder.Services.AddScoped<IKitchenNotifier, KitchenNotifier>();
 builder.Services.AddScoped<IWashNotifier, WashNotifier>();
 builder.Services.Configure<PhotoStorageOptions>(builder.Configuration.GetSection("Storage:Photos"));
 builder.Services.AddSingleton<IPhotoStorage, LocalPhotoStorage>();
+// No Zalo OA / SMS account yet: reminders are only logged. Swap for the real provider here.
+builder.Services.AddSingleton<IReminderSender, LogReminderSender>();
 
 // ---------- Auth ----------
 var jwtSection = builder.Configuration.GetSection("Jwt");

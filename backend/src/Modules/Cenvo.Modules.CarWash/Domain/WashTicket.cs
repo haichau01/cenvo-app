@@ -127,7 +127,7 @@ public class WashTicket : BaseEntity, IBranchScoped
 
         Status = WashStatus.Done;
         CompletedAt = now;
-        Raise(new WashTicketCompleted(Id, BranchId, Code, VehicleType, Lines.Select(l => l.OfferingId).ToList(),
+        Raise(new WashTicketCompleted(Id, BranchId, CustomerId, Code, VehicleType, Lines.Select(l => l.OfferingId).ToList(),
             StartedAt ?? now, now, Staff.Select(s => new StaffCommission(s.UserId, s.FullName, s.Commission)).ToList()));
     }
 
@@ -173,7 +173,7 @@ public class WashTicket : BaseEntity, IBranchScoped
         Status = WashStatus.Cancelled;
         CancelledAt = now;
         CancelReason = reason.Trim();
-        Raise(new WashTicketCancelled(Id, Code, CancelReason, wasCompleted));
+        Raise(new WashTicketCancelled(Id, CustomerId, Code, CancelReason, wasCompleted));
     }
 
     // ---------------- Photos ----------------

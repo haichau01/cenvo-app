@@ -9,6 +9,7 @@ public record StaffCommission(Guid UserId, string FullName, decimal Amount);
 public record WashTicketCompleted(
     Guid TicketId,
     Guid BranchId,
+    Guid? CustomerId,
     string Code,
     VehicleType VehicleType,
     IReadOnlyList<Guid> OfferingIds,
@@ -17,4 +18,4 @@ public record WashTicketCompleted(
     IReadOnlyList<StaffCommission> Commissions) : IDomainEvent;
 
 /// <param name="WasCompleted">True when supplies had been issued (and commission earned) — they must be reversed.</param>
-public record WashTicketCancelled(Guid TicketId, string Code, string Reason, bool WasCompleted) : IDomainEvent;
+public record WashTicketCancelled(Guid TicketId, Guid? CustomerId, string Code, string Reason, bool WasCompleted) : IDomainEvent;

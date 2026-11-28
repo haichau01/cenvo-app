@@ -10,6 +10,13 @@ public class Customer : BaseEntity, ISoftDelete
     public string Phone { get; set; } = "";
     public string Name { get; set; } = "";
     public string? Note { get; set; }
+    /// <summary>Customer agrees to receive reminder messages. On by default; staff turn it off when the customer asks.</summary>
+    public bool AcceptsReminders { get; set; } = true;
+    /// <summary>Latest finished wash anywhere in the chain — the return reminder counts days from it.</summary>
+    public DateTime? LastWashAt { get; set; }
+    /// <summary>Branch of the latest wash: that branch sends the return reminder.</summary>
+    public Guid? LastWashBranchId { get; set; }
+    public Guid? LastTicketId { get; set; }
     public bool IsDeleted { get; set; }
 
     /// <param name="phone">Already normalized.</param>
@@ -33,5 +40,20 @@ public class Customer : BaseEntity, ISoftDelete
     public void RenameIfGiven(string? name)
     {
         if (!string.IsNullOrWhiteSpace(name)) Name = name.Trim();
+    }
+
+    /// <summary>A wash finished → remember it as the latest visit unless a later one is already known.</summary>
+    public void RecordWash(Guid ticketId, Guid branchId, DateTime completedAt)
+    {
+        if (LastWashAt != null && LastWashAt > completedAt) return;
+        SetLastWash(ticketId, branchId, completedAt);
+    }
+
+    /// <summary>Replaces the latest visit (recomputed after that ticket was cancelled); all null = no visit left.</summary>
+    public void SetLastWash(Guid? ticketId, Guid? branchId, DateTime? completedAt)
+    {
+        LastTicketId = ticketId;
+        LastWashBranchId = branchId;
+        LastWashAt = completedAt;
     }
 }

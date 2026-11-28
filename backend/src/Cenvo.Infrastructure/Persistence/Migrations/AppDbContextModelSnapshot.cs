@@ -625,6 +625,10 @@ namespace Cenvo.Infrastructure.Persistence.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
+                    b.Property<bool>("AcceptsReminders")
+                        .HasColumnType("boolean")
+                        .HasColumnName("accepts_reminders");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
@@ -636,6 +640,18 @@ namespace Cenvo.Infrastructure.Persistence.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean")
                         .HasColumnName("is_deleted");
+
+                    b.Property<Guid?>("LastTicketId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("last_ticket_id");
+
+                    b.Property<DateTime?>("LastWashAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("last_wash_at");
+
+                    b.Property<Guid?>("LastWashBranchId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("last_wash_branch_id");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -672,6 +688,9 @@ namespace Cenvo.Infrastructure.Persistence.Migrations
                         .IsUnique()
                         .HasDatabaseName("ix_customer_phone")
                         .HasFilter("is_deleted = false");
+
+                    b.HasIndex("LastWashBranchId", "LastWashAt")
+                        .HasDatabaseName("ix_customer_last_wash_branch_id_last_wash_at");
 
                     b.ToTable("customer", (string)null);
                 });
@@ -810,6 +829,108 @@ namespace Cenvo.Infrastructure.Persistence.Migrations
                     b.ToTable("customer_membership", (string)null);
                 });
 
+            modelBuilder.Entity("Cenvo.Modules.CarWash.Domain.CustomerReminder", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("AttemptedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("attempted_at");
+
+                    b.Property<Guid?>("AttemptedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("attempted_by");
+
+                    b.Property<int>("Attempts")
+                        .HasColumnType("integer")
+                        .HasColumnName("attempts");
+
+                    b.Property<Guid>("BranchId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("branch_id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("created_by");
+
+                    b.Property<Guid>("CustomerId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("customer_id");
+
+                    b.Property<int>("Kind")
+                        .HasColumnType("integer")
+                        .HasColumnName("kind");
+
+                    b.Property<string>("LastError")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("last_error");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasMaxLength(640)
+                        .HasColumnType("character varying(640)")
+                        .HasColumnName("message");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasColumnName("phone");
+
+                    b.Property<string>("ProviderMessageId")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("provider_message_id");
+
+                    b.Property<Guid>("RefId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("ref_id");
+
+                    b.Property<DateTime?>("SentAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("sent_at");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer")
+                        .HasColumnName("status");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("updated_by");
+
+                    b.Property<uint>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.HasKey("Id")
+                        .HasName("pk_customer_reminder");
+
+                    b.HasIndex("CustomerId")
+                        .HasDatabaseName("ix_customer_reminder_customer_id");
+
+                    b.HasIndex("BranchId", "AttemptedAt")
+                        .HasDatabaseName("ix_customer_reminder_branch_id_attempted_at");
+
+                    b.HasIndex("Kind", "RefId")
+                        .IsUnique()
+                        .HasDatabaseName("ix_customer_reminder_kind_ref_id");
+
+                    b.ToTable("customer_reminder", (string)null);
+                });
+
             modelBuilder.Entity("Cenvo.Modules.CarWash.Domain.MembershipPackage", b =>
                 {
                     b.Property<Guid>("Id")
@@ -918,6 +1039,72 @@ namespace Cenvo.Infrastructure.Persistence.Migrations
                         .HasDatabaseName("ix_membership_payment_membership_id");
 
                     b.ToTable("membership_payment", (string)null);
+                });
+
+            modelBuilder.Entity("Cenvo.Modules.CarWash.Domain.ReminderSettings", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<Guid>("BranchId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("branch_id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("created_by");
+
+                    b.Property<string>("ExpiringTemplate")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("expiring_template");
+
+                    b.Property<int>("ExpiringWithinDays")
+                        .HasColumnType("integer")
+                        .HasColumnName("expiring_within_days");
+
+                    b.Property<string>("LowUsesTemplate")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("low_uses_template");
+
+                    b.Property<int>("LowUsesThreshold")
+                        .HasColumnType("integer")
+                        .HasColumnName("low_uses_threshold");
+
+                    b.Property<int>("ReturnAfterDays")
+                        .HasColumnType("integer")
+                        .HasColumnName("return_after_days");
+
+                    b.Property<string>("ReturnTemplate")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("return_template");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("updated_by");
+
+                    b.HasKey("Id")
+                        .HasName("pk_reminder_settings");
+
+                    b.HasIndex("BranchId")
+                        .IsUnique()
+                        .HasDatabaseName("ix_reminder_settings_branch_id");
+
+                    b.ToTable("reminder_settings", (string)null);
                 });
 
             modelBuilder.Entity("Cenvo.Modules.CarWash.Domain.Vehicle", b =>
@@ -2465,6 +2652,16 @@ namespace Cenvo.Infrastructure.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("fk_customer_membership_shift_shift_id");
+                });
+
+            modelBuilder.Entity("Cenvo.Modules.CarWash.Domain.CustomerReminder", b =>
+                {
+                    b.HasOne("Cenvo.Modules.CarWash.Domain.Customer", null)
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_customer_reminder_customer_customer_id");
                 });
 
             modelBuilder.Entity("Cenvo.Modules.CarWash.Domain.MembershipPackage", b =>

@@ -2779,6 +2779,45 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/carwash/customers/{id}/reminders": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["Cenvo.Modules.CarWash.Application.Reminders.SetAcceptsRemindersInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/carwash/vehicles/lookup": {
         parameters: {
             query?: never;
@@ -2923,6 +2962,174 @@ export interface paths {
                     };
                     content: {
                         "application/json": components["schemas"]["Cenvo.Modules.CarWash.Application.Customers.MembershipDto"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/carwash/reminders/settings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Cenvo.Modules.CarWash.Application.Reminders.ReminderSettingsDto"];
+                    };
+                };
+            };
+        };
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["Cenvo.Modules.CarWash.Application.Reminders.ReminderSettingsInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/carwash/reminders/due": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Cenvo.Modules.CarWash.Application.Reminders.DueReminderDto"][];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/carwash/reminders/history": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query: {
+                    from: string;
+                    to: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Cenvo.Modules.CarWash.Application.Reminders.ReminderLogDto"][];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/carwash/reminders/send": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["Cenvo.Modules.CarWash.Application.Reminders.SendRemindersInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Cenvo.Modules.CarWash.Application.Reminders.SendRemindersResult"];
                     };
                 };
             };
@@ -4243,6 +4450,9 @@ export interface components {
             name: string;
             phone: string;
             note?: string | null;
+            acceptsReminders: boolean;
+            /** Format: date-time */
+            lastWashAt?: string | null;
             vehicles: components["schemas"]["Cenvo.Modules.CarWash.Application.Customers.VehicleDto"][];
             memberships: components["schemas"]["Cenvo.Modules.CarWash.Application.Customers.MembershipDto"][];
             recentTickets: components["schemas"]["Cenvo.Modules.CarWash.Application.Tickets.TicketHistoryDto"][];
@@ -4329,6 +4539,91 @@ export interface components {
             ticket: components["schemas"]["Cenvo.Modules.CarWash.Application.Tickets.TicketDto"];
             store: components["schemas"]["Cenvo.Modules.Organization.Contracts.BranchContact"];
             cashierName?: string | null;
+        };
+        "Cenvo.Modules.CarWash.Application.Reminders.DueReminderDto": {
+            reason: components["schemas"]["Cenvo.Modules.CarWash.Application.Reminders.DueReminderRow"];
+            message: string;
+        };
+        "Cenvo.Modules.CarWash.Application.Reminders.DueReminderRow": {
+            kind: components["schemas"]["Cenvo.Modules.CarWash.Domain.ReminderKind"];
+            /** Format: uuid */
+            refId: string;
+            /** Format: uuid */
+            customerId: string;
+            customerName: string;
+            phone: string;
+            plate?: string | null;
+            /** Format: date-time */
+            lastWashAt?: string | null;
+            packageName?: string | null;
+            /** Format: int32 */
+            remainingUses?: number | null;
+            /** Format: date-time */
+            expiresAt?: string | null;
+            lastError?: string | null;
+        };
+        "Cenvo.Modules.CarWash.Application.Reminders.ReminderFailureDto": {
+            /** Format: uuid */
+            refId: string;
+            customerName: string;
+            error: string;
+        };
+        "Cenvo.Modules.CarWash.Application.Reminders.ReminderLogDto": {
+            /** Format: uuid */
+            id: string;
+            kind: components["schemas"]["Cenvo.Modules.CarWash.Domain.ReminderKind"];
+            /** Format: uuid */
+            customerId: string;
+            customerName: string;
+            phone: string;
+            message: string;
+            status: components["schemas"]["Cenvo.Modules.CarWash.Domain.ReminderStatus"];
+            /** Format: int32 */
+            attempts: number;
+            /** Format: date-time */
+            attemptedAt: string;
+            /** Format: date-time */
+            sentAt: string | null;
+            lastError: string | null;
+        };
+        "Cenvo.Modules.CarWash.Application.Reminders.ReminderSettingsDto": {
+            /** Format: int32 */
+            returnAfterDays: number;
+            /** Format: int32 */
+            expiringWithinDays: number;
+            /** Format: int32 */
+            lowUsesThreshold: number;
+            returnTemplate: string;
+            expiringTemplate: string;
+            lowUsesTemplate: string;
+            placeholders: string[];
+            /** Format: int32 */
+            maxTemplateLength: number;
+        };
+        "Cenvo.Modules.CarWash.Application.Reminders.ReminderSettingsInput": {
+            /** Format: int32 */
+            returnAfterDays: number;
+            /** Format: int32 */
+            expiringWithinDays: number;
+            /** Format: int32 */
+            lowUsesThreshold: number;
+            returnTemplate: string;
+            expiringTemplate: string;
+            lowUsesTemplate: string;
+        };
+        "Cenvo.Modules.CarWash.Application.Reminders.SendRemindersInput": {
+            kind: components["schemas"]["Cenvo.Modules.CarWash.Domain.ReminderKind"];
+            refIds: string[];
+        };
+        "Cenvo.Modules.CarWash.Application.Reminders.SendRemindersResult": {
+            /** Format: int32 */
+            sent: number;
+            /** Format: int32 */
+            skipped: number;
+            failures: components["schemas"]["Cenvo.Modules.CarWash.Application.Reminders.ReminderFailureDto"][];
+        };
+        "Cenvo.Modules.CarWash.Application.Reminders.SetAcceptsRemindersInput": {
+            accepts: boolean;
         };
         "Cenvo.Modules.CarWash.Application.Reports.CommissionReport": {
             /** Format: date */
@@ -4669,6 +4964,10 @@ export interface components {
         "Cenvo.Modules.CarWash.Domain.CommissionType": "Percent" | "FixedAmount";
         /** @enum {string} */
         "Cenvo.Modules.CarWash.Domain.MembershipStatus": "Active" | "Cancelled";
+        /** @enum {string} */
+        "Cenvo.Modules.CarWash.Domain.ReminderKind": "ReturnVisit" | "MembershipExpiring" | "MembershipLowUses";
+        /** @enum {string} */
+        "Cenvo.Modules.CarWash.Domain.ReminderStatus": "Pending" | "Sent" | "Failed";
         /** @enum {string} */
         "Cenvo.Modules.CarWash.Domain.VehicleType": "Sedan" | "SevenSeater" | "Pickup" | "Suv";
         /** @enum {string} */

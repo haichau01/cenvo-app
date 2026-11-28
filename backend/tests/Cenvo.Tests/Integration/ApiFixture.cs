@@ -1,7 +1,11 @@
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json.Nodes;
+using Cenvo.Api.Auth;
+using Cenvo.Infrastructure.Persistence;
+using Cenvo.SharedKernel;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.DependencyInjection;
 using Testcontainers.PostgreSql;
 
 namespace Cenvo.Tests.Integration;
@@ -30,6 +34,16 @@ public class ApiFixture : IAsyncLifetime
     {
         await _factory.DisposeAsync();
         await _pg.DisposeAsync();
+    }
+
+    /// <summary>Direct database access (as the system, every branch) — only to set up states the API cannot reach, e.g. the past.</summary>
+    public async Task WithDb(Func<AppDbContext, Task> work)
+    {
+        using var scope = _factory.Services.CreateScope();
+        scope.ServiceProvider.GetRequiredService<CurrentUser>().RunAs(SystemUser.AllBranches);
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        await work(db);
+        await db.SaveChangesAsync();
     }
 
     /// <summary>Signed-in client (default seed password).</summary>

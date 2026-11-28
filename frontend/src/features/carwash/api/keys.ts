@@ -14,4 +14,8 @@ export const washKeys = {
   customerSearch: (q: string) => ['carwash', 'customers', 'search', q] as const,
   customer: (id: string) => ['carwash', 'customers', id] as const,
   commissions: (from: string, to: string) => ['carwash', 'commissions', from, to] as const,
+  reminders: ['carwash', 'reminders'] as const,
+  remindersDue: ['carwash', 'reminders', 'due'] as const,
+  reminderSettings: ['carwash', 'reminders', 'settings'] as const,
+  reminderHistory: (from: string, to: string) => ['carwash', 'reminders', 'history', from, to] as const,
 }

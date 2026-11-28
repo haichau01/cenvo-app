@@ -10,3 +10,9 @@ public enum WashStatus { Waiting = 1, Washing = 2, Done = 3, Delivered = 4, Canc
 public enum CommissionType { Percent = 1, FixedAmount = 2 }
 
 public enum MembershipStatus { Active = 1, Cancelled = 2 }
+
+/// <summary>Why a customer is reminded: no visit for a while, a package about to expire, a package almost used up.</summary>
+public enum ReminderKind { ReturnVisit = 1, MembershipExpiring = 2, MembershipLowUses = 3 }
+
+/// <summary>Pending = claimed and being sent (blocks a second send); Failed may be sent again.</summary>
+public enum ReminderStatus { Pending = 1, Sent = 2, Failed = 3 }

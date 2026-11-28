@@ -24,8 +24,12 @@ const SECTIONS: NavSection[] = [
   { title: 'Cà phê', items: [{ to: '/pos', label: 'Bán hàng' }, { to: '/pha-che', label: 'Pha chế' }] },
   { title: 'Rửa xe', items: [{ to: '/rua-xe', label: 'Hàng chờ', end: true }, { to: '/rua-xe/khach-hang', label: 'Khách hàng' }], visible: canWash },
   {
-    title: 'Thiết lập rửa xe',
-    items: [{ to: '/rua-xe/dich-vu', label: 'Dịch vụ & gói' }, { to: '/rua-xe/hoa-hong', label: 'Hoa hồng' }],
+    title: 'Quản lý rửa xe',
+    items: [
+      { to: '/rua-xe/dich-vu', label: 'Dịch vụ & gói' },
+      { to: '/rua-xe/hoa-hong', label: 'Hoa hồng' },
+      { to: '/rua-xe/nhac-khach', label: 'Nhắc khách' },
+    ],
     visible: isManager,
   },
   { title: '', items: [{ to: '/', label: 'Trang chủ', end: true }] },

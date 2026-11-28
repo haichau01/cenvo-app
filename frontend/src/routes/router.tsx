@@ -36,6 +36,7 @@ export const router = createBrowserRouter([
               { path: '/bao-cao', lazy: async () => ({ Component: (await import('@/features/reports/pages/ReportsPage')).ReportsPage }) },
               { path: '/rua-xe/dich-vu', lazy: async () => ({ Component: (await import('@/features/carwash/pages/WashSetupPage')).WashSetupPage }) },
               { path: '/rua-xe/hoa-hong', lazy: async () => ({ Component: (await import('@/features/carwash/pages/CommissionPage')).CommissionPage }) },
+              { path: '/rua-xe/nhac-khach', lazy: async () => ({ Component: (await import('@/features/carwash/pages/RemindersPage')).RemindersPage }) },
             ],
           },
         ],

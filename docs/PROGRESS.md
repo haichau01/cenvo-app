@@ -110,7 +110,20 @@
   - Báo cáo: `GET /api/reports/carwash-sales` (`WashSalesReportService`, gom nhóm trong SQL, cắt ngày VN bằng `AT TIME ZONE`). Phiếu tính theo **giờ thu tiền** (khớp đối soát ca). Doanh thu = tiền rửa + tiền bán gói; lãi gộp = doanh thu − hóa chất − hoa hồng; lượt trừ gói tính theo giá niêm yết, không phải tiền trong kỳ. Giá vốn hóa chất qua contract mới `Inventory/Contracts/ISaleCostQuery` (trả `IQueryable` để ghép SQL). Migration `AddWashSalesIndexes`: chỉ thêm 2 index.
   - Biểu đồ tổng quát (cột chồng Cà phê robusta / Rửa xe foam, có chú giải + bảng). Validator dataviz: cặp màu tách tốt (ΔE ≥ 14), robusta dưới ngưỡng chroma, bù bằng chú giải/khe/bảng.
   - Kiểm chứng: `dotnet test` 102/102; `npm test` 64/64, lint, build sạch; Playwright + Edge: in 3 loại phiếu (khổ 80 × 126 mm), báo cáo 3 tab, không lỗi console.
-- **Việc tiếp theo:** commit (chạy `/cenvo-security` + `/cenvo-review` trước — đã chạy, không có mục Cao); sau đó nhắc khách quay lại, Payroll đọc hoa hồng.
+- In phiếu rửa xe + báo cáo đã commit (`96a6d84`).
+- **Nhắc khách quay lại (2026-11-28, nhánh `feat/carwash-print-report`):** ✅ chưa commit.
+  - Người dùng chốt: đến hạn theo **số ngày cố định** mỗi chi nhánh; nhắc thêm **gói sắp hết hạn** và **gói sắp hết lượt**; **quản lý bấm gửi** (không job tự động); khách **mặc định nhận tin, tắt được**; gửi qua Zalo OA/SMS nhưng **chưa có tài khoản** → làm khung, bộ gửi giả lập chỉ ghi log.
+  - Backend:
+    - `Customer` thêm `AcceptsReminders`, `LastWashAt/LastWashBranchId/LastTicketId` (lần rửa cuối **toàn chuỗi**). `CustomerLastWashHandler` cập nhật khi "Rửa xong", tính lại khi hủy phiếu đã rửa. `WashTicketCompleted/Cancelled` mang thêm `CustomerId`.
+    - `ReminderSettings` (theo chi nhánh: số ngày, ngưỡng lượt, 3 mẫu tin có chỗ điền `{ten}` `{bienso}` `{chinhanh}`…), `ReminderTemplate` (hàm thuần).
+    - `CustomerReminder` = nhật ký gửi; unique `(Kind, RefId)`. Lý do là phiếu rửa cuối hoặc gói, nên mỗi lý do chỉ gửi 1 lần. Gửi lỗi thì gửi lại được. Có `Pending` giữ chỗ và hết hạn sau 10 phút; `Version` chống 2 máy gửi trùng.
+    - Mỗi loại nhắc là một `IReminderStrategy` (ReturnVisit / MembershipExpiring / MembershipLowUses). Gói nhắc ở chi nhánh đã bán; nhắc quay lại ở chi nhánh rửa cuối.
+    - `IReminderSender` (Contracts) ← Api `LogReminderSender` (che SĐT trong log). Có tài khoản thật thì chỉ thay đăng ký ở `Program.cs`.
+    - API `/api/carwash/reminders/{settings,due,history,send}` (quản lý, tối đa 100 tin/lần, lọc lại "đến hạn" ở server trước khi gửi), `PUT /customers/{id}/reminders` (thu ngân).
+    - Migration `AddCustomerReminders`: khách cũ mặc định nhận tin, backfill lần rửa cuối từ `wash_ticket`. `PlateNumber.Format` để tin có biển số dạng 51A-123.45.
+  - Frontend: `/rua-xe/nhac-khach` (menu "Quản lý rửa xe"): 3 tab đến hạn + "Đã gửi", chọn rồi xác nhận gửi (xem trước tin), "Ngừng nhắc", dialog cài đặt; ô "Nhận tin nhắc" ở trang khách hàng.
+  - Kiểm chứng: `dotnet test` 123/123; `npm test` 67/67, lint, build sạch; Playwright + Edge 1440×900 (dữ liệu "đến hạn" giả lập bằng route mock, không ghi DB dev).
+- **Việc tiếp theo:** commit nhắc khách; Payroll đọc hoa hồng; khi có tài khoản Zalo OA/SMS: cài `IReminderSender` thật (SMS brandname thường cần tin không dấu).
 - Còn treo: 2 cảnh báo EF về global filter (Unit ↔ ProductUnit, Branch ↔ UserBranch). Chưa ảnh hưởng hành vi.
 
 > Phần dưới là nhật ký quá trình refactor, giữ lại để tham khảo.
